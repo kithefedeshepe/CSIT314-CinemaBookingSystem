@@ -5,4 +5,4 @@ hello there
 <br>
 <h1>Contributor</h1>
 Gia Khanh<br>
-Keith tan<br>
+Keith Tan<br>
