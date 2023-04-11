@@ -10,4 +10,4 @@ Gia Khanh<br>
 Keith TanWeiYang<br>
 Jay Junhyoung Park<br>
 Mikyung Jin<br>
-Xie JiangFeng Jin<br>
+Xie JiangFeng<br>
