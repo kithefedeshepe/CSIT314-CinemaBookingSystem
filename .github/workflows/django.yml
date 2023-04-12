@@ -21,10 +21,12 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.python-version }}
+  test:
+    runs-on: ubuntu-latest
+    steps:
     - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-    - name: Run Tests
-      run: |
-        python manage.py test core
+      run: python -m pip install --upgrade pip
+    - name: Setup django
+      run: pip install -r requirements.txt
+    - name: Run Tests for landing page
+      run: python manage.py test core
