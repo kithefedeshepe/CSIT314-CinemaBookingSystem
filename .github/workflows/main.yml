@@ -1,4 +1,4 @@
-name: Django CI
+name: Dev workflow - Build and run tests then deploy to vercel
 
 on:
   pull_request:
@@ -6,7 +6,6 @@ on:
 
 jobs:
   build-and-test:
-
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -25,3 +24,20 @@ jobs:
       run: pip install -r requirements.txt
     - name: Run Tests for enviroment
       run: python manage.py test Env_test
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install Vercel CLI
+      run: npm install -g vercel
+    - name: Login to Vercel
+      run: vercel login
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    - name: Deploy to Vercel
+      run: vercel --prod
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
