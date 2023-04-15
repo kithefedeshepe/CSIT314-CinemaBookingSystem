@@ -43,7 +43,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Build project
-        run: python manage.py collectstatic
+        run: python manage.py collectstatic --no-input
 
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v20
