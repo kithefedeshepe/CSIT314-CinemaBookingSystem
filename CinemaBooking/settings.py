@@ -76,11 +76,15 @@ WSGI_APPLICATION = 'CinemaBooking.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'UserAdmin',
+        'CLIENT': {
+            'host' :'mongodb+srv://bsian314:bsian314@bsian.lzgtcdx.mongodb.net/test',
+            'username': 'bsian314',
+            'PASSWORD': 'bsian314',
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
