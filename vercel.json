@@ -1,21 +1,13 @@
 {
-    "builds": [
-      {
+    "builds": [{
         "src": "CinemaBooking/wsgi.py",
         "use": "@vercel/python",
         "config": { "maxLambdaSize": "15mb", "runtime": "python3.11.3" }
-      }
-    ],
-    "headers": [
-      {
-        "source": "staticfiles/admin/*.css",
-        "headers": [
-          {
-            "key": "Content-Type",
-            "value": "text/css"
-          }
-        ]
-      }
+    }],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "CinemaBooking/wsgi.py"
+        }
     ]
 }
-  
