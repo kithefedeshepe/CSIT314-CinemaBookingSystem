@@ -20,12 +20,11 @@ from django.urls import path
 from core.views import index
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.staticfiles.views import serve
 
 urlpatterns = [
     path('', index, name='index'),    
     path('admin/', admin.site.urls),
-]
+]+ static(settings.STATIC_URL, view=serve, show_indexes=True)
 
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT, show_indexes=True, **{'mimetype': 'text/css'})
-    
+
