@@ -8,7 +8,7 @@
     ],
     "headers": [
       {
-        "source": "**/*.css",
+        "source": "staticfiles/admin/*.css",
         "headers": [
           {
             "key": "Content-Type",
