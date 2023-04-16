@@ -9,5 +9,16 @@
             "src": "/(.*)",
             "dest": "CinemaBooking/wsgi.py"
         }
-    ]
+    ],
+    "headers": [
+        {
+          "source": "**/*.css",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/css"
+            }
+          ]
+        }
+      ]
 }
