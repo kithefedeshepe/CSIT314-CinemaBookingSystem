@@ -1,7 +1,7 @@
 name: Dev workflow - Build and run tests then deploy to vercel
 
 on:
-  pull_request:
+  push:
     branches: [ "main" ]
 
 jobs:
