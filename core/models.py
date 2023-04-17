@@ -59,3 +59,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def has_module_perms(self, app_label):
         return True
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete = models.CASCADE, related_name='profile')
+    name = models.CharField(max_length=100)
+    date_of_birth = models.DateField()
+    loyalty_points = models.IntegerField(blank=True, null=True)
+    
+    def __str__(self):
+        return self.name
+    
+    def email(self):
+        return self.user.email
