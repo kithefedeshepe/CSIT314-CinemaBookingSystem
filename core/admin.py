@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-
 from .models import User
 
 
@@ -23,5 +22,15 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('username', 'email')
     ordering = ('username',)
 
+    def has_module_permission(self, request):
+        if request.user.is_superuser:
+            return True
+        return False
+
+    def get_model_perms(self, request):
+        perms = super().get_model_perms(request)
+        if not request.user.is_superuser and not request.user.role == 'UserAdmin':
+            perms['view'] = False
+        return perms
 
 admin.site.register(User, CustomUserAdmin)
