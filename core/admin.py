@@ -29,8 +29,10 @@ class CustomUserAdmin(UserAdmin):
 
     def get_model_perms(self, request):
         perms = super().get_model_perms(request)
-        if not request.user.is_superuser and not request.user.role == 'UserAdmin':
-            perms['view'] = False
+        if not request.user.is_staff and not request.user.role == 'UserAdmin':
+            perms['view_users'] = False
+        elif not request.user.is_staff and request.user.role == 'UserAdmin':
+            perms['view_profiles'] = False
         return perms
 
 class ProfileAdmin(admin.ModelAdmin):
