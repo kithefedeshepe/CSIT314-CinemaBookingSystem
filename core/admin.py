@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import User
+from .models import User, Profile
 
 
 class CustomUserAdmin(UserAdmin):
@@ -33,4 +33,18 @@ class CustomUserAdmin(UserAdmin):
             perms['view'] = False
         return perms
 
+class ProfileAdmin(admin.ModelAdmin):
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'email', 'password1', 'password2', 'role'),
+        }),
+    )
+       
+    list_display = ('user', 'name', 'date_of_birth', 'email', 'loyalty_points')
+    list_filter = ('user__role',)
+    search_fields = ('user__username', 'user__email', 'name')
+    ordering = ('user__username',)
+
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(Profile, ProfileAdmin)
