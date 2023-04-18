@@ -2,7 +2,9 @@ name: Dev workflow - Build and run tests then deploy to vercel
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build-and-test:
@@ -11,7 +13,6 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: [3.11.3]
-
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
