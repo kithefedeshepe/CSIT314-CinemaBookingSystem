@@ -68,3 +68,12 @@ class Profile(models.Model):
     
     def __str__(self):
         return self.name
+    
+
+class Movie(models.Model):
+    movie_title = models.CharField(max_length=255)
+    movie_description = models.TextField()
+
+class Image(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='movie_images')
+    image = models.ImageField(upload_to='movie_images/')

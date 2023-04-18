@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import User, Profile
-
+from .models import User, Profile, Movie, Image
+from django.utils.html import format_html
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
@@ -55,5 +55,18 @@ class ProfileAdmin(admin.ModelAdmin):
                     return True
         return False
 
+class ImageInline(admin.TabularInline):
+    model = Image
+
+class MovieAdmin(admin.ModelAdmin):
+    inlines = [ImageInline]
+    list_display = ('image_tag', 'movie_title', 'movie_description')
+
+    def image_tag(self, obj):
+        return format_html('<img src="{}" height="50"/>'.format(obj.movie_images.first().image.url))
+
+    image_tag.short_description = 'Image'
+    
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Movie, MovieAdmin)
