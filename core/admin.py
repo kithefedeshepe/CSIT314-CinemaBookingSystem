@@ -25,15 +25,11 @@ class CustomUserAdmin(UserAdmin):
     def has_module_permission(self, request):
         if request.user.is_superuser:
             return True
+        else:
+            if not request.user.is_anonymous:
+                if request.user.role == 'UserAdmin':
+                    return True
         return False
-
-    def get_model_perms(self, request):
-        perms = super().get_model_perms(request)
-        if not request.user.is_staff and not request.user.role == 'UserAdmin':
-            perms['view_users'] = False
-        elif not request.user.is_staff and request.user.role == 'UserAdmin':
-            perms['view_profiles'] = False
-        return perms
 
 class ProfileAdmin(admin.ModelAdmin):
     add_fieldsets = (
@@ -47,6 +43,15 @@ class ProfileAdmin(admin.ModelAdmin):
     list_filter = ('user__role',)
     search_fields = ('user__username', 'user__email', 'name')
     ordering = ('user__username',)
+
+    def has_module_permission(self, request):
+        if request.user.is_superuser:
+            return True
+        else:
+            if not request.user.is_anonymous:
+                if request.user.role == 'CinemaManager':
+                    return True
+        return False
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile, ProfileAdmin)
