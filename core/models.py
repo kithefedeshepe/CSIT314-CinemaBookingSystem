@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return True
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profiles')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='profiles')
     name = models.CharField(max_length=100)
     date_of_birth = models.DateField()
     loyalty_points = models.IntegerField(blank=True, null=True)
