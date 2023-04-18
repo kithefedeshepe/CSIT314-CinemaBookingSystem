@@ -50,6 +50,8 @@ class ProfileAdmin(admin.ModelAdmin):
         else:
             if not request.user.is_anonymous:
                 if request.user.role == 'CinemaManager':
+                    return False
+                if request.user.role == 'UserAdmin':
                     return True
         return False
 
