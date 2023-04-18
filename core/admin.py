@@ -39,9 +39,9 @@ class ProfileAdmin(admin.ModelAdmin):
         }),
     )
        
-    list_display = ('user', 'name', 'date_of_birth', 'email', 'loyalty_points')
+    list_display = ('user', 'name', 'date_of_birth', 'loyalty_points')
     list_filter = ('user__role',)
-    search_fields = ('user__username', 'user__email', 'name')
+    search_fields = ('user__username', 'name')
     ordering = ('user__username',)
 
     def has_module_permission(self, request):
