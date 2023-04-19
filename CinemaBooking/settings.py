@@ -85,11 +85,11 @@ WSGI_APPLICATION = 'CinemaBooking.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'UserAdmin',
+        'NAME': 'Bsian',
         'CLIENT': {
-            'host' :'mongodb+srv://bsian314:bsian314@bsian.lzgtcdx.mongodb.net/test',
-            'username': 'bsian314',
-            'PASSWORD': 'bsian314',
+            'host' :'mongodb+srv://csit314:csit314@cluster0.5m5afkc.mongodb.net/test',
+            'username': 'csit314',
+            'PASSWORD': 'csit314',
         }
     }
 }
