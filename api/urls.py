@@ -1,7 +1,7 @@
 from django.urls import include, path
-from .views import *
+from .views import AccountController
 urlpatterns = [
     # other URL patterns here
-    path('', getUserAccount),
-    path('add/', addUserAccount)
+    path('', AccountController.getUserAccount),
+    path('add/', AccountController.RegisterAccount)
 ]
