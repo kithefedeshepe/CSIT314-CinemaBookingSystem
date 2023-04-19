@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from django.contrib.auth.hashers import make_password
 from core.models import User
 from .serializers import UserSerializer
 # Create your views here.
@@ -13,8 +14,10 @@ class AccountController:
         return Response(serializer.data)
 
     @api_view(['POST'])
-    def addUserAccount(request):
+    def RegisterAccount(request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
+            password = make_password(serializer.validated_data['password'])
+            serializer.validated_data['password'] = password
             serializer.save()
         return Response(serializer.data)
