@@ -1,8 +1,10 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import uuid
 
 # Create your models here.
 class User(AbstractUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     ROLE = (
         ('UserAdmin', 'UserAdmin'),
         ('CinemaManager', 'CinemaManager'),
@@ -16,6 +18,9 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
     
+    def save(self,*args, **kwargs):
+        super().save(*args, **kwargs)
+        
     def has_perm(self, perm, obj=None):
         return True
 
@@ -34,5 +39,8 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
     
+    def save(self,*args, **kwargs):
+        super().save(*args, **kwargs)
+        
     class Meta:
         db_table = 'profiles'
