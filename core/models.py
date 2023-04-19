@@ -69,6 +69,9 @@ class Profile(models.Model):
     def __str__(self):
         return self.name
     
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+    
 
 class Movie(models.Model):
     movie_title = models.CharField(max_length=255)
