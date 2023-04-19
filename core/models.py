@@ -61,7 +61,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return True
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profiles')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='profiles')
     name = models.CharField(max_length=100)
     date_of_birth = models.DateField()
     loyalty_points = models.IntegerField(blank=True, null=True)
@@ -69,5 +69,11 @@ class Profile(models.Model):
     def __str__(self):
         return self.name
     
-    def email(self):
-        return self.user.email
+
+class Movie(models.Model):
+    movie_title = models.CharField(max_length=255)
+    movie_description = models.TextField()
+
+class Image(models.Model):
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='movie_images')
+    image = models.ImageField(upload_to='movie_images/')
