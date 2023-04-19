@@ -3,5 +3,5 @@ from .views import AccountController
 urlpatterns = [
     # other URL patterns here
     path('', AccountController.getUserAccount),
-    path('add/', AccountController.addUserAccount)
+    path('add/', AccountController.RegisterAccount)
 ]
