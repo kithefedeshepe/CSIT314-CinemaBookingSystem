@@ -1,11 +1,16 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from .models import User, Profile
 
-class ProfileAdmin(admin.ModelAdmin):
-    pass
+# Register your models here
 
-    class Meta:
-        model = Profile
+class CustomUserAdmin(UserAdmin):
+    list_display = ('username', 'email', 'role',)
+    list_filter = ('role',)
 
-admin.site.register(User)
-admin.site.register(Profile, ProfileAdmin)
+admin.site.register(User, CustomUserAdmin)
+
+class CustomProfileAdmin(admin.ModelAdmin):
+    list_display = ('user',)
+
+admin.site.register(Profile, CustomProfileAdmin)
