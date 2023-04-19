@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 import uuid
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Create your models here.
 class User(AbstractUser):
@@ -18,29 +20,21 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
     
-    def save(self,*args, **kwargs):
+    def save(self, *args, **kwargs):
+        created = not self.pk
         super().save(*args, **kwargs)
+        if created:
+            Profile.objects.create(user=self)
         
     def has_perm(self, perm, obj=None):
         return True
 
     def has_module_perms(self, app_label):
         return True
-
-class UserProfile(models.Model):
+    
+class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    dob = models.DateField()
-    name = models.CharField(max_length=50)
-    date_of_birth = models.DateField()
-    loyalty_points = models.IntegerField(blank=True, null=True)
-    
-    # add any additional fields you want for the user profile here
-    
+    bio = models.CharField(max_length=500)
+
     def __str__(self):
-        return self.user.username
-    
-    def save(self,*args, **kwargs):
-        super().save(*args, **kwargs)
-        
-    class Meta:
-        db_table = 'profiles'
+        return f"{self.user.username} Profile"

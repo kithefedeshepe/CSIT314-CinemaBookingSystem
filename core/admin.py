@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import User, UserProfile
+from .models import User, Profile
 
-class UserProfileAdmin(admin.ModelAdmin):
+class ProfileAdmin(admin.ModelAdmin):
     pass
 
     class Meta:
-        model = UserProfile
+        model = Profile
 
 admin.site.register(User)
-admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(Profile, ProfileAdmin)
