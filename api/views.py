@@ -17,7 +17,5 @@ class AccountController:
     def RegisterAccount(request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            password = make_password(serializer.validated_data['password'])
-            serializer.validated_data['password'] = password
             serializer.save()
         return Response(serializer.data)
