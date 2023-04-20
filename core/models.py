@@ -72,9 +72,23 @@ class Profile(models.Model):
     
 
 class Movie(models.Model):
-    movie_title = models.CharField(max_length=255)
+    movie_id = models.IntegerField(primary_key=True)
+    movie_title = models.CharField(max_length=50)
+    genre = models.CharField(max_length=50)
+    duration = models.DurationField()
+    release_date = models.DateField()
+    cast = models.CharField(max_length=200)
+    director = models.CharField(max_length=50)
     movie_description = models.TextField()
+    movie_img = models.ImageField(upload_to='movie_images/', blank=True)
 
-class Image(models.Model):
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='movie_images')
-    image = models.ImageField(upload_to='movie_images/')
+    def formatted_duration(self):
+        hours, minutes = self.duration.total_seconds() // 3600, \
+                                  (self.duration.total_seconds() // 60) % 60
+        return f"{int(hours)}h {int(minutes)}m"
+
+    def get_first_image_url(self):
+        if self.movie_img:
+            return self.movie_img.url
+        else:
+            return None
