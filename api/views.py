@@ -5,6 +5,8 @@ from django.contrib.auth.hashers import make_password
 from django.db import DatabaseError
 from core.models import User
 from .serializers import UserSerializer
+from .serializers import RegisterAccount
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 # LOGIN 
 from django.contrib.auth import authenticate, login
@@ -25,7 +27,7 @@ class AccountController:
     @api_view(['POST'])
     def RegisterAccount(request):
         try:
-            serializer = UserSerializer(data=request.data)
+            serializer = UserSerializer(request.data)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
@@ -40,11 +42,37 @@ class LoginView(APIView):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            return Response({'message': 'Login success'}, status=status.HTTP_200_OK)
+            session_key = request.session.session_key
+            if not session_key:
+                request.session.save()
+            print('Session key:', session_key)
+            response = Response({'message': 'Login success'}, status=status.HTTP_200_OK)
+            response.set_cookie('sessionid', session_key, httponly=True)
+            return response
         else:
             return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         
 class LogoutView(APIView):
     def post(self, request):
         logout(request)
-        return Response({'message': 'Logout success'}, status=status.HTTP_200_OK)
+        session_key = request.session.session_key
+        if session_key:
+            request.session.delete(session_key)
+        response = Response({'message': 'Logout success'}, status=status.HTTP_200_OK)
+        response.delete_cookie('sessionid')
+        return response
+    
+class GetUserView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = request.user
+        user_data = {
+            'id': user.id,
+            'username': user.username,
+            'password': user.password,
+            'email': user.email,
+            'role': user.role
+        }
+        return Response(user_data, status=status.HTTP_200_OK)
+    
+    
