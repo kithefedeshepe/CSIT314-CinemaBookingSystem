@@ -69,7 +69,6 @@ class GetUserView(APIView):
         user_data = {
             'id': user.id,
             'username': user.username,
-            'password': user.password,
             'email': user.email,
             'role': user.role
         }
