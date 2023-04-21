@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import User, Profile, Movie
+from .models import User, Profile, Movie, MovieSession, CinemaRoom
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
@@ -55,11 +55,19 @@ class ProfileAdmin(admin.ModelAdmin):
         return False
 
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ('get_first_image_url', 'movie_id', 'movie_title', 'genre', 'formatted_duration', 'release_date')
+    list_display = ('get_first_image_url', 'movie_title', 'genre', 'formatted_duration', 'release_date')
     list_filter = ('genre', 'release_date')
-    search_fields = ('movie_id', 'movie_title', 'genre')
-    ordering = ('movie_id', 'movie_title')
+    search_fields = ('movie_title', 'genre')
+    ordering = ('movie_title',)
+    
+class MovieSessionAdmin(admin.ModelAdmin):
+    list_display = ('movie_title', 'session_date')
+    list_filter = ('movie_title', 'session_date')
+    search_fields = ('movie_title', 'session_date', 'genre')
+    ordering = ('movie_title',)
     
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Movie, MovieAdmin)
+admin.site.register(MovieSession)
+admin.site.register(CinemaRoom)
