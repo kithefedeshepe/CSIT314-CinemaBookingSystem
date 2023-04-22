@@ -1,0 +1,78 @@
+Gmail account
+ID : bsian314@gmail.com
+PW : csit314project!
+
+MongoDB Atlas
+ID : csit314
+PW : csit314
+
+1. Install djonggo
+pip install djongo
+
+2. Install dnspython
+pip install dnspython
+
+3. Pymongo
+pip install pymongo==3.12.3
+
+4. pytz
+pip install pytz
+
+5. Migration
+python manage.py migrate
+
+6. how to create admin
+python manage.py createsuperuser
+
+7. Refresh compass and check UserAdmin DB
+
+****************************************
+
+DB information : setting.py
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'Bsian',
+        'CLIENT': {
+            'host' :'mongodb+srv://csit314:csit314@cluster0.5m5afkc.mongodb.net/test
+',
+            'username': 'csit314',
+            'PASSWORD': 'csit314',
+        }
+    }
+}
+
+****************************************
+
+Accounts
+
+- Can create superuser and create many User types in admin site 
+
+python manage.py createsuperuser
+
+- Account information
+
+* superuser acc
+ID : mongadmin
+PW : mongmong123
+ID : test
+PW : mongmong123
+
+* useradmin
+ID : useradmin1
+PW : mongmong123
+ID : admin1
+PW : mongmong123
+
+* manager
+ID : manager1
+PW : mongmong123
+
+* customer 
+ID : customer1
+PW : mongmong123
+
+* owner
+ID : owner1
+PW : mongmong123
