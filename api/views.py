@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny
 from django.db import DatabaseError
 from core.models import User
@@ -57,10 +58,12 @@ class LoginView(APIView):
         
 class LogoutView(APIView):
     def post(self, request):
+        if not request.user.is_authenticated:
+            raise PermissionDenied()
+        response.delete_cookie('token')  # remove session cookie
         Token.objects.filter(user=request.user).delete()
         logout(request)
         response = Response({'message': 'Logout success'}, status=status.HTTP_200_OK)
-        response.delete_cookie('token')  # remove session cookie
         return response
     
 class GetUserView(APIView):
