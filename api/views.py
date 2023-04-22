@@ -72,7 +72,6 @@ class GetUserView(APIView):
         user_data = {
             'id': user.id,
             'username': user.username,
-            'email': user.email,
             'role': user.role
         }
         return Response(user_data, status=status.HTTP_200_OK)
