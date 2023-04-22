@@ -56,12 +56,9 @@ class LoginView(APIView):
         
 class LogoutView(APIView):
     def post(self, request):
+        Token.objects.filter(user=request.user).delete()
         logout(request)
-        session_key = request.session.session_key
-        if session_key:
-            request.session.delete(session_key)
         response = Response({'message': 'Logout success'}, status=status.HTTP_200_OK)
-        response.delete_cookie('sessionid')
         return response
     
 class GetUserView(APIView):
