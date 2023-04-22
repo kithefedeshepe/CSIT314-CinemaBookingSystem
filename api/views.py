@@ -63,7 +63,8 @@ class LogoutView(APIView):
         response = Response({'message': 'Logout success'}, status=status.HTTP_200_OK)
         logout(request)
         response.delete_cookie('token')  # remove session cookie
-        Token.objects.filter(user=request.user).delete()
+        if request.user.is_authenticated:
+            Token.objects.filter(user=request.user).delete()
         return response
     
 class GetUserView(APIView):
