@@ -50,6 +50,7 @@ class LoginView(APIView):
                 'token': token.key
             }
             response = Response(response_data, status=status.HTTP_200_OK)
+            response.set_cookie('token', token.key)  # add session cookie
             return response
         else:
             return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -59,6 +60,7 @@ class LogoutView(APIView):
         Token.objects.filter(user=request.user).delete()
         logout(request)
         response = Response({'message': 'Logout success'}, status=status.HTTP_200_OK)
+        response.delete_cookie('token')  # remove session cookie
         return response
     
 class GetUserView(APIView):
@@ -72,5 +74,3 @@ class GetUserView(APIView):
             'role': user.role
         }
         return Response(user_data, status=status.HTTP_200_OK)
-    
-    
