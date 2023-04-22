@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import AllowAny
 from django.db import DatabaseError
 from core.models import User
 from .serializers import UserSerializer
@@ -65,7 +66,7 @@ class LogoutView(APIView):
     
 class GetUserView(APIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [AllowAny,]
+    permission_classes = [AllowAny]
 
     def get(self, request):
         user = request.auth.user
