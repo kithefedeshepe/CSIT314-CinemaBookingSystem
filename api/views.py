@@ -46,8 +46,11 @@ class LoginView(APIView):
             if not session_key:
                 request.session.save()
             print('Session key:', session_key)
-            response = Response({'message': 'Login success'}, status=status.HTTP_200_OK)
-            response.set_cookie('sessionid', session_key, httponly=True)
+            response_data = {
+                'message': 'Login success',
+                'sessionid': session_key
+            }
+            response = Response(response_data, status=status.HTTP_200_OK)
             return response
         else:
             return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
