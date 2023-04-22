@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from django.contrib.auth.hashers import make_password
+from rest_framework.authtoken.models import Token
 from django.db import DatabaseError
 from core.models import User
 from .serializers import UserSerializer
@@ -42,13 +42,10 @@ class LoginView(APIView):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            session_key = request.session.session_key
-            if not session_key:
-                request.session.save()
-            print('Session key:', session_key)
+            token, _ = Token.objects.get_or_create(user=user)
             response_data = {
                 'message': 'Login success',
-                'sessionid': session_key
+                'token': token.key
             }
             response = Response(response_data, status=status.HTTP_200_OK)
             return response
