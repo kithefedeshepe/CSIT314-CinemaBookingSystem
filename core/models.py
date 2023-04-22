@@ -64,6 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Profile(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='profiles')
     name = models.CharField(max_length=100)
     date_of_birth = models.DateField()
@@ -91,14 +92,15 @@ class Movie(models.Model):
     def __str__(self):
         return self.movie_title
 
-    def get_first_image_url(self):
+    def poster(self):
         if self.movie_img:
             return self.movie_img.url
         else:
             return None
-
-
+    
+    
 class CinemaRoom(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
     capacity = models.PositiveIntegerField()
 
@@ -107,11 +109,11 @@ class CinemaRoom(models.Model):
     
     
 class MovieSession(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='sessions')
     session_date = models.DateField()
-    room_choices = [(room.id, room.name) for room in CinemaRoom.objects.all()]
-    cinemaroom = models.ForeignKey(CinemaRoom, on_delete=models.SET_NULL, null=True, blank=True, related_name='cinemaroom', choices=room_choices)
-    
+    cinema_room = models.ForeignKey(CinemaRoom, on_delete=models.SET_NULL, null=True, blank=True, related_name='cinemaroom')
+
     TIME = (
         ('08:30', '08:30'),
         ('11:30', '11:30'),
@@ -123,7 +125,17 @@ class MovieSession(models.Model):
         ('20:40', '20:40'),
         ('21:10', '21:10'),
     )
+
     session_time = models.CharField(choices=TIME, max_length=10)
 
     def __str__(self):
-        return f"{self.movie.movie_title} - {self.session_date}"
+        return f"{self.movie.movie_title}-{self.session_date}"
+
+class Seat(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    movie_session = models.ForeignKey(MovieSession, on_delete=models.CASCADE, related_name='sessions')
+    row_number = models.CharField(max_length=10)
+    seat_number = models.IntegerField()
+    
+    def __str__(self):
+        return f"{self.movie_session}-{self.movie_session.cinema_room}-{self.row_number,self.seat_number}"

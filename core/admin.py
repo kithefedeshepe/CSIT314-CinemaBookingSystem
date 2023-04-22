@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import User, Profile, Movie, MovieSession, CinemaRoom
+from .models import User, Profile, Movie, MovieSession, CinemaRoom, Seat
+from django.db import models
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
@@ -55,19 +56,33 @@ class ProfileAdmin(admin.ModelAdmin):
         return False
 
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ('get_first_image_url', 'movie_title', 'genre', 'formatted_duration', 'release_date')
+    list_display = ('poster', 'movie_title', 'genre', 'formatted_duration', 'release_date')
     list_filter = ('genre', 'release_date')
     search_fields = ('movie_title', 'genre')
     ordering = ('movie_title',)
     
 class MovieSessionAdmin(admin.ModelAdmin):
-    list_display = ('movie_title', 'session_date')
-    list_filter = ('movie_title', 'session_date')
-    search_fields = ('movie_title', 'session_date', 'genre')
-    ordering = ('movie_title',)
+    list_display = ('movie', 'session_date', 'session_time', 'cinema_room')
+    list_filter = ('movie', 'session_date', 'session_time')
+    search_fields = ('movie', 'session_date', 'session_time')
+    ordering = ('movie',)
+
+    
+class CinemaRoomAdmin(admin.ModelAdmin):
+    list_display = ('name', 'capacity')
+    list_filter = ('name', 'capacity')
+    search_fields = ('name',)
+    ordering = ('name',)
+    
+class SeatAdmin(admin.ModelAdmin):
+    list_display = ('movie_session', 'row_number', 'seat_number')
+    list_filter = ('movie_session', )
+    search_fields = ('movie_session',)
+    ordering = ('movie_session',)   
     
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Movie, MovieAdmin)
-admin.site.register(MovieSession)
-admin.site.register(CinemaRoom)
+admin.site.register(MovieSession, MovieSessionAdmin)
+admin.site.register(CinemaRoom, CinemaRoomAdmin)
+admin.site.register(Seat, SeatAdmin)
