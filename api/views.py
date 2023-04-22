@@ -60,9 +60,9 @@ class LogoutView(APIView):
     def post(self, request):
         if not request.user.is_authenticated:
             raise PermissionDenied()
+        logout(request)
         response.delete_cookie('token')  # remove session cookie
         Token.objects.filter(user=request.user).delete()
-        logout(request)
         response = Response({'message': 'Logout success'}, status=status.HTTP_200_OK)
         return response
     
