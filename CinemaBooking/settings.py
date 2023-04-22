@@ -64,7 +64,7 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
-    'https://bsiancinema-6764b.web.app/',
+    'https://bsiancinema-6764b.web.app',
 ]
 
 ROOT_URLCONF = 'CinemaBooking.urls'
