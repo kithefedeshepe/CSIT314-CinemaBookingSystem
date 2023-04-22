@@ -66,7 +66,7 @@ class LogoutView(APIView):
     
 class GetUserView(APIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         user = request.user
         user_data = {
