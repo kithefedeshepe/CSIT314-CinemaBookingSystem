@@ -30,13 +30,14 @@ class AccountController:
     @api_view(['POST'])
     def RegisterAccount(request):
         try:
-            serializer = UserSerializer(request.data)
+            serializer = UserSerializer(data=request.data)  # Pass data to the serializer instance
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
-            return Response({"invalid": "bad data"}, status = 400)
+            return Response({"invalid": "bad data"}, status=400)
         except DatabaseError as e:
             return Response({"error": "Bad data"}, status=500)
+
         
 class LoginView(APIView):
     def post(self, request):
