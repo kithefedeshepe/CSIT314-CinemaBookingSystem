@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
             'role'
         ]
 
-class RegisterAccount(serializers.Serializer):
+class RegisterAccount(serializers.ModelSerializer):
     #media_type = serializers.CharField(max_length=100)
     #username = serializers.CharField(max_length=50)
     #password = serializers.CharField(max_length=50)
