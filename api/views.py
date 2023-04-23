@@ -30,7 +30,13 @@ class AccountController:
     @api_view(['POST'])
     def RegisterAccount(request):
         try:
-            serializer = RegisterAccount(data=request.data)  # Pass data to the serializer instance
+            # Create a new User object from the request data
+            user = User(username=request.data['username'], email=request.data['email'])
+            user.set_password(request.data['password'])  # Encrypt the password using set_password()
+
+            # Pass the User object to the serializer instance
+            serializer = UserSerializer(user)
+
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
