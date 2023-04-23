@@ -30,7 +30,7 @@ class AccountController:
     @api_view(['POST'])
     def RegisterAccount(request):
         try:
-            serializer = UserSerializer(data=request.data)  # Pass data to the serializer instance
+            serializer = RegisterAccount(data=request.data)  # Pass data to the serializer instance
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
