@@ -10,12 +10,12 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'role'
         ]
-        
+
 class RegisterAccount(serializers.Serializer):
-    media_type = serializers.CharField(max_length=100)
-    username = serializers.CharField(max_length=50)
-    password = serializers.CharField(max_length=50)
-    email = serializers.EmailField()
+    #media_type = serializers.CharField(max_length=100)
+    #username = serializers.CharField(max_length=50)
+    #password = serializers.CharField(max_length=50)
+    #email = serializers.EmailField()
     class Meta:
         model = User
         fields = [
