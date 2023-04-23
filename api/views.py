@@ -10,6 +10,7 @@ from core.models import User
 from .serializers import UserSerializer
 from .serializers import RegisterAccount
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.hashers import make_password
 # Create your views here.
 # LOGIN 
 from django.contrib.auth import authenticate, login
@@ -30,16 +31,19 @@ class AccountController:
     @api_view(['POST'])
     def RegisterAccount(request):
         try:
-            # Create a new User object from the request data
-            user = User(username=request.data['username'], email=request.data['email'])
-            user.set_password(request.data['password'])  # Encrypt the password using set_password()
+            # Encrypt the password before passing it to the serializer instance
+            password = request.data.get('password')
+            encrypted_password = make_password(password)
 
-            # Pass the User object to the serializer instance
-            serializer = UserSerializer(user)
+            # Pass data with encrypted password to the serializer instance
+            data = request.data.copy()
+            data['password'] = encrypted_password
+            serializer = RegisterAccount(data=data)
 
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
+
             return Response({"invalid": "bad data"}, status=400)
         except DatabaseError as e:
             return Response({"error": "Bad data"}, status=500)
