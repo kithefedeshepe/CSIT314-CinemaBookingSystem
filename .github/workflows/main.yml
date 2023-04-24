@@ -25,3 +25,5 @@ jobs:
       run: pip install -r requirements.txt
     - name: Run Tests for enviroment
       run: python manage.py test Env_test
+    - name: Run unit tests
+      run: python manage.py test UnitTest
