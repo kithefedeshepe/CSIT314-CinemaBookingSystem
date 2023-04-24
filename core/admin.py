@@ -56,14 +56,15 @@ class ProfileAdmin(admin.ModelAdmin):
         return False
 
 class MovieAdmin(admin.ModelAdmin):
-    list_display = ('poster', 'movie_title', 'genre', 'formatted_duration', 'release_date')
+    # list_display = ('poster', 'movie_title', 'genre', 'formatted_duration', 'release_date')
+    list_display = ('id', 'movie_title', 'genre', 'formatted_duration', 'release_date')
     list_filter = ('genre', 'release_date')
     search_fields = ('movie_title', 'genre')
-    ordering = ('movie_title',)
+    ordering = ('id', 'movie_title')
     
 class MovieSessionAdmin(admin.ModelAdmin):
     list_display = ('movie', 'session_date', 'session_time', 'cinema_room')
-    list_filter = ('movie', 'session_date', 'session_time')
+    list_filter = ('movie', 'session_date', 'session_time', 'cinema_room')
     search_fields = ('movie', 'session_date', 'session_time')
     ordering = ('movie',)
 
