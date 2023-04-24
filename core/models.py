@@ -75,7 +75,8 @@ class Profile(models.Model):
     
     
 class Movie(models.Model):
-    movie_title = models.CharField(max_length=50, primary_key=True)
+    id = models.IntegerField(primary_key=True, auto_created=True, null=False)
+    movie_title = models.CharField(max_length=100)
     genre = models.CharField(max_length=50)
     duration = models.DurationField()
     release_date = models.DateField()
