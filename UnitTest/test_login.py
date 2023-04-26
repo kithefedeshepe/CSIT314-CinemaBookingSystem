@@ -1,20 +1,28 @@
-import unittest
-import requests
-from .models import User, Profile, Movie, MovieSession, CinemaRoom
+from core.models import User
+from django.test import TestCase
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+from rest_framework.test import APIClient
 
-class TestLogin(unittest.TestCase):
-    def test_login_success(self):
-        username = "test_user"
-        password = "test_password"
-        
-        response = requests.post("https://csit-314-cinema-booking-system.vercel.app/login", json={"username": username, "password": password})
-        
-        self.assertEqual(response.status_code, 200)
+class LoginTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.username = 'testuser'
+        self.password = 'testpass'
+        self.user = User.objects.create_user(username=self.username, password=self.password, email="test@gmail.com", role='Customer')
 
-    def test_login_failure(self):
-        username = "test_user"
-        password = "wrong_password"
-        
-        response = requests.post("https://csit-314-cinema-booking-system.vercel.app/login", json={"username": username, "password": password})
- 
-        self.assertEqual(response.status_code, 400)
+    def test_login_with_correct_credentials(self):
+        url = reverse('login')
+        data = {'username': self.username, 'password': self.password}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_login_with_incorrect_username(self):
+        url = reverse('login')
+        data = {'username': 'wronguser', 'password': self.password}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+def tearDown(self):
+    self.user.delete()
