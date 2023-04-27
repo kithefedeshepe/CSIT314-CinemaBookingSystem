@@ -1,6 +1,7 @@
 #Handle complex data type
 from rest_framework import serializers
 from core.models import User
+from core.models import Profile
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,4 +23,15 @@ class RegisterAccount(serializers.ModelSerializer):
             'username',
             'password',
             'email',
+        ]
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = [
+            'id',
+            'user',
+            'name',
+            'date_of_birth',
+            'loyalty_points',
         ]

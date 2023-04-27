@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .views import AccountController, LoginView, LogoutView, GetUserView, UpdateUser
+from .views import AccountController, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, UserProfile
 
 
 urlpatterns = [
@@ -12,5 +12,9 @@ urlpatterns = [
     path('suspendUser/', UpdateUser.suspendUser, name='suspendUser'),
     path('reactivateUser/', UpdateUser.reactivateUser, name='reactivateUser'),
     path('changePW/', UpdateUser.changePassword, name='changePassword'),
-    path('changeEmail/', UpdateUser.changeEmail, name='changeEmail')
+    path('changeEmail/', UpdateUser.changeEmail, name='changeEmail'),
+    path('searchUser/', SearchUserView.searchUser, name='searchUser'),
+    path('createProfile/', UserProfile.createProfile, name='createProfile'),
+    path('viewProfile/', UserProfile.viewProfile, name='viewProfile'),
+    path('getProfile/', UserProfile.getProfile, name='getProfile')
 ]

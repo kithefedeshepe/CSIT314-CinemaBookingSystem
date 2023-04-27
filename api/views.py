@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny
 from django.db import DatabaseError
 from core.models import User
+from core.models import Profile
 from .serializers import UserSerializer
+from .serializers import ProfileSerializer
 from .serializers import RegisterAccount
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
@@ -100,7 +102,7 @@ class GetUserView(APIView):
     
 #4 functions
 class UpdateUser(APIView):
-    #authentication_classes = [TokenAuthentication]
+    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def suspendUser(self, request):
@@ -188,3 +190,62 @@ class UpdateUser(APIView):
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class SearchUserView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def searchUser(self, request):
+         # Check if user has permission to search user
+        if request.user.role != 'UserAdmin':
+            raise PermissionDenied("You do not have permission to search user.")
+        # Get prompt from request body
+        prompt = request.data.get('keyword', '')
+        # Filter accounts based on the prompt
+        accounts = User.objects.filter(username__icontains=prompt)
+        # Serialize the accounts to JSON and return a Response object
+        serializer = UserSerializer(accounts, many=True)
+        return Response(serializer.data)
+    
+class UserProfile(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+    
+    def createProfile(self, request):
+        # Check if user has permission to create user profile
+        if request.user.role != 'UserAdmin':
+            raise PermissionDenied("You do not have permission to create user profile.")
+
+        # Get the user data from the request
+        username = request.data.get('username')
+        name = request.data.get('name')
+        date_of_birth = request.data.get('date_of_birth')
+
+        # Create the user profile
+        user = User.objects.get(username=username)
+        profile = Profile.objects.create(user=user, name=name, date_of_birth=date_of_birth)
+
+        # Return a response with the created profile data
+        return Response({
+            'id': profile.id,
+            'user': profile.user.username,
+            'name': profile.name,
+            'date_of_birth': profile.date_of_birth,
+            'loyalty_points': profile.loyalty_points
+        }, status=status.HTTP_201_CREATED)
+    
+    def viewProfile(self, request):
+        # check if user has permission to view profiles
+        if request.user.role != 'UserAdmin' and not request.user.is_superuser:
+            raise PermissionDenied("You do not have permission to view profiles.")
+
+        profiles = Profile.objects.all()
+        serializer = ProfileSerializer(profiles, many = True)
+        return Response(serializer.data)
+    
+    def getProfile(self, request):
+        token = request.data.get('token')
+        profile = request.user.profiles.first() # retrieve the first profile associated with the user
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
+
