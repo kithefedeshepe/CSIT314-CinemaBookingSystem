@@ -19,6 +19,12 @@ from rest_framework import status
 # LOGOUT
 from django.contrib.auth import logout
 from rest_framework.response import Response
+# UPDATE
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import get_object_or_404
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from core.models import CustomUserManager
+
 
 
 class AccountController:
@@ -91,3 +97,94 @@ class GetUserView(APIView):
             'role': user.role
         }
         return Response(user_data, status=status.HTTP_200_OK)
+    
+#4 functions
+class UpdateUser(APIView):
+    #authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def suspendUser(self, request):
+        try:
+            # Check if user has permission to suspend accounts
+            if request.user.role != 'UserAdmin':
+                raise PermissionDenied("You do not have permission to suspend accounts.")
+            # Get the username from the request data
+            username = request.data.get('username')
+            # Retrieve the user with the specified username
+            user = User.objects.get(username=username)
+            # Check if the user is already suspended
+            if not user.is_active:
+                return Response({'message': 'User account is already suspended.'}, status=status.HTTP_400_BAD_REQUEST)
+            # Suspend the user account
+            user.is_active = False
+            user.save()
+            # Return a success response
+            return Response({'message': 'User account has been suspended.'}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def reactivateUser(self, request):
+        try:
+            # Check if user has permission to reactivate accounts
+            if request.user.role != 'UserAdmin':
+                raise PermissionDenied("You do not have permission to reactivate accounts.")
+            # Get the username from the request data
+            username = request.data.get('username')
+            # Retrieve the user with the specified username
+            user = User.objects.get(username=username)
+            # Reactivate the user account
+            user.is_active = True
+            user.save()
+            # Return a success response
+            return Response({'message': 'User account has been reactivated.'}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def changePassword(self, request):
+        try:
+            # Check if user has permission to change passwords
+            if request.user.role != 'UserAdmin':
+                raise PermissionDenied("You do not have permission to change passwords.")
+            # Get the username and new password from the request data
+            username = request.data.get('username')
+            new_password = request.data.get('new_password')
+            # Retrieve the user with the specified username
+            user = User.objects.get(username=username)
+            # Set the new password for the user
+            user.set_password(new_password)
+            user.save()
+            # Return a success response
+            return Response({'message': 'User password has been changed.'}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def changeEmail(self, request):
+        try:
+            # Check if user has permission to change email
+            if request.user.role != 'UserAdmin':
+                raise PermissionDenied("You do not have permission to change email.")
+            # Get the username and new email from the request data
+            username = request.data.get('username')
+            new_email = request.data.get('new_email')
+            # Retrieve the user with the specified username
+            user = User.objects.get(username=username)
+            # Check if new email is provided
+            if not new_email:
+                raise ValueError('New email is required')
+            # Set the new email for the user
+            user.email = new_email
+            user.save()
+            # Return a success response
+            return Response({'message': 'User email has been changed.'}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+        except ValueError as e:
+            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
