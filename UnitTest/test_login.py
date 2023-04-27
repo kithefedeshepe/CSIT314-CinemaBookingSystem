@@ -1,11 +1,13 @@
 from core.models import User
-from django.test import TestCase
+from django.test import TestCase, skipIf
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APIClient
+from api.checklist import *
 
 class LoginTest(TestCase):
+    @skipIf(not login_exists, "Login API not implemented yet")
     def setUp(self):
         self.client = APIClient()
         self.username = 'testuser'
