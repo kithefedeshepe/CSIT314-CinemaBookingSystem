@@ -1,8 +1,8 @@
 login_exists = True
 ##
-suspense_exists = False 
-reactive_exists = False
-search_account_exists = False
-create_profile_exists = False
-view_profile_exists = False
-get_profile_exists = False
+suspense_exists = True 
+reactive_exists = True
+search_account_exists = True
+create_profile_exists = True
+view_profile_exists = True
+get_profile_exists = True
