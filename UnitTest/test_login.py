@@ -13,8 +13,8 @@ class LoginTest(TestCase):
         self.password = 'testpass'
         self.user = User.objects.create_user(username=self.username, password=self.password, email="test@gmail.com", role='Customer')
 
-    #Login_1
-    def test_login_with_correct_credentials(self):
+    #Login success
+    def LogIn1(self):
         if not login_exists:
             return
         url = reverse('login')
@@ -23,8 +23,8 @@ class LoginTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         print("\nUnit test Login_1 passed")
 
-    #Login_2
-    def test_login_with_incorrect_username(self):
+    #Login fail
+    def LogIn2(self):
         if not login_exists:
             return
         url = reverse('login')
