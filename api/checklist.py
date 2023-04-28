@@ -1,4 +1,5 @@
 login_exists = True
+register_exists = True
 ##
 suspense_exists = True 
 reactive_exists = True

@@ -13,6 +13,7 @@ class LoginTest(TestCase):
         self.password = 'testpass'
         self.user = User.objects.create_user(username=self.username, password=self.password, email="test@gmail.com", role='Customer')
 
+    #Login_1
     def test_login_with_correct_credentials(self):
         if not login_exists:
             return
@@ -20,7 +21,9 @@ class LoginTest(TestCase):
         data = {'username': self.username, 'password': self.password}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print("\nUnit test Login_1 passed")
 
+    #Login_2
     def test_login_with_incorrect_username(self):
         if not login_exists:
             return
@@ -28,6 +31,7 @@ class LoginTest(TestCase):
         data = {'username': 'wronguser', 'password': self.password}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        print("\nUnit test Login_2 passed")
 
 def tearDown(self):
     self.user.delete()

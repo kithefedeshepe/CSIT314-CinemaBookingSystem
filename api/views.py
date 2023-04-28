@@ -50,7 +50,7 @@ class AccountController:
 
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
-                return Response(serializer.data)
+                return Response(serializer.data, status=200)
 
             return Response({"invalid": "bad data"}, status=400)
         except DatabaseError as e:
@@ -212,10 +212,6 @@ class UserProfile(APIView):
     #permission_classes = [IsAuthenticated]
     
     def createProfile(self, request):
-        # Check if user has permission to create user profile
-        if request.user.role != 'UserAdmin':
-            raise PermissionDenied("You do not have permission to create user profile.")
-
         # Get the user data from the request
         username = request.data.get('username')
         name = request.data.get('name')
