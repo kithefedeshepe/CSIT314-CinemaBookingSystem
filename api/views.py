@@ -108,7 +108,7 @@ class UpdateUser(APIView):
     permission_classes = [IsAuthenticated]
 
     @api_view(['POST'])
-    def suspendUser(self, request):
+    def suspendUser(request):
         try:
             # Check if user has permission to suspend accounts
             if request.user.role != 'UserAdmin':
