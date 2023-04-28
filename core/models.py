@@ -83,7 +83,6 @@ class Movie(models.Model):
     cast = models.CharField(max_length=200)
     director = models.CharField(max_length=50)
     movie_description = models.TextField()
-    movie_img = models.ImageField(upload_to='movie_images/', blank=True)
      
     def formatted_duration(self):
         hours, minutes = self.duration.total_seconds() // 3600, \
@@ -92,22 +91,12 @@ class Movie(models.Model):
     
     def __str__(self):
         return self.movie_title
-
-    def poster(self):
-        if self.movie_img:
-            return self.movie_img.url
-        else:
-            return None
-
+    
 
 class MovieImage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='images')
-    movie_img = models.ImageField(blank=True, null=True)
-   
-    def __str__(self):
-        return f"{self.movie}-{self.movie_img}"
-       
+    data = models.TextField()
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)  
        
 class CinemaRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -142,13 +131,12 @@ class MovieSession(models.Model):
         return f"{self.movie.movie_title}-{self.session_date}"
 
 
-class FoodAndBeverage(models.Model):
+class FoodandBeverage(models.Model):
     id = models.IntegerField(primary_key=True, auto_created=True, null=False)
     menu = models.CharField(max_length=100)
     menu_description = models.TextField()
     quantity = models.PositiveIntegerField()
     price = models.FloatField() 
-    menu_img = models.ImageField(upload_to='menu_images/', blank=True)
     
     def get_price(self):
         total_price = self.price * self.quantity
@@ -164,7 +152,13 @@ class FoodAndBeverage(models.Model):
 
     class Meta:
         verbose_name_plural = 'Foods and Beverages'   
-    
+ 
+class FoodandBeverageImage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    data = models.TextField()
+    fandb = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE)  
+
+          
 class Seat(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     movie_session = models.ForeignKey(MovieSession, on_delete=models.CASCADE, related_name='sessions')

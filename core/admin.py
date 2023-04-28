@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import User, Profile, Movie, MovieSession, CinemaRoom, Seat, MovieImage, FoodAndBeverage
+from .models import User, Profile, Movie, MovieSession, CinemaRoom, Seat, FoodandBeverage, MovieImage, FoodandBeverageImage
 from django.db import models
-from django.utils.safestring import mark_safe
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
@@ -56,26 +55,13 @@ class ProfileAdmin(admin.ModelAdmin):
                     return True
         return False
 
-class MovieImageInline(admin.TabularInline):
-    model = MovieImage
-    extra = 5  # allows up to 5 images to be uploaded
-    fields = ['movie_img']
-    
+
 class MovieAdmin(admin.ModelAdmin):
-    inlines = [MovieImageInline]
-    list_display = ('id', 'movie_title', 'poster', 'genre', 'formatted_duration', 'release_date')
+    list_display = ('id', 'movie_title', 'genre', 'formatted_duration', 'release_date')
     list_filter = ('genre', 'release_date')
     search_fields = ('movie_title', 'genre')
     ordering = ('id', 'movie_title')
-    
-    def poster(self, obj):
-        if obj.movie_img:
-            return mark_safe('<img src="%s" width="50" height="50" />' % (obj.movie_img.url))
-        else:
-            return None
 
-    poster.allow_tags = True
-    poster.short_description = 'Poster'
     
 class MovieSessionAdmin(admin.ModelAdmin):
     list_display = ('movie', 'session_date', 'session_time', 'cinema_room')
@@ -97,7 +83,7 @@ class SeatAdmin(admin.ModelAdmin):
     ordering = ('movie_session',)   
 
 class FBAdmin(admin.ModelAdmin):
-    list_display = ('id', 'menu', 'quantity', 'get_admin_display', 'menu_img')
+    list_display = ('id', 'menu', 'quantity', 'get_admin_display')
     list_filter = ('menu', )
     search_fields = ('menu',)
     ordering = ('id', 'menu')   
@@ -105,7 +91,9 @@ class FBAdmin(admin.ModelAdmin):
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Movie, MovieAdmin)
+admin.site.register(MovieImage)
+admin.site.register(FoodandBeverageImage)
 admin.site.register(MovieSession, MovieSessionAdmin)
 admin.site.register(CinemaRoom, CinemaRoomAdmin)
 admin.site.register(Seat, SeatAdmin)
-admin.site.register(FoodAndBeverage, FBAdmin)
+admin.site.register(FoodandBeverage, FBAdmin)
