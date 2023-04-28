@@ -211,7 +211,7 @@ class UserProfile(APIView):
     #authentication_classes = [TokenAuthentication]
     #permission_classes = [IsAuthenticated]
     @api_view(['POST'])
-    def createProfile(request):
+    def createProfile(self, request):
         # Get the user data from the request
         username = request.data.get('username')
         name = request.data.get('name')
