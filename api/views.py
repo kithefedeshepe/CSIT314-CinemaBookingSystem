@@ -41,6 +41,8 @@ class AccountController:
         try:
             # Encrypt the password before passing it to the serializer instance
             password = request.data.get('password')
+            if not password:
+                return Response({"error": "Password cannot be empty"}, status=400)
             encrypted_password = make_password(password)
 
             # Pass data with encrypted password to the serializer instance
@@ -105,6 +107,7 @@ class UpdateUser(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @api_view(['POST'])
     def suspendUser(self, request):
         try:
             # Check if user has permission to suspend accounts
