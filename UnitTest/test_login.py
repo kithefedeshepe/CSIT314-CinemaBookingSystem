@@ -14,7 +14,7 @@ class LoginTest(TestCase):
         self.user = User.objects.create_user(username=self.username, password=self.password, email="test@gmail.com", role='Customer')
 
     #Login success
-    def LogIn1(self):
+    def test_LogIn1(self):
         if not login_exists:
             return
         url = reverse('login')
@@ -24,7 +24,7 @@ class LoginTest(TestCase):
         print("\nUnit test Login_1 passed")
 
     #Login fail
-    def LogIn2(self):
+    def test_LogIn2(self):
         if not login_exists:
             return
         url = reverse('login')
@@ -33,5 +33,10 @@ class LoginTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         print("\nUnit test Login_2 passed")
 
-def tearDown(self):
-    self.user.delete()
+    def addFailure(self, test, exc_info):
+        super().addFailure(test, exc_info)
+        print(f"Unit test '{test.__name__}' failed: {exc_info[1]}")
+
+    def tearDown(self):
+        self.user.delete()
+    
