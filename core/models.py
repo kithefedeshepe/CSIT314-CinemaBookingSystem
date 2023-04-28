@@ -84,7 +84,7 @@ class Movie(models.Model):
     director = models.CharField(max_length=50)
     movie_description = models.TextField()
     movie_img = models.ImageField(upload_to='movie_images/', blank=True)
-
+     
     def formatted_duration(self):
         hours, minutes = self.duration.total_seconds() // 3600, \
                                   (self.duration.total_seconds() // 60) % 60
@@ -98,8 +98,17 @@ class Movie(models.Model):
             return self.movie_img.url
         else:
             return None
-    
-    
+
+
+class MovieImage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='images')
+    movie_img = models.ImageField(blank=True, null=True)
+   
+    def __str__(self):
+        return f"{self.movie}-{self.movie_img}"
+       
+       
 class CinemaRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
@@ -132,6 +141,30 @@ class MovieSession(models.Model):
     def __str__(self):
         return f"{self.movie.movie_title}-{self.session_date}"
 
+
+class FoodAndBeverage(models.Model):
+    id = models.IntegerField(primary_key=True, auto_created=True, null=False)
+    menu = models.CharField(max_length=100)
+    menu_description = models.TextField()
+    quantity = models.PositiveIntegerField()
+    price = models.FloatField() 
+    menu_img = models.ImageField(upload_to='menu_images/', blank=True)
+    
+    def get_price(self):
+        total_price = self.price * self.quantity
+        return f"SGD {total_price:.2f}"
+        
+    def __str__(self):
+        return f"{self.menu}"
+ 
+    def get_admin_display(self):
+        return f"{self.get_price()}"
+    
+    get_admin_display.short_description = 'Price'
+
+    class Meta:
+        verbose_name_plural = 'Foods and Beverages'   
+    
 class Seat(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     movie_session = models.ForeignKey(MovieSession, on_delete=models.CASCADE, related_name='sessions')
