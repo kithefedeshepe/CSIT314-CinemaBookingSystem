@@ -210,7 +210,7 @@ class SearchUserView(APIView):
 class UserProfile(APIView):
     #authentication_classes = [TokenAuthentication]
     #permission_classes = [IsAuthenticated]
-    
+    @api_view(['POST'])
     def createProfile(request):
         # Get the user data from the request
         username = request.data.get('username')
