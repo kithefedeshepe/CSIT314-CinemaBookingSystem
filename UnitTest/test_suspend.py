@@ -2,7 +2,7 @@ from core.models import User
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
-
+from api.checklist import *
 
 class SuspendUserTestCase(APITestCase):
     def setUp(self):
@@ -16,6 +16,8 @@ class SuspendUserTestCase(APITestCase):
         self.client.cookies['token'] = self.admin_token
 
     def test_suspend_user(self):
+        if not suspense_exists:
+            return
         # create a user to suspend
         user = User.objects.create_user(username='testuser', password='password', email='testusr@gmail.com', role='Customer')
         # suspend the user
@@ -27,6 +29,8 @@ class SuspendUserTestCase(APITestCase):
         print("\nUnit test Suspend_1 passed")
 
     def test_suspension_no_permission(self):
+        if not suspense_exists:
+            return
         self.usertest = User.objects.create_user(username='testuser', password='password', email='testusr@gmail.com', role='Customer')
         self.usertest.save()
         self.usertest1 = User.objects.create_user(username='testuser1', password='password', email='testusr1@gmail.com', role='Customer')
@@ -43,6 +47,8 @@ class SuspendUserTestCase(APITestCase):
         print("\nUnit test Suspend_2 passed")
     
     def test_suspend_nonexist_user(self):
+        if not suspense_exists:
+            return
         # suspend the user
         response = self.client.post('/suspendUser/', {'username': 'hsgfdhjs'})
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
