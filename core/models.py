@@ -83,6 +83,7 @@ class Movie(models.Model):
     cast = models.CharField(max_length=200)
     director = models.CharField(max_length=50)
     movie_description = models.TextField()
+    images = models.ImageField(upload_to='movie_images/', null=True, blank=True)
      
     def formatted_duration(self):
         hours, minutes = self.duration.total_seconds() // 3600, \

@@ -26,7 +26,11 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from core.models import CustomUserManager
-
+# MOVIE
+from rest_framework.decorators import api_view, permission_classes
+from core.models import Movie, MovieImage
+from .serializers import MovieImageSerializer
+import base64
 
 
 class AccountController:
@@ -254,4 +258,81 @@ class UserProfile(APIView):
         profile = request.user.profiles.first() # retrieve the first profile associated with the user
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)
+    
+class movieIMG(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+        Returns a list of all movie images.
+        """
+        # Check if user has permission to view movie images
+        if request.user.role != 'cinemaManager':
+            return Response({'message': 'You don\'t have permission to view movie images'}, status=403)
+
+        movies = MovieImage.objects.all()
+        serializer = MovieImageSerializer(movies, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        """
+        Create a new movie image.
+        """
+        # Check if user has permission to create movie images
+        if request.user.role != 'cinemaManager':
+            return Response({'message': 'You don\'t have permission to create movie images'}, status=403)
+
+        serializer = MovieImageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    
+class movieAddIMG(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # Check if user has permission to add movie images
+        if request.user.role != 'cinemaManager':
+            return Response({'message': 'You don\'t have permission to add movie images'}, status=status.HTTP_403_FORBIDDEN)
+
+        # Check if the required input data is present and valid
+        movie_id = request.data.get('movie_id')
+        image_data = request.data.get('image_data')
+        if not all([movie_id, image_data]):
+            return Response({'message': 'Invalid input data'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Validate the movie ID
+        try:
+            movie = Movie.objects.get(id=movie_id)
+        except Movie.DoesNotExist:
+            return Response({'message': 'Movie not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Decode the image data
+        try:
+            image_data = base64.b64decode(image_data)
+        except:
+            return Response({'message': 'Invalid image data'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Create a new movie image object
+        movie_image = MovieImage(movie=movie, image_data=image_data)
+        try:
+            movie_image.save()
+        except:
+            return Response({'message': 'An unknown error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({'message': 'Movie image added successfully'}, status=status.HTTP_201_CREATED)
+
+
+
+
+    
+
+    
+
+
+
+
 
