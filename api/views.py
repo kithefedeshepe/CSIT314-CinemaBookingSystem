@@ -173,7 +173,7 @@ class UpdateUser(APIView):
             return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @api_view(['POST'])
-    def changeEmail(self, request):
+    def changeEmail(request):
         try:
             # Check if user has permission to change email
             if request.user.role != 'UserAdmin':
@@ -203,7 +203,7 @@ class SearchUserView(APIView):
     permission_classes = [IsAuthenticated]
 
     @api_view(['POST'])
-    def searchUser(self, request):
+    def searchUser(request):
          # Check if user has permission to search user
         if request.user.role != 'UserAdmin':
             raise PermissionDenied("You do not have permission to search user.")
@@ -219,7 +219,7 @@ class UserProfile(APIView):
     #authentication_classes = [TokenAuthentication]
     #permission_classes = [IsAuthenticated]
     @api_view(['POST'])
-    def createProfile(self, request):
+    def createProfile(request):
         # Get the user data from the request
         username = request.data.get('username')
         name = request.data.get('name')
@@ -249,7 +249,7 @@ class UserProfile(APIView):
         return Response(serializer.data)
     
     @api_view(['GET'])
-    def getProfile(self, request):
+    def getProfile(request):
         token = request.data.get('token')
         profile = request.user.profiles.first() # retrieve the first profile associated with the user
         serializer = ProfileSerializer(profile)
