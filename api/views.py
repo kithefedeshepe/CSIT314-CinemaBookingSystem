@@ -291,7 +291,7 @@ class movieIMG(APIView):
     
 class movieAddIMG(APIView):
     authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         # Check if user has permission to add movie images
@@ -300,8 +300,8 @@ class movieAddIMG(APIView):
 
         # Check if the required input data is present and valid
         movie_id = request.data.get('movie_id')
-        image_data = request.data.get('image_data')
-        if not all([movie_id, image_data]):
+        img_data = request.data.get('image_data')
+        if not all([movie_id, img_data]):
             return Response({'message': 'Invalid input data'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Validate the movie ID
@@ -312,12 +312,12 @@ class movieAddIMG(APIView):
 
         # Decode the image data
         try:
-            image_data = base64.b64decode(image_data)
+            img_data = base64.b64decode(img_data)
         except:
             return Response({'message': 'Invalid image data'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Create a new movie image object
-        movie_image = MovieImage(movie=movie, image_data=image_data)
+        movie_image = MovieImage(movie=movie, img_data=img_data)
         try:
             movie_image.save()
         except:
