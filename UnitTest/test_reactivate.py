@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from api.checklist import *
 
-class SuspendUserTestCase(APITestCase):
+class ReactivateUserTestCase(APITestCase):
     def setUp(self):
         self.client = APIClient()
         # create an admin user
