@@ -268,7 +268,7 @@ class movieIMG(APIView):
         Returns a list of all movie images.
         """
         # Check if user has permission to view movie images
-        if request.user.role != 'cinemaManager':
+        if request.user.role != 'CinemaManager':
             return Response({'message': 'You don\'t have permission to view movie images'}, status=403)
 
         movies = MovieImage.objects.all()
@@ -280,7 +280,7 @@ class movieIMG(APIView):
         Create a new movie image.
         """
         # Check if user has permission to create movie images
-        if request.user.role != 'cinemaManager':
+        if request.user.role != 'CinemaManager':
             return Response({'message': 'You don\'t have permission to create movie images'}, status=403)
 
         serializer = MovieImageSerializer(data=request.data)
@@ -291,11 +291,11 @@ class movieIMG(APIView):
     
 class movieAddIMG(APIView):
     #authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
     def post(self, request):
         # Check if user has permission to add movie images
-        if request.user.role != 'cinemaManager':
+        if request.user.role != 'CinemaManager':
             return Response({'message': 'You don\'t have permission to add movie images'}, status=status.HTTP_403_FORBIDDEN)
 
         # Check if the required input data is present and valid
