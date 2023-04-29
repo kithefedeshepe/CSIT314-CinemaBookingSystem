@@ -290,7 +290,7 @@ class movieIMG(APIView):
         return Response(serializer.errors, status=400)
     
 class movieAddIMG(APIView):
-    authentication_classes = [TokenAuthentication]
+    #authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
