@@ -290,8 +290,8 @@ class movieIMG(APIView):
         return Response(serializer.errors, status=400)
     
 class movieAddIMG(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         # Check if user has permission to add movie images
