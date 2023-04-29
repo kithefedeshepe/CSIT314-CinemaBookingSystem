@@ -6,11 +6,11 @@ from api.checklist import *
 import base64
 from django.urls import reverse
 
-class SuspendUserTestCase(APITestCase):
+class MovieImageAddTestCase(APITestCase):
     def setUp(self):
         self.client = APIClient()
         # create an admin user
-        self.admin_user = User.objects.create_user(username='admin', password='password', email='ad1@gmail.com', role='UserAdmin')
+        self.admin_user = User.objects.create_user(username='admin', password='password', email='ad1@gmail.com', role='CinemaManager')
         self.admin_user.save()
         # log in the admin user
         response = self.client.post('/login/', {'username': 'admin', 'password': 'password'})
