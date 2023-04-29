@@ -131,7 +131,7 @@ class UpdateUser(APIView):
             return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @api_view(['POST'])
-    def reactivateUser(self, request):
+    def reactivateUser(request):
         try:
             # Check if user has permission to reactivate accounts
             if request.user.role != 'UserAdmin':
@@ -239,7 +239,7 @@ class UserProfile(APIView):
         }, status=status.HTTP_201_CREATED)
     
     @api_view(['GET'])
-    def viewProfile(self, request):
+    def viewProfile(request):
         # check if user has permission to view profiles
         if request.user.role != 'UserAdmin' and not request.user.is_superuser:
             raise PermissionDenied("You do not have permission to view profiles.")
