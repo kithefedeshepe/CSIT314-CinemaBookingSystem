@@ -112,7 +112,7 @@ class UpdateUser(APIView):
         try:
             # Check if user has permission to suspend accounts
             if request.user.role != 'UserAdmin':
-                raise PermissionDenied("You do not have permission to suspend accounts.")
+                return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
             # Get the username from the request data
             username = request.data.get('username')
             # Retrieve the user with the specified username
@@ -130,11 +130,12 @@ class UpdateUser(APIView):
         except Exception as e:
             return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
+    @api_view(['POST'])
     def reactivateUser(self, request):
         try:
             # Check if user has permission to reactivate accounts
             if request.user.role != 'UserAdmin':
-                raise PermissionDenied("You do not have permission to reactivate accounts.")
+                return Response({'message': 'You don\'t have permission to reactivate account'}, status=403)
             # Get the username from the request data
             username = request.data.get('username')
             # Retrieve the user with the specified username
@@ -149,6 +150,8 @@ class UpdateUser(APIView):
         except Exception as e:
             return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+    @api_view(['POST'])
     def changePassword(self, request):
         try:
             # Check if user has permission to change passwords
@@ -169,6 +172,7 @@ class UpdateUser(APIView):
         except Exception as e:
             return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @api_view(['POST'])
     def changeEmail(self, request):
         try:
             # Check if user has permission to change email
@@ -198,6 +202,7 @@ class SearchUserView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @api_view(['POST'])
     def searchUser(self, request):
          # Check if user has permission to search user
         if request.user.role != 'UserAdmin':
@@ -233,6 +238,7 @@ class UserProfile(APIView):
             'loyalty_points': profile.loyalty_points
         }, status=status.HTTP_201_CREATED)
     
+    @api_view(['GET'])
     def viewProfile(self, request):
         # check if user has permission to view profiles
         if request.user.role != 'UserAdmin' and not request.user.is_superuser:
@@ -242,6 +248,7 @@ class UserProfile(APIView):
         serializer = ProfileSerializer(profiles, many = True)
         return Response(serializer.data)
     
+    @api_view(['GET'])
     def getProfile(self, request):
         token = request.data.get('token')
         profile = request.user.profiles.first() # retrieve the first profile associated with the user

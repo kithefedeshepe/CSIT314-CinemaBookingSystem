@@ -1,5 +1,5 @@
-login_exists = True
-register_exists = True
+login_exists = True #T
+register_exists = True #T
 ##
 suspense_exists = True 
 reactive_exists = True
