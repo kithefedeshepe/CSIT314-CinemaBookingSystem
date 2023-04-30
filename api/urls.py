@@ -17,5 +17,5 @@ urlpatterns = [
     path('createProfile/', UserProfile.createProfile, name='createProfile'),
     path('viewProfile/', UserProfile.viewProfile, name='viewProfile'),
     path('getProfile/', UserProfile.getProfile, name='getProfile'),
-    path('addMovieImage/', MovieImage.addMovieImage, name='add_mov_img')
+    path('addMovieImage/', MovieImage.addMovieImage, name='addImg')
 ]
