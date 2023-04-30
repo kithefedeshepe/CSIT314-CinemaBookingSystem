@@ -33,7 +33,7 @@ from rest_framework import status
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseServerError
 import base64
 from core.models import Movie
-from .serializers import MovieSerializer
+from .serializers import MovieImageSerializer
 
 
 
@@ -295,5 +295,5 @@ class MovieImage(APIView):
                 return HttpResponseServerError()
 
             # Return serialized movie object with updated image
-            serializer = MovieSerializer(movie)
+            serializer = MovieImageSerializer(movie)
             return Response(serializer.data)
