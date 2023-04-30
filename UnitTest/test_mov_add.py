@@ -44,7 +44,7 @@ class TestAddMovie(APITestCase):
         
 
     def test_add_mov_unauthorized(self):
-        if not add_mov_img:
+        if not add_mov:
             return
         self.usertest = User.objects.create_user(username='testuser', password='password', email='testusr@gmail.com', role='Customer')
         self.usertest.save()
@@ -67,7 +67,7 @@ class TestAddMovie(APITestCase):
         print("\nUnit test addMov_2 passed")
 
     def test_add_mov_invalid(self):
-        if not del_mov_img:
+        if not add_mov:
             return
 
         payload = {

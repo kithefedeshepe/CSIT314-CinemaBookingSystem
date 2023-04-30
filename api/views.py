@@ -26,14 +26,6 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from core.models import CustomUserManager
-#Cinema
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, HttpResponseServerError
-import base64
-from core.models import Movie
-from .serializers import MovieImageSerializer
 
 
 
@@ -263,36 +255,49 @@ class UserProfile(APIView):
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)
     
-class MovieImage(APIView):
-        Authentication_classes = [TokenAuthentication]
-        permission_classes = [IsAuthenticated]
-        @api_view(['POST'])
-        def addMovieImage( request):
-            if not request.user.role == 'cinemaManager':
-                return HttpResponse(status=403)
+class movieIMG(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-            # Get movie id and image data from request data
-            movie_id = request.data.get('id')
-            img_data = request.data.get('data')
+    @api_view(['GET'])
+    def viewMovieImage(self, request):
+        """
+        Returns a list of all movie images.
+        """
+        # Check if user has permission to view movie images
+        if request.user.role != 'CinemaManager':
+            return Response({'message': 'You don\'t have permission to view movie images'}, status=403)
 
-            # Check if movie with given id exists
-            try:
-                movie = MovieImage.objects.get(pk=movie_id)
-            except MovieImage.DoesNotExist:
-                return HttpResponseNotFound()
+        movies = MovieImage.objects.all()
+        serializer = MovieImageSerializer(movies, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        """
+        Create a new movie image.
+        """
+        # Check if user has permission to create movie images
+        if request.user.role != 'CinemaManager':
+            return Response({'message': 'You don\'t have permission to create movie images'}, status=403)
 
-            # Convert image data from base64 string to binary data
-            try:
-                img_binary = base64.b64decode(img_data)
-            except:
-                return HttpResponseBadRequest()
+        serializer = MovieImageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    
 
-            # Update movie image field with binary image data
-            try:
-                movie.image.save(f'{movie_id}.jpg', img_binary)
-                movie.save()
-            except:
-                return HttpResponseServerError()
+
+
+
+    
+
+    
+
+
+
+
+
 
             # Return serialized movie object with updated image
             serializer = MovieImageSerializer(movie)

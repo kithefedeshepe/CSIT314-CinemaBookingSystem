@@ -56,7 +56,7 @@ class TestMovDel(APITestCase):
         print("\nUnit test delMov_2 passed")
     
     def test_del_mov_invalid(self):
-        if not update_mov:
+        if not del_mov:
             return
         
         payload = {

@@ -22,6 +22,7 @@ class TestDeleteMovieImage(APITestCase):
         #setup image
         if del_mov_img:
             self.url = reverse('delImg')
+
         with open('UnitTest/testimg.png', 'rb') as f:
             img_data = f.read()
         self.base64_img_data = base64.b64encode(img_data).decode('utf-8')
@@ -47,7 +48,7 @@ class TestDeleteMovieImage(APITestCase):
         
 
     def test_delete_image_unauthorized(self):
-        if not add_mov_img:
+        if not del_mov_img:
             return
         self.usertest = User.objects.create_user(username='testuser', password='password', email='testusr@gmail.com', role='Customer')
         self.usertest.save()
