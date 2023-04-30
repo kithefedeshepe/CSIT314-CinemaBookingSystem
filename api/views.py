@@ -263,7 +263,8 @@ class movieIMG(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    @api_view(['GET'])
+    def viewMovieImage(self, request):
         """
         Returns a list of all movie images.
         """

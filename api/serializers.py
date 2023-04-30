@@ -40,7 +40,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         ]
 
 class MovieImageSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = MovieImage
         fields = '__all__'
