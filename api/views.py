@@ -289,41 +289,6 @@ class movieIMG(APIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
     
-class addImg(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        # Check if user has permission to add movie images
-        if request.user.role != 'CinemaManager':
-            return Response({'message': 'You don\'t have permission to add movie images'}, status=status.HTTP_403_FORBIDDEN)
-
-        # Check if the required input data is present and valid
-        movie_id = request.data.get('movie_id')
-        img_data = request.data.get('img_data')
-        if not all([movie_id, img_data]):
-            return Response({'message': 'Invalid input data'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Validate the movie ID
-        try:
-            movie = Movie.objects.get(id=movie_id)
-        except Movie.DoesNotExist:
-            return Response({'message': 'Movie not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        # Decode the image data
-        try:
-            img_data = base64.b64decode(img_data)
-        except:
-            return Response({'message': 'Invalid image data'}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Create a new movie image object
-        movie_image = MovieImage(movie=movie, img_data=img_data)
-        try:
-            movie_image.save()
-        except:
-            return Response({'message': 'An unknown error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        return Response({'message': 'Movie image added successfully'}, status=status.HTTP_201_CREATED)
 
 
 
