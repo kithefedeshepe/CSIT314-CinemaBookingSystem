@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from core.models import User
 from core.models import Profile
-from core.models import Movie
+from core.models import MovieImage
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,9 +38,9 @@ class ProfileSerializer(serializers.ModelSerializer):
             'loyalty_points',
         ]
 
-class MovieSerializer(serializers.ModelSerializer):
+class MovieImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Movie
+        model = MovieImage
         fields = [
             'id',
             'data',
