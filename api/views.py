@@ -129,7 +129,7 @@ class UpdateUser(APIView):
                 except IndexError:
                     return HttpResponseBadRequest('Invalid authorization header')
             
-            user = AuthToken.objects.get(pk=token.user)
+            user = AuthToken.objects.get(pk=token).user
             if user.role != 'UserAdmin':
                 return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
             # Check if the user is already suspended
