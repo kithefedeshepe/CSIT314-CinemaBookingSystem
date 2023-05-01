@@ -168,10 +168,10 @@ class UpdateUser(APIView):
             username = request.data.get('username')
             new_password = request.data.get('new_password')
             # Retrieve the user with the specified username
-            user = User.objects.get(username=username)
+            user1 = User.objects.get(username=username)
             # Set the new password for the user
-            user.set_password(new_password)
-            user.save()
+            user1.set_password(new_password)
+            user1.save()
             # Return a success response
             return Response({'message': 'User password has been changed.'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
@@ -187,13 +187,13 @@ class UpdateUser(APIView):
             username = request.data.get('username')
             new_email = request.data.get('new_email')
             # Retrieve the user with the specified username
-            user = User.objects.get(username=username)
+            user1 = User.objects.get(username=username)
             # Check if new email is provided
             if not new_email:
                 raise ValueError('New email is required')
             # Set the new email for the user
-            user.email = new_email
-            user.save()
+            user1.email = new_email
+            user1.save()
             # Return a success response
             return Response({'message': 'User email has been changed.'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
