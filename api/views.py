@@ -111,9 +111,9 @@ class GetUserView(APIView):
 class UpdateUser(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    
+
     @api_view(['POST'])
-    @permission_classes([IsAuthenticated])
+    @permission_classes(IsAuthenticated)
     def suspendUser(request):
         try:
             user = request.user
