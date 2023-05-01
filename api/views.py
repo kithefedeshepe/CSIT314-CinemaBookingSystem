@@ -14,6 +14,8 @@ from .serializers import ProfileSerializer
 from .serializers import RegisterAccount
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+
 # Create your views here.
 # LOGIN 
 from django.contrib.auth import authenticate, login
@@ -65,6 +67,7 @@ class AccountController:
 
         
 class LoginView(APIView):
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')

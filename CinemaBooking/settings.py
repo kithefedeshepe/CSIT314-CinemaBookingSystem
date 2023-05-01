@@ -61,6 +61,12 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'https://bsiancinema-6764b.web.app',
