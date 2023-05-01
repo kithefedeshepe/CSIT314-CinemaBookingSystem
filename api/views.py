@@ -119,7 +119,8 @@ class UpdateUser(APIView):
             # Retrieve the user with the specified username
             user1 = User.objects.get(username=username)
             # Check if user has permission to suspend accounts
-            if request.user.role != 'UserAdmin':
+            user = request.user
+            if user.role != 'UserAdmin':
                 return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
             # Check if the user is already suspended
             if not user1.is_active:
@@ -131,6 +132,8 @@ class UpdateUser(APIView):
             return Response({'message': 'User account has been suspended.'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @api_view(['POST'])
     def reactivateUser(request):
