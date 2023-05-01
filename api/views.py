@@ -26,7 +26,11 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from core.models import CustomUserManager
-
+# MOVIE
+from rest_framework.decorators import api_view, permission_classes
+from core.models import Movie, MovieImage
+from .serializers import MovieImageSerializer
+import base64
 
 
 class AccountController:
@@ -252,4 +256,47 @@ class UserProfile(APIView):
         profile = request.user.profiles.first() # retrieve the first profile associated with the user
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)
+    
+class movieIMG(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['GET'])
+    def viewMovieImage(self, request):
+        """
+        Returns a list of all movie images.
+        """
+        # Check if user has permission to view movie images
+        if request.user.role != 'CinemaManager':
+            return Response({'message': 'You don\'t have permission to view movie images'}, status=403)
+
+        movies = MovieImage.objects.all()
+        serializer = MovieImageSerializer(movies, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        """
+        Create a new movie image.
+        """
+        # Check if user has permission to create movie images
+        if request.user.role != 'CinemaManager':
+            return Response({'message': 'You don\'t have permission to create movie images'}, status=403)
+
+        serializer = MovieImageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+    
+
+
+
+
+    
+
+    
+
+
+
+
 

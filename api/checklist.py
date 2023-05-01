@@ -9,9 +9,9 @@ view_profile_exists = True
 get_profile_exists = True
 ##
 add_mov_img = False #T
-del_mov_img = False #T
-add_mov = False #T
-update_mov = False #T
-del_mov = False #T
+del_mov_img = False
+add_mov = False
+update_mov = False
+del_mov = False
 search_mov = False
 get_mov_img = False
