@@ -5,6 +5,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import AllowAny
+from django.http import HttpResponseBadRequest
 from django.db import DatabaseError
 from core.models import User
 from core.models import Profile
@@ -118,8 +119,16 @@ class UpdateUser(APIView):
             username = request.data.get('username')
             # Retrieve the user with the specified username
             user1 = User.objects.get(username=username)
-            # Check if user has permission to suspend accounts
-            user = request.user
+            auth_header = request.META.get('HTTP_AUTHORIZATION')
+
+            if auth_header:
+            # Extract the token from the authorization header
+                try:
+                    token = auth_header.split(' ')[1]
+                except IndexError:
+                    return HttpResponseBadRequest('Invalid authorization header')
+            
+            user = user = User.objects.get(pk=token.user)
             if user.role != 'UserAdmin':
                 return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
             # Check if the user is already suspended
