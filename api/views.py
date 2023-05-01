@@ -110,13 +110,13 @@ class UpdateUser(APIView):
     @api_view(['POST'])
     def suspendUser(request):
         try:
-            # Check if user has permission to suspend accounts
-            if request.user.role != 'UserAdmin':
-                return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
             # Get the username from the request data
             username = request.data.get('username')
             # Retrieve the user with the specified username
             user = User.objects.get(username=username)
+            # Check if user has permission to suspend accounts
+            if request.user.role != 'UserAdmin':
+                return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
             # Check if the user is already suspended
             if not user.is_active:
                 return Response({'message': 'User account is already suspended.'}, status=status.HTTP_400_BAD_REQUEST)
