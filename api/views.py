@@ -117,16 +117,16 @@ class UpdateUser(APIView):
             # Get the username from the request data
             username = request.data.get('username')
             # Retrieve the user with the specified username
-            user = User.objects.get(username=username)
+            user1 = User.objects.get(username=username)
             # Check if user has permission to suspend accounts
             if request.user.role != 'UserAdmin':
                 return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
             # Check if the user is already suspended
-            if not user.is_active:
+            if not user1.is_active:
                 return Response({'message': 'User account is already suspended.'}, status=status.HTTP_400_BAD_REQUEST)
             # Suspend the user account
-            user.is_active = False
-            user.save()
+            user1.is_active = False
+            user1.save()
             # Return a success response
             return Response({'message': 'User account has been suspended.'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
@@ -135,16 +135,16 @@ class UpdateUser(APIView):
     @api_view(['POST'])
     def reactivateUser(request):
         try:
-            # Check if user has permission to reactivate accounts
-            if request.user.role != 'UserAdmin':
-                return Response({'message': 'You don\'t have permission to reactivate account'}, status=403)
             # Get the username from the request data
             username = request.data.get('username')
             # Retrieve the user with the specified username
-            user = User.objects.get(username=username)
+            user1 = User.objects.get(username=username)
+            # Check if user has permission to reactivate accounts
+            if request.user.role != 'UserAdmin':
+                return Response({'message': 'You don\'t have permission to reactivate account'}, status=403)
             # Reactivate the user account
-            user.is_active = True
-            user.save()
+            user1.is_active = True
+            user1.save()
             # Return a success response
             return Response({'message': 'User account has been reactivated.'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
