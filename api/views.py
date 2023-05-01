@@ -14,7 +14,6 @@ from .serializers import ProfileSerializer
 from .serializers import RegisterAccount
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
-from .models import AuthToken
 # Create your views here.
 # LOGIN 
 from django.contrib.auth import authenticate, login
@@ -116,22 +115,13 @@ class UpdateUser(APIView):
     @api_view(['POST'])
     def suspendUser(request):
         try:
-            # Get the username from the request data
-            username = request.data.get('username')
-            # Retrieve the user with the specified username
-            user1 = User.objects.get(username=username)
-            auth_header = request.META.get('HTTP_AUTHORIZATION')
-
-            if auth_header:
-            # Extract the token from the authorization header
-                try:
-                    mytoken = auth_header.split(' ')[1]
-                except IndexError:
-                    return HttpResponseBadRequest('Invalid authorization header')
-            
-            user = AuthToken.objects.get(token=mytoken).user
+            user = request.user
             if user.role != 'UserAdmin':
                 return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
+            # Get the username from the request data
+            username = request.data.get('username')
+            # Retrieve the user with the specified username 
+            user1 = User.objects.get(username=username)
             # Check if the user is already suspended
             if not user1.is_active:
                 return Response({'message': 'User account is already suspended.'}, status=status.HTTP_400_BAD_REQUEST)
