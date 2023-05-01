@@ -132,8 +132,6 @@ class UpdateUser(APIView):
             return Response({'message': 'User account has been suspended.'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     @api_view(['POST'])
     def reactivateUser(request):
@@ -152,8 +150,6 @@ class UpdateUser(APIView):
             return Response({'message': 'User account has been reactivated.'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
     @api_view(['POST'])
