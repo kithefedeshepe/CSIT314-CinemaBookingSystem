@@ -139,18 +139,21 @@ class UpdateUser(APIView):
     @api_view(['POST'])
     def reactivateUser(request):
         try:
+            user = request.user
+            if user.role != 'UserAdmin':
+                return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
             # Get the username from the request data
             username = request.data.get('username')
-            # Retrieve the user with the specified username
+            # Retrieve the user with the specified username 
             user1 = User.objects.get(username=username)
-            # Check if user has permission to reactivate accounts
-            if request.user.role != 'UserAdmin':
-                return Response({'message': 'You don\'t have permission to reactivate account'}, status=403)
-            # Reactivate the user account
+            # Check if the user is already suspended
+            if user1.is_active:
+                return Response({'message': 'User account is not suspended.'}, status=status.HTTP_400_BAD_REQUEST)
+            # Suspend the user account
             user1.is_active = True
             user1.save()
             # Return a success response
-            return Response({'message': 'User account has been reactivated.'}, status=status.HTTP_200_OK)
+            return Response({'message': 'User account activated.'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -158,49 +161,45 @@ class UpdateUser(APIView):
     @api_view(['POST'])
     def changePassword(self, request):
         try:
-            # Check if user has permission to change passwords
-            if request.user.role != 'UserAdmin':
-                raise PermissionDenied("You do not have permission to change passwords.")
+            user = request.user
+            if user.role != 'UserAdmin':
+                return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
             # Get the username and new password from the request data
             username = request.data.get('username')
             new_password = request.data.get('new_password')
             # Retrieve the user with the specified username
-            user = User.objects.get(username=username)
+            user1 = User.objects.get(username=username)
             # Set the new password for the user
-            user.set_password(new_password)
-            user.save()
+            user1.set_password(new_password)
+            user1.save()
             # Return a success response
             return Response({'message': 'User password has been changed.'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @api_view(['POST'])
     def changeEmail(request):
         try:
-            # Check if user has permission to change email
-            if request.user.role != 'UserAdmin':
-                raise PermissionDenied("You do not have permission to change email.")
+            user = request.user
+            if user.role != 'UserAdmin':
+                return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
             # Get the username and new email from the request data
             username = request.data.get('username')
             new_email = request.data.get('new_email')
             # Retrieve the user with the specified username
-            user = User.objects.get(username=username)
+            user1 = User.objects.get(username=username)
             # Check if new email is provided
             if not new_email:
                 raise ValueError('New email is required')
             # Set the new email for the user
-            user.email = new_email
-            user.save()
+            user1.email = new_email
+            user1.save()
             # Return a success response
             return Response({'message': 'User email has been changed.'}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
         except ValueError as e:
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response({'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class SearchUserView(APIView):
     authentication_classes = [TokenAuthentication]
