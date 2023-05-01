@@ -14,6 +14,7 @@ from .serializers import ProfileSerializer
 from .serializers import RegisterAccount
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
+from .models import AuthToken
 # Create your views here.
 # LOGIN 
 from django.contrib.auth import authenticate, login
@@ -128,7 +129,7 @@ class UpdateUser(APIView):
                 except IndexError:
                     return HttpResponseBadRequest('Invalid authorization header')
             
-            user = user = User.objects.get(pk=token.user)
+            user = AuthToken.objects.get(pk=token).user
             if user.role != 'UserAdmin':
                 return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
             # Check if the user is already suspended
