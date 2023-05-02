@@ -307,7 +307,7 @@ class movieIMG(APIView):
         try:
             movie = MovieImage.objects.get(movie=movie_id)
 
-        except MovieImage.DoesNotExist:
+        except Movie.DoesNotExist:
             return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
         # Create serializer with data from request body
