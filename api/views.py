@@ -36,7 +36,9 @@ from core.models import Movie, MovieImage
 from .serializers import MovieImageSerializer, MovieSerializer, UpdateMovieSerializer
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 import base64
-from django.db import transaction
+
+
+
 
 class AccountController:
     @api_view(['GET'])
@@ -326,31 +328,48 @@ class Movies(APIView):
         
         # Validate serializer data
         if serializer.is_valid():
-            movie = serializer.save()
-            movie_id = movie.id
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             # Return 400 if data is invalid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-    @api_view(['POST'])    
-    def updateMov(request):
+    @api_view(['POST'])
+    def delMov(request):
         # Check if user is a cinemaManager
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
-        # Get the movie object to update
-        movie_id = request.data.get('id')
+
         try:
+            # Retrieve the movie with the specified id
+            movie_id = request.data.get('id')
             movie = Movie.objects.get(id=movie_id)
         except Movie.DoesNotExist:
-            return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        # Create serializer with data from request body
-        serializer = MovieSerializer(movie, data=request.data, partial=True)
-        # Validate serializer data
-        if serializer.is_valid():
-            serializer.save()
-            
+            # If the movie does not exist, return 404 error
+            return Response({'message': 'Movie not found.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Delete the movie from the database
+        movie.delete()
+        # Return a success response
+        return Response({'message': 'Movie deleted successfully.'}, status=status.HTTP_200_OK)
+    
+
+class SearchMovie(APIView):
+    permission_classes = [AllowAny]
+
+    @api_view(['POST'])
+    def SearchMov(request):
+        # Retrieve the search keyword from the request body
+        keyword = request.data.get('keyword')
+
+        if keyword is not None:
+            # Retrieve all movies that match the search keyword
+            movies = Movie.objects.filter(movie_title__icontains=keyword)
+
+            # Serialize the movies data
+            serializer = MovieSerializer(movies, many=True)
+
+            # Return the serialized movies data as a response
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            # Return 400 if data is invalid
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response("No keyword provided", status=status.HTTP_400_BAD_REQUEST)

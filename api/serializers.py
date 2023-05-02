@@ -64,4 +64,13 @@ class MovieSerializer(serializers.ModelSerializer):
 class UpdateMovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = '__all__'
+        fields = [
+            'movie_title',
+            'genre',
+            'duration',
+            'release_date',
+            'cast',
+            'director',
+            'movie_description',
+        ]
+        
