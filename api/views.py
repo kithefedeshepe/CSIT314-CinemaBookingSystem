@@ -335,6 +335,7 @@ class Movie(APIView):
             # Return 400 if data is invalid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+    @api_view(['POST'])   
     def updateMovie(request):
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
