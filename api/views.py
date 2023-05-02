@@ -387,6 +387,7 @@ class Movies(APIView):
         # Check if user is a cinemaManager
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
+        
         # Get the movie object to update
         movie_id = request.data.get('id')
         try:
