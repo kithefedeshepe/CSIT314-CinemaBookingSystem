@@ -276,14 +276,16 @@ class movieIMG(APIView):
         serializer = MovieImageSerializer(movies, many=True)
         return Response(serializer.data)
     
+    @api_view(['POST'])
     def addMovieImg(request):
         # check user role
         if request.user.role != 'CinemaManager':
             return HttpResponse(status=403)
 
         # get movie id and image data from request data
-        movie_id = request.data.get('id')
-        img_data = request.data.get('data')
+        # get movie id and image data from request data
+        movie_id = request.POST.get('movie_id')
+        img_file = request.FILES.get('img_data')
 
         # check if movie with given id exists
         try:
