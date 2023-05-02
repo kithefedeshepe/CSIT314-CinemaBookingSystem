@@ -21,7 +21,7 @@ class TestAddMovie(APITestCase):
         if add_mov:
             self.url = reverse('addMov')
         #setup movie object
-        self.movie_obj = Movie.objects.create(id = 0, movie_title='test', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
+        self.movie_obj = Movie.objects.create(id = 0, movie_title='test', genre='action', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
 
     def test_add_mov_success(self):
         if not add_mov:
@@ -30,6 +30,7 @@ class TestAddMovie(APITestCase):
         payload = {
             'id' : self.movie_obj.id,
             'movie_title': 'test', 
+            'genre': 'action',
             'duration' : timedelta(hours=1, minutes=30), 
             'release_date' :date(2022, 5, 1), 
             'cast' : 'John Doe',
@@ -55,6 +56,7 @@ class TestAddMovie(APITestCase):
         payload = {
             'id' : self.movie_obj.id,
             'movie_title': 'test', 
+            'genre': 'action',
             'duration' : timedelta(hours=1, minutes=30), 
             'release_date' :date(2022, 5, 1), 
             'cast' : 'John Doe',
