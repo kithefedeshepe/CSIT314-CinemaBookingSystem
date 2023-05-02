@@ -33,7 +33,7 @@ from core.models import CustomUserManager
 # MOVIE
 from rest_framework.decorators import api_view, permission_classes
 from core.models import Movie, MovieImage
-from .serializers import MovieImageSerializer
+from .serializers import MovieImageSerializer, MovieSerializer
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 import base64
 
@@ -277,8 +277,8 @@ class movieIMG(APIView):
         serializer = MovieImageSerializer(movies, many=True)
         return Response(serializer.data)
     
-    @api_view(['POST'])
-    def addMovieImg(request):
+    #@api_view(['POST'])
+    #def addMovieImg(request):
         # check user role
         if request.user.role != 'CinemaManager':
             return HttpResponse(status=403)
@@ -312,13 +312,24 @@ class movieIMG(APIView):
         # return success response
         return HttpResponse(status=200)
     
-# class Movie(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
-    #def post(self, request):
-        """
-        Returns a list of all movie images.
-        """
-        # Check if user has permission to view movie images
-        if request.user.role != 'CinemaManager':
-            return Response({'message': 'You don\'t have permission to add movie'}, status=403)
+class Movie(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def addMovie( request):
+    # Check if user is a cinemaManager
+        if not request.user.is_cinema_manager:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Create serializer with data from request body
+        serializer = MovieSerializer(data=request.data)
+        
+        # Validate serializer data
+        if serializer.is_valid():
+            # Save the new movie to the database
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            # Return 400 if data is invalid
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
