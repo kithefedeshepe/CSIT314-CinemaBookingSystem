@@ -43,7 +43,6 @@ class MovieImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieImage
         fields = [
-            'id',
             'data',
             'movie',
         ]
