@@ -36,8 +36,7 @@ from core.models import Movie, MovieImage
 from .serializers import MovieImageSerializer, MovieSerializer
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 import base64
-
-
+from django.core.exceptions import ValidationError
 
 
 class AccountController:
@@ -279,6 +278,7 @@ class movieIMG(APIView):
         serializer = MovieImageSerializer(movies, many=True)
         return Response(serializer.data)
     
+    @api_view(['GET'])
     def getMovieImage(self, request):
         """
         Returns a list of all image objects that match the given movie ID.
@@ -295,6 +295,26 @@ class movieIMG(APIView):
 
         serializer = MovieImageSerializer(images, many=True)
         return Response(serializer.data)
+    
+    @api_view(['POST'])
+    def delImg(request):
+        # Check if user is a cinemaManager
+        if request.user.role != 'CinemaManager':
+            return Response({'message': 'You don\'t have permission to delete movie images'}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            # Retrieve the movie image with the specified id
+            image_id = request.data.get('id')
+            image = MovieImage.objects.get(id=image_id)
+        except (MovieImage.DoesNotExist, ValueError, TypeError, ValidationError):
+            # If the movie image does not exist, return 404 error
+            return Response({'message': 'Movie image not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Delete the movie image from the database
+        image.delete()
+
+        # Return a success response
+        return Response({'message': 'Movie image deleted successfully.'}, status=status.HTTP_200_OK)
 
     @api_view(['POST'])
     def addMovieImg(request):
@@ -321,6 +341,7 @@ class movieIMG(APIView):
             print(serializer.error_messages)
             print(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     
 class Movies(APIView):
     authentication_classes = [TokenAuthentication]
@@ -361,8 +382,27 @@ class Movies(APIView):
         # Return a success response
         return Response({'message': 'Movie deleted successfully.'}, status=status.HTTP_200_OK)
     
+    @api_view(['POST'])    
+    def updateMov(request):
+        # Check if user is a cinemaManager
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
-class SearchMovie(APIView):
+        # Get the movie object to update
+        movie = get_object_or_404(Movie, id=request.data.get('movie_id'))
+
+        # Create serializer with data from request body
+        serializer = MovieSerializer(movie, data=request.data, partial=True)
+
+        # Validate serializer data
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            # Return 400 if data is invalid
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class allowAnyMovie(APIView):
     permission_classes = [AllowAny]
 
     @api_view(['POST'])
@@ -381,3 +421,12 @@ class SearchMovie(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response("No keyword provided", status=status.HTTP_400_BAD_REQUEST)
+        
+    @api_view(['GET'])
+    def viewAllMovie(request):
+        """
+        Returns a list of all movie images
+        """
+        movies = Movie.objects.all()
+        serializer = MovieSerializer(movies, many=True)
+        return Response(serializer.data)
