@@ -60,7 +60,7 @@ class TestMovDel(APITestCase):
             return
         
         payload = {
-            'id': 'asdhfgasdhf71346715234thisdontmakeanysense',
+            'id': '26134567134',
         }
 
         response = self.client.post(self.url, payload)
