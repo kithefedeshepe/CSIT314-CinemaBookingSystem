@@ -303,8 +303,8 @@ class movieIMG(APIView):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         # Get the movie object to add the image to
-        movie_id = request.data.get('movie')
-        movie = Movie.objects.get(pk=movie_id)
+        movie_id = request.data.get('id')
+        movie = Movie.objects.get(id =movie_id)
 
         # Create serializer with data from request body
         serializer = MovieImageSerializer(data=request.data)
