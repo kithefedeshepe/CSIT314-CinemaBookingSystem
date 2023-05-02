@@ -315,14 +315,14 @@ class movieIMG(APIView):
         return HttpResponse(status=200)
     
 class Movies(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
     
     @api_view(['POST'])
     def addMov(request):
         # Check if user is a cinemaManager
-        if request.user.role != 'CinemaManager':
-            return Response(status=status.HTTP_403_FORBIDDEN)
+        #if request.user.role != 'CinemaManager':
+        #    return Response(status=status.HTTP_403_FORBIDDEN)
         # Create serializer with data from request body
         serializer = MovieSerializer(data=request.data)
         
@@ -345,8 +345,8 @@ class Movies(APIView):
             movie_id = request.data.get('id')
             movie = Movie.objects.get(id=movie_id)
         except Movie.DoesNotExist:
-            # If the movie does not exist, return 404 error
-            return Response({'message': 'Movie not found.'}, status=status.HTTP_404_NOT_FOUND)
+            # If the movie does not exist, return 400 error
+            return Response({'message': 'Movie not found.'}, status=status.HTTP_400_NOT_FOUND)
 
         # Delete the movie from the database
         movie.delete()
