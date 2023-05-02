@@ -33,12 +33,10 @@ from core.models import CustomUserManager
 # MOVIE
 from rest_framework.decorators import api_view, permission_classes
 from core.models import Movie, MovieImage
-from .serializers import MovieImageSerializer, MovieSerializer
+from .serializers import MovieImageSerializer, MovieSerializer, UpdateMovieSerializer
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 import base64
 from django.db import transaction
-
-
 
 class AccountController:
     @api_view(['GET'])
@@ -314,7 +312,7 @@ class movieIMG(APIView):
         # return success response
         return HttpResponse(status=200)
     
-class Movie(APIView):
+class Movies(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -335,15 +333,23 @@ class Movie(APIView):
             # Return 400 if data is invalid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-    @api_view(['POST'])   
-    def updateMovie(request):
+    @api_view(['POST'])    
+    def updateMov(self, request):
+        # Check if user is a cinemaManager
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
-        movie_id = request.data.get('id')
-        movie = Movie.objects.get(id=movie_id)
-        serializer = MovieSerializer(movie, data=request.data, partial=True)
+        # Get the movie object to update
+        movie_id = request.data.get('movie_id')
+        try:
+            movie = Movie.objects.get(id=movie_id)
+        except Movie.DoesNotExist:
+            return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        # Create serializer with data from request body
+        serializer = UpdateMovieSerializer(movie, data=request.data, partial=True)
+        # Validate serializer data
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
+            # Return 400 if data is invalid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
