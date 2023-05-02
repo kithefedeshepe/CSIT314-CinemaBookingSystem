@@ -1,10 +1,11 @@
-from core.models import User, MovieImage
+from core.models import User, MovieImage, Movie
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from api.checklist import *
 import base64
 from django.urls import reverse
+from datetime import timedelta, date
 
 class MovieImageAddTestCase(APITestCase):
     def setUp(self):
@@ -21,13 +22,14 @@ class MovieImageAddTestCase(APITestCase):
         with open('UnitTest/testimg.png', 'rb') as f:
             img_data = f.read()
         self.base64_img_data = base64.b64encode(img_data).decode('utf-8')
+        self.movie_obj = Movie.objects.create(id = 0, movie_title='test', genre='action', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
 
 
     def test_add_movimg(self):
         if not add_mov_img:
             return
         payload = {
-            'movie': 0,
+            'movie': self.movie_obj.id,
             'img_data': self.base64_img_data
         }
 
@@ -46,7 +48,7 @@ class MovieImageAddTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         payload = {
-            'movie': 0,
+            'movie': self.movie_obj.id,
             'img_data': self.base64_img_data
         }
 
