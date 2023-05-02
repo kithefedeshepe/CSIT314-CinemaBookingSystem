@@ -38,6 +38,8 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadReque
 import base64
 
 
+
+
 class AccountController:
     @api_view(['GET'])
     def getUserAccount(request):
@@ -339,13 +341,15 @@ class Movie(APIView):
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        try:
+        movie_id = request.data.get('id')
+        movie = Movie.objects.get(id=movie_id)
+        #try:
             # Retrieve the movie with the specified id
-            movie_id = request.data.get('id')
-            movie = Movie.objects.get(id=movie_id)
-        except Movie.DoesNotExist:
+            #movie_id = request.data.get('id')
+            #movie = Movie.objects.get(id=movie_id)
+        #except Movie.DoesNotExist:
             # If the movie does not exist, return 404 error
-            return Response({'message': 'Movie not found.'}, status=status.HTTP_404_NOT_FOUND)
+            #return Response({'message': 'Movie not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         # Delete the movie from the database
         movie.delete()
