@@ -36,6 +36,7 @@ from core.models import Movie, MovieImage
 from .serializers import MovieImageSerializer, MovieSerializer
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 import base64
+from django.core.exceptions import ValidationError
 
 
 
@@ -307,7 +308,7 @@ class movieIMG(APIView):
             # Retrieve the movie image with the specified id
             image_id = request.data.get('id')
             image = MovieImage.objects.get(id=image_id)
-        except (MovieImage.DoesNotExist, ValueError, TypeError):
+        except (MovieImage.DoesNotExist, ValueError, TypeError, ValidationError):
             # If the movie image does not exist, return 404 error
             return Response({'message': 'Movie image not found.'}, status=status.HTTP_404_NOT_FOUND)
 
