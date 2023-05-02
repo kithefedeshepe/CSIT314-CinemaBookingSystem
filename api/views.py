@@ -29,7 +29,12 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from core.models import CustomUserManager
-
+# MOVIE
+from rest_framework.decorators import api_view, permission_classes
+from core.models import Movie, MovieImage
+from .serializers import MovieImageSerializer
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
+import base64
 
 
 class AccountController:
@@ -271,33 +276,33 @@ class movieIMG(APIView):
         serializer = MovieImageSerializer(movies, many=True)
         return Response(serializer.data)
     
-    def post(self, request):
-        """
-        Create a new movie image.
-        """
-        # Check if user has permission to create movie images
+    def addMovieImg(self, request):
+        # check user role
         if request.user.role != 'CinemaManager':
-            return Response({'message': 'You don\'t have permission to create movie images'}, status=403)
+            return HttpResponse(status=403)
 
-        serializer = MovieImageSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
-    
+        # get movie id and image data from request data
+        movie_id = request.data.get('id')
+        img_data = request.data.get('data')
 
+        # check if movie with given id exists
+        try:
+            movie = MovieImage.objects.get(pk=movie_id)
+        except MovieImage.DoesNotExist:
+            return HttpResponseNotFound()
 
+        # convert image data from base64 string to binary data
+        try:
+            img_binary = base64.b64decode(img_data)
+        except:
+            return HttpResponseBadRequest()
 
+        # update movie image field with binary image data
+        try:
+            movie.image.save(f'{movie_id}.jpg', img_binary)
+            movie.save()
+        except:
+            return HttpResponseServerError()
 
-    
-
-    
-
-
-
-
-
-
-            # Return serialized movie object with updated image
-            serializer = MovieImageSerializer(movie)
-            return Response(serializer.data)
+        # return success response
+        return HttpResponse(status=200)

@@ -38,3 +38,12 @@ class ProfileSerializer(serializers.ModelSerializer):
             'date_of_birth',
             'loyalty_points',
         ]
+
+class MovieImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MovieImage
+        fields = [
+            'id',
+            'data',
+            'movie',
+        ]
