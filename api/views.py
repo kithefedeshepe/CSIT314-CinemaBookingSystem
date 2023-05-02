@@ -319,6 +319,7 @@ class movieIMG(APIView):
         else:
             # Return 400 if data is invalid
             print(serializer.error_messages)
+            print(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class Movies(APIView):
