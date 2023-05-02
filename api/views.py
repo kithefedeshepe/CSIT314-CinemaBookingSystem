@@ -298,7 +298,7 @@ class movieIMG(APIView):
         return Response(serializer.data)
     
     @api_view(['POST'])
-    def deleteMovieImage(request):
+    def delImg(request):
         # Check if user is a cinemaManager
         if request.user.role != 'CinemaManager':
             return Response({'message': 'You don\'t have permission to delete movie images'}, status=status.HTTP_403_FORBIDDEN)
@@ -351,7 +351,6 @@ class movieIMG(APIView):
 
         # return success response
         return HttpResponse(status=200)
-    
     
     
 class Movies(APIView):

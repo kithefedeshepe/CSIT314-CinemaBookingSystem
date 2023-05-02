@@ -24,5 +24,5 @@ urlpatterns = [
     path('delMov/', Movies.delMov, name='delMov'),
     path('SearchMovie/', allowAnyMovie.SearchMov, name='SearchMovie'),
     path('SearchMovie/', allowAnyMovie.SearchMov, name='SearchMovie'),
-    path('deleteMovieImage/', movieIMG.deleteMovieImage, name='deleteMovieImage')
+    path('deleteMovieImage/', movieIMG.delImg, name='deleteMovieImage')
 ]
