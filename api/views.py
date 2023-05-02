@@ -279,40 +279,30 @@ class movieIMG(APIView):
         serializer = MovieImageSerializer(movies, many=True)
         return Response(serializer.data)
     
-    #@api_view(['POST'])
-    #def addMovieImg(request):
-        # check user role
+    @api_view(['POST'])
+    def addMovieImg(request):
+        # Check if user is a cinemaManager
         if request.user.role != 'CinemaManager':
-            return HttpResponse(status=403)
-        
-        # get movie id and image data from request data
-        movie_id = request.POST.get('movie_id')
-        img_data = request.FILES.get('img_data')
-        print(movie_id)
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
-        # check if movie with given id exists
+        # Get the movie object to add the image to
+        movie_id = request.data.get('id')
         try:
             movie = Movie.objects.get(id=movie_id)
         except Movie.DoesNotExist:
-            return HttpResponseNotFound()
+            return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
-        # convert image data from base64 string to binary data
-        try:
-            img_binary = base64.b64decode(img_data.read())
-        except:
-            return HttpResponseBadRequest()
+        # Create serializer with data from request body
+        serializer = MovieImageSerializer(data=request.data)
+        # Validate serializer data
+        if serializer.is_valid():
+            # Save serializer and return response
+            serializer.save(movie=movie)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            # Return 400 if data is invalid
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # create a new MovieImage object and set its attributes
-        movie_image = MovieImage(movie=movie, data=img_binary)
-
-        # save the MovieImage object
-        try:
-            movie_image.save()
-        except:
-            return HttpResponseServerError()
-
-        # return success response
-        return HttpResponse(status=200)
     
 class Movies(APIView):
     authentication_classes = [TokenAuthentication]
@@ -365,7 +355,7 @@ class Movies(APIView):
         except Movies.DoesNotExist:
             return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
         # Create serializer with data from request body
-        serializer = UpdateMovieSerializer(movie, data=request.data, partial=True)
+        serializer = MovieSerializer(movie, data=request.data, partial=True)
         # Validate serializer data
         if serializer.is_valid():
             serializer.save()
