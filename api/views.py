@@ -39,8 +39,6 @@ import base64
 from django.core.exceptions import ValidationError
 
 
-
-
 class AccountController:
     @api_view(['GET'])
     def getUserAccount(request):
