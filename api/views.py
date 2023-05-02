@@ -276,7 +276,7 @@ class movieIMG(APIView):
         serializer = MovieImageSerializer(movies, many=True)
         return Response(serializer.data)
     
-    def addMovieImg(self, request):
+    def addMovieImg(request):
         # check user role
         if request.user.role != 'CinemaManager':
             return HttpResponse(status=403)
