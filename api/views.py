@@ -353,6 +353,26 @@ class Movies(APIView):
         # Return a success response
         return Response({'message': 'Movie deleted successfully.'}, status=status.HTTP_200_OK)
     
+    @api_view(['POST'])    
+    def updateMov(request):
+        # Check if user is a cinemaManager
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        # Get the movie object to update
+        movie_id = request.data.get('id')
+        try:
+            movie = Movie.objects.get(id=movie_id)
+        except Movies.DoesNotExist:
+            return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        # Create serializer with data from request body
+        serializer = UpdateMovieSerializer(movie, data=request.data, partial=True)
+        # Validate serializer data
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            # Return 400 if data is invalid
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SearchMovie(APIView):
     permission_classes = [AllowAny]
