@@ -319,11 +319,10 @@ class Movie(APIView):
     @api_view(['POST'])
     def addMov(request):
         # Check if user is a cinemaManager
-        if not request.user.is_cinema_manager:
-            #return Response(status=status.HTTP_403_FORBIDDEN)
-        
-            # Create serializer with data from request body
-            serializer = MovieSerializer(data=request.data)
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        # Create serializer with data from request body
+        serializer = MovieSerializer(data=request.data)
         
         # Validate serializer data
         if serializer.is_valid():
