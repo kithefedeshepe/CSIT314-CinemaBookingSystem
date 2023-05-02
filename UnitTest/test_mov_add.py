@@ -28,7 +28,7 @@ class TestAddMovie(APITestCase):
             return
 
         payload = {
-            'id' : 0,
+            'id' : self.movie_obj.id,
             'movie_title': 'test', 
             'duration' : timedelta(hours=1, minutes=30), 
             'release_date' :date(2022, 5, 1), 
@@ -39,7 +39,7 @@ class TestAddMovie(APITestCase):
 
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue(Movie.objects.filter(id=payload.id).exists())
+        self.assertTrue(Movie.objects.filter(id=self.movie_obj.id).exists())
         print("\nUnit test addMov_1 passed")
         
 
@@ -53,7 +53,7 @@ class TestAddMovie(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         payload = {
-            'id' : 0,
+            'id' : self.movie_obj.id,
             'movie_title': 'test', 
             'duration' : timedelta(hours=1, minutes=30), 
             'release_date' :date(2022, 5, 1), 
@@ -63,7 +63,7 @@ class TestAddMovie(APITestCase):
         }
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertFalse(Movie.objects.filter(id=payload.id).exists())
+        self.assertFalse(Movie.objects.filter(id=self.movie_obj.id).exists())
         print("\nUnit test addMov_2 passed")
 
     def test_add_mov_invalid(self):
