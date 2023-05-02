@@ -339,14 +339,8 @@ class Movie(APIView):
     def updateMovie(request):
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
-            
         movie_id = request.data.get('id')
-
-        try:
-            movie = Movie.objects.get(id=movie_id)
-        except Movie.DoesNotExist:
-            return Response({'error': 'Movie not found'}, status=status.HTTP_404_NOT_FOUND)
-        
+        movie = Movie.objects.get(id=movie_id)
         serializer = MovieSerializer(movie, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
