@@ -279,6 +279,23 @@ class movieIMG(APIView):
         serializer = MovieImageSerializer(movies, many=True)
         return Response(serializer.data)
     
+    def getMovieImage(self, request):
+        """
+        Returns a list of all image objects that match the given movie ID.
+        """
+        # Check if user has permission to view movie images
+        if request.user.role != 'CinemaManager':
+            return Response({'message': 'You don\'t have permission to view movie images'}, status=403)
+
+        # Get movie ID from request
+        movie_id = request.data.get('id')
+
+        # Get all image objects that match the movie ID
+        images = MovieImage.objects.filter(movie_id=movie_id)
+
+        serializer = MovieImageSerializer(images, many=True)
+        return Response(serializer.data)
+
     #@api_view(['POST'])
     #def addMovieImg(request):
         # check user role
@@ -373,3 +390,5 @@ class SearchMovie(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response("No keyword provided", status=status.HTTP_400_BAD_REQUEST)
+    
+    
