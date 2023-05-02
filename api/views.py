@@ -335,10 +335,9 @@ class Movie(APIView):
         
     @api_view(['POST'])
     def delMov(request):
-        user = request.user
-        # Check if the user is a CinemaManager
-        if not user.role == 'CinemaManager':
-            return Response({'message': 'You don\'t have permission to delete movies.'}, status=status.HTTP_403_FORBIDDEN)
+        # Check if user is a cinemaManager
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
         try:
             # Retrieve the movie with the specified id
