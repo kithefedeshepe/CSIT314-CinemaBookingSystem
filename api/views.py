@@ -334,7 +334,7 @@ class Movie(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     @api_view(['POST'])
-    def delMov(self, request):
+    def delMov(request):
         user = request.user
         # Check if the user is a CinemaManager
         if not user.role == 'CinemaManager':
