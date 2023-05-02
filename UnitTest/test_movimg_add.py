@@ -68,6 +68,7 @@ class MovieImageAddTestCase(APITestCase):
         }
 
         response = self.client.post(self.url, payload)
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         print("\nUnit test addImg_3 passed")
     
@@ -80,5 +81,6 @@ class MovieImageAddTestCase(APITestCase):
         }
 
         response = self.client.post(self.url, payload)
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         print("\nUnit test addImg_4 passed")
