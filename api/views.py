@@ -332,3 +332,43 @@ class Movie(APIView):
         else:
             # Return 400 if data is invalid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    @api_view(['POST'])
+    def delMov(self, request):
+        user = request.user
+        # Check if the user is a CinemaManager
+        if not user.role == 'CinemaManager':
+            return Response({'message': 'You don\'t have permission to delete movies.'}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            # Retrieve the movie with the specified id
+            movie_id = request.data.get('id')
+            movie = Movie.objects.get(id=movie_id)
+        except Movie.DoesNotExist:
+            # If the movie does not exist, return 404 error
+            return Response({'message': 'Movie not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Delete the movie from the database
+        movie.delete()
+        # Return a success response
+        return Response({'message': 'Movie deleted successfully.'}, status=status.HTTP_200_OK)
+    
+
+"""class SearchMovie(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        # Retrieve the search keyword from the request body
+        keyword = request.data.get('keyword')
+
+        if keyword is not None:
+            # Retrieve all movies that match the search keyword
+            movies = Movie.objects.filter(movie_title__icontains=keyword)
+
+            # Serialize the movies data
+            serializer = MovieSerializer(movies, many=True)
+
+            # Return the serialized movies data as a response
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response("No keyword provided", status=status.HTTP_400_BAD_REQUEST)"""

@@ -12,6 +12,6 @@ add_mov_img = False #T
 del_mov_img = False
 add_mov = True
 update_mov = False
-del_mov = False
+del_mov = True
 search_mov = False
 get_mov_img = False
