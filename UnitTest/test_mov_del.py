@@ -15,7 +15,7 @@ class TestMovDel(APITestCase):
         # log in the admin user
         response = self.client.post('/login/', {'username': 'admin', 'password': 'password'})
         self.admin_token = response.data['token']
-        self.client.cookies['token'] = self.admin_token
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.admin_token)
         if del_mov:
             self.url = reverse('delMov')
         #setup movie object
@@ -44,7 +44,7 @@ class TestMovDel(APITestCase):
 
         response = self.client.post('/login/', {'username': 'testuser', 'password': 'password'})
         self.test_token = response.data['token']
-        self.client.cookies['token'] = self.test_token
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         self.movie_id = self.movie_obj.id;
         payload = {

@@ -13,7 +13,7 @@ class SuspendUserTestCase(APITestCase):
         # log in the admin user
         response = self.client.post('/login/', {'username': 'admin', 'password': 'password'})
         self.admin_token = response.data['token']
-        self.client.cookies['token'] = self.admin_token
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.admin_token)
 
     def test_suspend_user(self):
         if not suspense_exists:
@@ -39,8 +39,7 @@ class SuspendUserTestCase(APITestCase):
         #login using not user admin
         response = self.client.post('/login/', {'username': 'testuser', 'password': 'password'})
         self.test_token = response.data['token']
-        self.client.cookies['token'] = self.test_token
-
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
         response = self.client.post('/suspendUser/', {'username': 'testuser1'})
         # check that the user is suspended
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

@@ -15,7 +15,7 @@ class TestMovUpdate(APITestCase):
         # log in the admin user
         response = self.client.post('/login/', {'username': 'admin', 'password': 'password'})
         self.admin_token = response.data['token']
-        self.client.cookies['token'] = self.admin_token
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.admin_token)
         if update_mov:
             self.url = reverse('updateMov')
         #setup movie object
@@ -50,7 +50,7 @@ class TestMovUpdate(APITestCase):
 
         response = self.client.post('/login/', {'username': 'testuser', 'password': 'password'})
         self.test_token = response.data['token']
-        self.client.cookies['token'] = self.test_token
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         payload = {
             'id' : '0',

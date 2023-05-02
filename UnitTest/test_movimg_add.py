@@ -15,7 +15,7 @@ class MovieImageAddTestCase(APITestCase):
         # log in the admin user
         response = self.client.post('/login/', {'username': 'admin', 'password': 'password'})
         self.admin_token = response.data['token']
-        self.client.cookies['token'] = self.admin_token
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.admin_token)
         if add_mov_img:
             self.url = reverse('addImg')
         with open('UnitTest/testimg.png', 'rb') as f:
@@ -43,7 +43,7 @@ class MovieImageAddTestCase(APITestCase):
 
         response = self.client.post('/login/', {'username': 'testuser', 'password': 'password'})
         self.test_token = response.data['token']
-        self.client.cookies['token'] = self.test_token
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         payload = {
             'movie_id': '0',
