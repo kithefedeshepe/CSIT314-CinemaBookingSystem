@@ -334,7 +334,7 @@ class Movies(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     @api_view(['POST'])    
-    def updateMov(self, request):
+    def updateMov(request):
         # Check if user is a cinemaManager
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
