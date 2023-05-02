@@ -296,6 +296,26 @@ class movieIMG(APIView):
 
         serializer = MovieImageSerializer(images, many=True)
         return Response(serializer.data)
+    
+    @api_view(['POST'])
+    def deleteMovieImage(request):
+        # Check if user is a cinemaManager
+        if request.user.role != 'CinemaManager':
+            return Response({'message': 'You don\'t have permission to delete movie images'}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            # Retrieve the movie image with the specified id
+            image_id = request.data.get('id')
+            image = MovieImage.objects.get(movie=image_id)
+        except MovieImage.DoesNotExist:
+            # If the movie image does not exist, return 404 error
+            return Response({'message': 'Movie image not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Delete the movie image from the database
+        image.delete()
+
+        # Return a success response
+        return Response({'message': 'Movie image deleted successfully.'}, status=status.HTTP_200_OK)
 
     #@api_view(['POST'])
     #def addMovieImg(request):
@@ -332,25 +352,6 @@ class movieIMG(APIView):
         # return success response
         return HttpResponse(status=200)
     
-    @api_view(['POST'])
-    def deleteMovieImage(request):
-        # Check if user is a cinemaManager
-        if request.user.role != 'CinemaManager':
-            return Response({'message': 'You don\'t have permission to delete movie images'}, status=status.HTTP_403_FORBIDDEN)
-
-        try:
-            # Retrieve the movie image with the specified id
-            image_id = request.data.get('id')
-            image = MovieImage.objects.get(movie=image_id)
-        except MovieImage.DoesNotExist:
-            # If the movie image does not exist, return 404 error
-            return Response({'message': 'Movie image not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-        # Delete the movie image from the database
-        image.delete()
-
-        # Return a success response
-        return Response({'message': 'Movie image deleted successfully.'}, status=status.HTTP_200_OK)
     
     
 class Movies(APIView):
