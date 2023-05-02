@@ -51,5 +51,14 @@ class MovieImageSerializer(serializers.ModelSerializer):
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
-        fields = '__all__'
-        read_only_fields = ('id',) # set 'id' field as read-only
+        fields = [
+            'id',
+            'movie_title',
+            'genre',
+            'duration',
+            'release_date',
+            'cast',
+            'director',
+            'movie_description',
+        ]
+        

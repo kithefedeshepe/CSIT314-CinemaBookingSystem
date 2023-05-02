@@ -314,7 +314,7 @@ class movieIMG(APIView):
         # return success response
         return HttpResponse(status=200)
     
-class Movie(APIView):
+class Movies(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -341,21 +341,43 @@ class Movie(APIView):
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        movie_id = request.data.get('id')
-        movie = Movie.objects.get(id=movie_id)
-        #try:
+        try:
             # Retrieve the movie with the specified id
-            #movie_id = request.data.get('id')
-            #movie = Movie.objects.get(id=movie_id)
-        #except Movie.DoesNotExist:
+            movie_id = request.data.get('id')
+            movie = Movie.objects.get(id=movie_id)
+        except Movie.DoesNotExist:
             # If the movie does not exist, return 404 error
-            #return Response({'message': 'Movie not found.'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'message': 'Movie not found.'}, status=status.HTTP_404_NOT_FOUND)
 
         # Delete the movie from the database
         movie.delete()
         # Return a success response
         return Response({'message': 'Movie deleted successfully.'}, status=status.HTTP_200_OK)
     
+
+'''class DeleteMovie(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        #user = request.user
+        # Check if the user is a CinemaManager
+        #if not user.role == 'CinemaManager':
+            #return Response({'message': 'You don\'t have permission to delete movies.'}, status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            # Retrieve the movie with the specified id
+            movie_id = request.data.get('id')
+            movie = Movie.objects.get(id=movie_id)
+        except Movie.DoesNotExist:
+            # If the movie does not exist, return 404 error
+            return Response({'message': 'Movie not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Delete the movie from the database
+        movie.delete()
+
+        # Return a success response
+        return Response({'message': 'Movie deleted successfully.'}, status=status.HTTP_200_OK)'''
 
 """class SearchMovie(APIView):
     permission_classes = [AllowAny]
