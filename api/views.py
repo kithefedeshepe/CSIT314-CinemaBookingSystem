@@ -328,7 +328,7 @@ class Movie(APIView):
         if serializer.is_valid():
             movie = serializer.save()
             movie_id = movie.id
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             # Return 400 if data is invalid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
