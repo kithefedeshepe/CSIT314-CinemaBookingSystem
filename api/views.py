@@ -289,7 +289,7 @@ class movieIMG(APIView):
         movie_id = request.data.get('id')
         try:
             movie = Movie.objects.get(id=movie_id)
-            
+
         except Movie.DoesNotExist:
             return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
@@ -315,7 +315,7 @@ class Movies(APIView):
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
         # Create serializer with data from request body
-        serializer = MovieSerializer(data=request.data)
+        serializer = MovieImageSerializer(data=request.data)
         
         # Validate serializer data
         if serializer.is_valid():
