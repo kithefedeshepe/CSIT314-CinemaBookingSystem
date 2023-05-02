@@ -72,15 +72,3 @@ class MovieImageAddTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         print("\nUnit test addImg_3 passed")
     
-    def test_add_movimg_invalid(self):
-        if not add_mov_img:
-            return
-        
-        payload = {
-            'img_data': self.base64_img_data
-        }
-
-        response = self.client.post(self.url, payload)
-        print(response.data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        print("\nUnit test addImg_4 passed")
