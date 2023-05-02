@@ -395,6 +395,7 @@ class Movies(APIView):
             return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
         # Create serializer with data from request body
         serializer = MovieSerializer(movie, data=request.data, partial=True)
+        
         # Validate serializer data
         if serializer.is_valid():
             serializer.save()
