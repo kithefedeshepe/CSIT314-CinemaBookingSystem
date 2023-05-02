@@ -71,7 +71,7 @@ class TestMovUpdate(APITestCase):
             return
         
         payload = {
-            'id': ' ',
+            'id': '',
         }
 
         response = self.client.post(self.url, payload)
