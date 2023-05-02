@@ -47,3 +47,18 @@ class MovieImageSerializer(serializers.ModelSerializer):
             'data',
             'movie',
         ]
+
+class Movie(serializers.ModelSerializer):
+    class Meta:
+        model = MovieImage
+        fields = [
+            'id',
+            'movie_title',
+            'genre',
+            'duration',
+            'release_date',
+            'cast',
+            'director',
+            'movie_description',
+            'images',
+        ]

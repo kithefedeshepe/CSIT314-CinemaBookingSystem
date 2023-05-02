@@ -1,3 +1,4 @@
+import uuid
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -281,30 +282,43 @@ class movieIMG(APIView):
         # check user role
         if request.user.role != 'CinemaManager':
             return HttpResponse(status=403)
-
-        # get movie id and image data from request data
+        
         # get movie id and image data from request data
         movie_id = request.POST.get('movie_id')
-        img_file = request.FILES.get('img_data')
+        img_data = request.FILES.get('img_data')
+        print(movie_id)
 
         # check if movie with given id exists
         try:
-            movie = MovieImage.objects.get(pk=movie_id)
-        except MovieImage.DoesNotExist:
+            movie = Movie.objects.get(id=movie_id)
+        except Movie.DoesNotExist:
             return HttpResponseNotFound()
 
         # convert image data from base64 string to binary data
         try:
-            img_binary = base64.b64decode(img_data)
+            img_binary = base64.b64decode(img_data.read())
         except:
             return HttpResponseBadRequest()
 
-        # update movie image field with binary image data
+        # create a new MovieImage object and set its attributes
+        movie_image = MovieImage(movie=movie, data=img_binary)
+
+        # save the MovieImage object
         try:
-            movie.image.save(f'{movie_id}.jpg', img_binary)
-            movie.save()
+            movie_image.save()
         except:
             return HttpResponseServerError()
 
         # return success response
         return HttpResponse(status=200)
+    
+# class Movie(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+    #def post(self, request):
+        """
+        Returns a list of all movie images.
+        """
+        # Check if user has permission to view movie images
+        if request.user.role != 'CinemaManager':
+            return Response({'message': 'You don\'t have permission to add movie'}, status=403)
