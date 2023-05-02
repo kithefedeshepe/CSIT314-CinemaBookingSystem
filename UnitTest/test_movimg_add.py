@@ -63,7 +63,7 @@ class MovieImageAddTestCase(APITestCase):
             return
         
         payload = {
-            'movie': 190234781239412736412,
+            'movie': 12345,
             'img_data': self.base64_img_data
         }
 
