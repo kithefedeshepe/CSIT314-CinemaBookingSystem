@@ -10,7 +10,7 @@ get_profile_exists = True
 ##
 add_mov_img = False #T
 del_mov_img = False
-add_mov = False
+add_mov = True
 update_mov = False
 del_mov = False
 search_mov = False
