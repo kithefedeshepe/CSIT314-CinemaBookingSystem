@@ -1,3 +1,4 @@
+import uuid
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
@@ -32,7 +33,8 @@ from core.models import CustomUserManager
 # MOVIE
 from rest_framework.decorators import api_view, permission_classes
 from core.models import Movie, MovieImage
-from .serializers import MovieImageSerializer
+from .serializers import MovieImageSerializer, MovieSerializer
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 import base64
 
 
@@ -219,8 +221,8 @@ class SearchUserView(APIView):
         return Response(serializer.data)
     
 class UserProfile(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    Authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     @api_view(['POST'])
     def createProfile(request):
         # Get the user data from the request
@@ -275,29 +277,58 @@ class movieIMG(APIView):
         serializer = MovieImageSerializer(movies, many=True)
         return Response(serializer.data)
     
-    def post(self, request):
-        """
-        Create a new movie image.
-        """
-        # Check if user has permission to create movie images
+    #@api_view(['POST'])
+    #def addMovieImg(request):
+        # check user role
         if request.user.role != 'CinemaManager':
-            return Response({'message': 'You don\'t have permission to create movie images'}, status=403)
+            return HttpResponse(status=403)
+        
+        # get movie id and image data from request data
+        movie_id = request.POST.get('movie_id')
+        img_data = request.FILES.get('img_data')
+        print(movie_id)
 
-        serializer = MovieImageSerializer(data=request.data)
+        # check if movie with given id exists
+        try:
+            movie = Movie.objects.get(id=movie_id)
+        except Movie.DoesNotExist:
+            return HttpResponseNotFound()
+
+        # convert image data from base64 string to binary data
+        try:
+            img_binary = base64.b64decode(img_data.read())
+        except:
+            return HttpResponseBadRequest()
+
+        # create a new MovieImage object and set its attributes
+        movie_image = MovieImage(movie=movie, data=img_binary)
+
+        # save the MovieImage object
+        try:
+            movie_image.save()
+        except:
+            return HttpResponseServerError()
+
+        # return success response
+        return HttpResponse(status=200)
+    
+class Movie(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    @api_view(['POST'])
+    def addMov(request):
+        # Check if user is a cinemaManager
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        # Create serializer with data from request body
+        serializer = MovieSerializer(data=request.data)
+        
+        # Validate serializer data
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
-    
-
-
-
-
-    
-
-    
-
-
-
-
-
+            movie = serializer.save()
+            movie_id = movie.id
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            # Return 400 if data is invalid
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
