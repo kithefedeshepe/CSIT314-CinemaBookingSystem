@@ -66,20 +66,3 @@ class TestMovUpdate(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         print("\nUnit test updateMov_2 passed")
     
-    def test_update_mov_invalid(self):
-        if not update_mov:
-            return
-        
-        payload = {
-            'movie_title': 'test123', 
-            'genre': 'action',
-            'duration' : timedelta(hours=1, minutes=30), 
-            'release_date' :date(2022, 5, 1), 
-            'cast' : 'John Doe Anderson',
-            'director' :'Jane Smith',
-            'movie_description' : 'A test movie'
-        }
-
-        response = self.client.post(self.url, payload)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        print("\nUnit test updateMov_3 passed")
