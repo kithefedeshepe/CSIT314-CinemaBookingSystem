@@ -303,8 +303,8 @@ class movieIMG(APIView):
         else:
             # Return 400 if data is invalid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    
+        
+        
 class Movies(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -315,7 +315,7 @@ class Movies(APIView):
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
         # Create serializer with data from request body
-        serializer = MovieImageSerializer(data=request.data)
+        serializer = MovieSerializer(data=request.data)
         
         # Validate serializer data
         if serializer.is_valid():
