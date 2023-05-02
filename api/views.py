@@ -342,7 +342,7 @@ class Movies(APIView):
         movie_id = request.data.get('movie_id')
         try:
             movie = Movie.objects.get(id=movie_id)
-        except Movies.DoesNotExist:
+        except Movie.DoesNotExist:
             return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
         # Create serializer with data from request body
         serializer = UpdateMovieSerializer(movie, data=request.data, partial=True)
