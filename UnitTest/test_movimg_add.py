@@ -30,7 +30,7 @@ class MovieImageAddTestCase(APITestCase):
             return
         payload = {
             'movie': self.movie_obj.id,
-            'img_data': self.base64_img_data
+            'data': self.base64_img_data
         }
 
         response = self.client.post(self.url, payload)
@@ -49,7 +49,7 @@ class MovieImageAddTestCase(APITestCase):
 
         payload = {
             'movie': self.movie_obj.id,
-            'img_data': self.base64_img_data
+            'data': self.base64_img_data
         }
 
         response = self.client.post(self.url, payload)
@@ -64,7 +64,7 @@ class MovieImageAddTestCase(APITestCase):
         
         payload = {
             'movie': 12345,
-            'img_data': self.base64_img_data
+            'data': self.base64_img_data
         }
 
         response = self.client.post(self.url, payload)
