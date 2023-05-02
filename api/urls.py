@@ -21,6 +21,5 @@ urlpatterns = [
     #path('addImg/', movieIMG.addMovieImg, name='addImg'),
     path('addMov/', Movies.addMov, name='addMov'),
     path('delMov/', Movies.delMov, name='delMov'),
-    #path('DeleteMovie/', DeleteMovie.as_view(), name='DeleteMovie')
     path('SearchMovie/', SearchMovie.SearchMov, name='SearchMovie')
 ]
