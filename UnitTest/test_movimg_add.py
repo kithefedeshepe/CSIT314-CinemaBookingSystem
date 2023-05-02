@@ -27,7 +27,7 @@ class MovieImageAddTestCase(APITestCase):
         if not add_mov_img:
             return
         payload = {
-            'movie_id': '0',
+            'movie': '0',
             'img_data': self.base64_img_data
         }
 
@@ -46,7 +46,7 @@ class MovieImageAddTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         payload = {
-            'movie_id': '0',
+            'movie': '0',
             'img_data': self.base64_img_data
         }
 
@@ -61,7 +61,7 @@ class MovieImageAddTestCase(APITestCase):
             return
         
         payload = {
-            'movie_id': '190234781239412736412',
+            'movie': '190234781239412736412',
             'img_data': self.base64_img_data
         }
 
