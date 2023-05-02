@@ -161,7 +161,7 @@ class UpdateUser(APIView):
 
 
     @api_view(['POST'])
-    def changePassword(self, request):
+    def changePassword(request):
         try:
             user = request.user
             if user.role != 'UserAdmin':
