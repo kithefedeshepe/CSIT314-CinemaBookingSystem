@@ -36,6 +36,8 @@ from core.models import Movie, MovieImage
 from .serializers import MovieImageSerializer, MovieSerializer
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 import base64
+from django.db import transaction
+
 
 
 class AccountController:
@@ -331,4 +333,22 @@ class Movie(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             # Return 400 if data is invalid
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def updateMovie(request):
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+            
+        movie_id = request.data.get('id')
+
+        try:
+            movie = Movie.objects.get(id=movie_id)
+        except Movie.DoesNotExist:
+            return Response({'error': 'Movie not found'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = MovieSerializer(movie, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
