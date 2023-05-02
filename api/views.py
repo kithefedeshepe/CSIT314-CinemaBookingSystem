@@ -357,7 +357,8 @@ class Movies(APIView):
 class SearchMovie(APIView):
     permission_classes = [AllowAny]
 
-    def post(self, request):
+    @api_view(['POST'])
+    def SearchMov(request):
         # Retrieve the search keyword from the request body
         keyword = request.data.get('keyword')
 

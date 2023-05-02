@@ -22,5 +22,5 @@ urlpatterns = [
     path('addMov/', Movies.addMov, name='addMov'),
     path('delMov/', Movies.delMov, name='delMov'),
     #path('DeleteMovie/', DeleteMovie.as_view(), name='DeleteMovie')
-    path('SearchMovie/', SearchMovie.as_view(), name='SearchMovie')
+    path('SearchMovie/', SearchMovie.SearchMov, name='SearchMovie')
 ]
