@@ -286,9 +286,9 @@ class movieIMG(APIView):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         # Get the movie object to add the image to
-        movie_id = request.data.get('id')
+        movie_id = request.data.get('movie')
         try:
-            movie = Movie.objects.get(id=movie_id)
+            movie = Movie.objects.get(movie=movie_id)
 
         except Movie.DoesNotExist:
             return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
