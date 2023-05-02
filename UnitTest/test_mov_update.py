@@ -27,7 +27,7 @@ class TestMovUpdate(APITestCase):
             return
         
         payload = {
-            'id' : '0',
+            'id' : 0,
             'movie_title': 'test123', 
             'genre': 'action',
             'duration' : timedelta(hours=1, minutes=30), 
@@ -54,7 +54,7 @@ class TestMovUpdate(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         payload = {
-            'id' : '0',
+            'id' : 0,
             'movie_title': 'test123', 
             'genre': 'action',
             'duration' : timedelta(hours=1, minutes=30), 
@@ -73,7 +73,7 @@ class TestMovUpdate(APITestCase):
             return
         
         payload = {
-            'id': 'asdhfgasdhf71346715234thisdontmakeanysense',
+            'id': '12356412376',
         }
 
         response = self.client.post(self.url, payload)
