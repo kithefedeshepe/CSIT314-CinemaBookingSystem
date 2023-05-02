@@ -97,9 +97,9 @@ class LogoutView(APIView):
             raise PermissionDenied()
         if request.user.is_authenticated:
             Token.objects.filter(user=request.user).delete()
+        response = Response({'message': 'Logout success'}, status=status.HTTP_200_OK)
         response.delete_cookie('token')  # remove session cookie
         logout(request) 
-        response = Response({'message': 'Logout success'}, status=status.HTTP_200_OK)
         return response
     
 class GetUserView(APIView):
