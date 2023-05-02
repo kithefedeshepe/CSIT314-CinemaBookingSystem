@@ -315,14 +315,14 @@ class movieIMG(APIView):
         return HttpResponse(status=200)
     
 class Movies(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     
     @api_view(['POST'])
     def addMov(request):
         # Check if user is a cinemaManager
-        #if request.user.role != 'CinemaManager':
-        #    return Response(status=status.HTTP_403_FORBIDDEN)
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
         # Create serializer with data from request body
         serializer = MovieSerializer(data=request.data)
         
