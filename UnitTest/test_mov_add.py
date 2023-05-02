@@ -28,7 +28,7 @@ class TestAddMovie(APITestCase):
             return
 
         payload = {
-            'id' : '0',
+            'id' : 0,
             'movie_title': 'test', 
             'duration' : timedelta(hours=1, minutes=30), 
             'release_date' :date(2022, 5, 1), 
@@ -53,7 +53,7 @@ class TestAddMovie(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         payload = {
-            'id' : '0',
+            'id' : 0,
             'movie_title': 'test', 
             'duration' : timedelta(hours=1, minutes=30), 
             'release_date' :date(2022, 5, 1), 
