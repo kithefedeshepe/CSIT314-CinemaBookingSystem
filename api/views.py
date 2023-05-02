@@ -33,7 +33,7 @@ from core.models import CustomUserManager
 # MOVIE
 from rest_framework.decorators import api_view, permission_classes
 from core.models import Movie, MovieImage
-from .serializers import MovieImageSerializer, MovieSerializer, UpdateMovieSerializer
+from .serializers import MovieImageSerializer, MovieSerializer
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 import base64
 
@@ -279,6 +279,23 @@ class movieIMG(APIView):
         serializer = MovieImageSerializer(movies, many=True)
         return Response(serializer.data)
     
+    def getMovieImage(self, request):
+        """
+        Returns a list of all image objects that match the given movie ID.
+        """
+        # Check if user has permission to view movie images
+        if request.user.role != 'CinemaManager':
+            return Response({'message': 'You don\'t have permission to view movie images'}, status=403)
+
+        # Get movie ID from request
+        movie_id = request.data.get('id')
+
+        # Get all image objects that match the movie ID
+        images = MovieImage.objects.filter(movie_id=movie_id)
+
+        serializer = MovieImageSerializer(images, many=True)
+        return Response(serializer.data)
+
     @api_view(['POST'])
     def addMovieImg(request):
         # Check if user is a cinemaManager
@@ -304,8 +321,7 @@ class movieIMG(APIView):
         else:
             # Return 400 if data is invalid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-
+    
 class Movies(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -345,26 +361,6 @@ class Movies(APIView):
         # Return a success response
         return Response({'message': 'Movie deleted successfully.'}, status=status.HTTP_200_OK)
     
-    @api_view(['POST'])    
-    def updateMov(request):
-        # Check if user is a cinemaManager
-        if request.user.role != 'CinemaManager':
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        # Get the movie object to update
-        movie_id = request.data.get('id')
-        try:
-            movie = Movie.objects.get(id=movie_id)
-        except Movies.DoesNotExist:
-            return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        # Create serializer with data from request body
-        serializer = MovieSerializer(movie, data=request.data, partial=True)
-        # Validate serializer data
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            # Return 400 if data is invalid
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SearchMovie(APIView):
     permission_classes = [AllowAny]
