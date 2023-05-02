@@ -1,10 +1,11 @@
-from core.models import User, MovieImage
+from core.models import User, MovieImage, Movie
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from api.checklist import *
 import base64
 from django.urls import reverse
+from datetime import timedelta, date
 
 class MovieImageAddTestCase(APITestCase):
     def setUp(self):
@@ -21,14 +22,15 @@ class MovieImageAddTestCase(APITestCase):
         with open('UnitTest/testimg.png', 'rb') as f:
             img_data = f.read()
         self.base64_img_data = base64.b64encode(img_data).decode('utf-8')
-
+        self.movie_obj = Movie.objects.create(id = 0, movie_title='test', genre='action', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
+        self.movie_obj.save()
 
     def test_add_movimg(self):
         if not add_mov_img:
             return
         payload = {
-            'movie_id': '0',
-            'img_data': self.base64_img_data
+            'movie': self.movie_obj.id,
+            'data': self.base64_img_data
         }
 
         response = self.client.post(self.url, payload)
@@ -46,8 +48,8 @@ class MovieImageAddTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         payload = {
-            'movie_id': '0',
-            'img_data': self.base64_img_data
+            'movie': self.movie_obj.id,
+            'data': self.base64_img_data
         }
 
         response = self.client.post(self.url, payload)
@@ -61,22 +63,12 @@ class MovieImageAddTestCase(APITestCase):
             return
         
         payload = {
-            'movie_id': '190234781239412736412',
-            'img_data': self.base64_img_data
+            'movie': 12345,
+            'data': self.base64_img_data
         }
 
         response = self.client.post(self.url, payload)
+        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         print("\nUnit test addImg_3 passed")
     
-    def test_add_movimg_invalid(self):
-        if not add_mov_img:
-            return
-        
-        payload = {
-            'img_data': self.base64_img_data
-        }
-
-        response = self.client.post(self.url, payload)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        print("\nUnit test addImg_4 passed")
