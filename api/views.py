@@ -304,12 +304,8 @@ class movieIMG(APIView):
 
         # Get the movie object to add the image to
         movie_id = request.data.get('movie')
-        try:
-            movie = Movie.objects.get(id=movie_id)
-
-        except Movie.DoesNotExist:
-            return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
-
+        movie = Movie.objects.get(id=movie_id)
+        
         # Create serializer with data from request body
         serializer = MovieImageSerializer(data=request.data)
         # Validate serializer data
