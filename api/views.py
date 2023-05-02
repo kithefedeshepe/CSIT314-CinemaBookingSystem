@@ -307,7 +307,7 @@ class movieIMG(APIView):
             # Retrieve the movie image with the specified id
             image_id = request.data.get('id')
             image = MovieImage.objects.get(id=image_id)
-        except MovieImage.DoesNotExist:
+        except (MovieImage.DoesNotExist, ValueError, TypeError):
             # If the movie image does not exist, return 404 error
             return Response({'message': 'Movie image not found.'}, status=status.HTTP_404_NOT_FOUND)
 
