@@ -23,7 +23,7 @@ class MovieImageAddTestCase(APITestCase):
             img_data = f.read()
         self.base64_img_data = base64.b64encode(img_data).decode('utf-8')
         self.movie_obj = Movie.objects.create(id = 0, movie_title='test', genre='action', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
-
+        self.movie_obj.save()
 
     def test_add_movimg(self):
         if not add_mov_img:

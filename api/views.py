@@ -305,9 +305,7 @@ class movieIMG(APIView):
         # Get the movie object to add the image to
         movie_id = request.data.get('movie')
         movie = Movie.objects.get(id=movie_id)
-
-        if not movie:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
         # Create serializer with data from request body
         serializer = MovieImageSerializer(data=request.data)
         # Validate serializer data
