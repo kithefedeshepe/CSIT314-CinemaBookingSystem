@@ -38,6 +38,8 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadReque
 import base64
 
 
+
+
 class AccountController:
     @api_view(['GET'])
     def getUserAccount(request):
@@ -312,7 +314,7 @@ class movieIMG(APIView):
         # return success response
         return HttpResponse(status=200)
     
-class Movie(APIView):
+class Movies(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -326,9 +328,48 @@ class Movie(APIView):
         
         # Validate serializer data
         if serializer.is_valid():
-            movie = serializer.save()
-            movie_id = movie.id
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             # Return 400 if data is invalid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    @api_view(['POST'])
+    def delMov(request):
+        # Check if user is a cinemaManager
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            # Retrieve the movie with the specified id
+            movie_id = request.data.get('id')
+            movie = Movie.objects.get(id=movie_id)
+        except Movie.DoesNotExist:
+            # If the movie does not exist, return 404 error
+            return Response({'message': 'Movie not found.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Delete the movie from the database
+        movie.delete()
+        # Return a success response
+        return Response({'message': 'Movie deleted successfully.'}, status=status.HTTP_200_OK)
+    
+
+class SearchMovie(APIView):
+    permission_classes = [AllowAny]
+
+    @api_view(['POST'])
+    def SearchMov(request):
+        # Retrieve the search keyword from the request body
+        keyword = request.data.get('keyword')
+
+        if keyword is not None:
+            # Retrieve all movies that match the search keyword
+            movies = Movie.objects.filter(movie_title__icontains=keyword)
+
+            # Serialize the movies data
+            serializer = MovieSerializer(movies, many=True)
+
+            # Return the serialized movies data as a response
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response("No keyword provided", status=status.HTTP_400_BAD_REQUEST)

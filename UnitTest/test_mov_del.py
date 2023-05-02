@@ -26,7 +26,7 @@ class TestMovDel(APITestCase):
         if not del_mov:
             return
         
-        self.movie_id = self.movie_obj.id;
+        self.movie_id = self.movie_obj.id
         payload = {
             'id' : self.movie_id,
         }
@@ -46,7 +46,7 @@ class TestMovDel(APITestCase):
         self.test_token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
-        self.movie_id = self.movie_obj.id;
+        self.movie_id = self.movie_obj.id
         payload = {
             'id' : self.movie_id,
         }
