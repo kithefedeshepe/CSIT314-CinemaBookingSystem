@@ -346,7 +346,7 @@ class Movies(APIView):
             movie = Movie.objects.get(id=movie_id)
         except Movie.DoesNotExist:
             # If the movie does not exist, return 404 error
-            return Response({'message': 'Movie not found.'}, status=status.HTTP_400_NOT_FOUND)
+            return Response({'message': 'Movie not found.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Delete the movie from the database
         movie.delete()
