@@ -71,7 +71,13 @@ class TestMovUpdate(APITestCase):
             return
         
         payload = {
-            'id': '',
+            'movie_title': 'test123', 
+            'genre': 'action',
+            'duration' : timedelta(hours=1, minutes=30), 
+            'release_date' :date(2022, 5, 1), 
+            'cast' : 'John Doe Anderson',
+            'director' :'Jane Smith',
+            'movie_description' : 'A test movie'
         }
 
         response = self.client.post(self.url, payload)
