@@ -316,7 +316,6 @@ class movieIMG(APIView):
         if serializer.is_valid():
             # Save serializer and return response
             serializer.save()
-            
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             # Return 400 if data is invalid
