@@ -34,7 +34,6 @@ class MovieImageAddTestCase(APITestCase):
         }
 
         response = self.client.post(self.url, payload)
-        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         print("\nUnit test addImg_1 passed")
 
