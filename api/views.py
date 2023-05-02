@@ -279,6 +279,7 @@ class movieIMG(APIView):
         serializer = MovieImageSerializer(movies, many=True)
         return Response(serializer.data)
     
+    @api_view(['GET'])
     def getMovieImage(self, request):
         """
         Returns a list of all image objects that match the given movie ID.
@@ -331,6 +332,7 @@ class movieIMG(APIView):
         # return success response
         return HttpResponse(status=200)
     
+    @api_view(['POST'])
     def deleteMovieImage(request):
         # Check if user is a cinemaManager
         if request.user.role != 'CinemaManager':
@@ -414,7 +416,7 @@ class allowAnyMovie(APIView):
     @api_view(['GET'])
     def viewAllMovie(request):
         """
-        Returns a list of all movie images.
+        Returns a list of all movie images
         """
         movies = Movie.objects.all()
         serializer = MovieSerializer(movies, many=True)
