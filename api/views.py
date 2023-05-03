@@ -76,7 +76,7 @@ class LoginView(APIView):
 
     #LOGIN(username, pw) 
     @api_view(['POST'])
-    def login(self, request):
+    def login(request):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
@@ -99,7 +99,7 @@ class LogoutView(APIView):
 
     #LOGOUT()
     @api_view(['POST'])
-    def logout(self, request):
+    def logout(request):
         if not request.user.is_authenticated:
             raise PermissionDenied()
         if request.user.is_authenticated:
