@@ -387,7 +387,7 @@ class Movies(APIView):
 
             # Retrieve the movie with the specified id
             movie_title_obj = request.data.get('movie_title')
-            movie = Movie.objects.get(move_title=movie_title_obj)
+            movie = Movie.objects.get(movie_title=movie_title_obj)
         except Movie.DoesNotExist:
             # If the movie does not exist, return 404 error
             return Response({'message': 'Movie not found.'}, status=status.HTTP_400_BAD_REQUEST)
