@@ -19,7 +19,7 @@ class TestMovUpdate(APITestCase):
         if update_mov:
             self.url = reverse('updateMov')
         #setup movie object
-        self.movie_obj = Movie.objects.create(id = 0, movie_title='test', genre='action', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
+        self.movie_obj = Movie.objects.create(movie_title='test', genre='action', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
 
 
     def test_update_mov(self):
@@ -27,9 +27,8 @@ class TestMovUpdate(APITestCase):
             return
         
         payload = {
-            'id' : 0,
-            'movie_title': 'test123', 
-            'genre': 'action',
+            'movie_title': 'test', 
+            'genre': 'Comedy',
             'duration' : timedelta(hours=1, minutes=30), 
             'release_date' :date(2022, 5, 1), 
             'cast' : 'John Doe Anderson',
@@ -52,7 +51,6 @@ class TestMovUpdate(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         payload = {
-            'id' : 0,
             'movie_title': 'test123', 
             'genre': 'action',
             'duration' : timedelta(hours=1, minutes=30), 
