@@ -10,7 +10,7 @@ from django.http import HttpResponseBadRequest
 from django.db import DatabaseError
 from core.models import User
 from core.models import Profile
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UpdateMovieSerializer
 from .serializers import ProfileSerializer
 from .serializers import RegisterAccount
 from rest_framework.permissions import IsAuthenticated
@@ -433,5 +433,5 @@ class allowAnyMovie(APIView):
         Returns a list of all movie images
         """
         movies = Movie.objects.all()
-        serializer = MovieSerializer(movies, many=True)
+        serializer = UpdateMovieSerializer(movies, many=True)
         return Response(serializer.data)
