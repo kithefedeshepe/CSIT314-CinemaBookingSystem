@@ -27,8 +27,8 @@ class TestMovUpdate(APITestCase):
             return
         
         payload = {
-            'movie_title': 'test123', 
-            'genre': 'action',
+            'movie_title': 'test', 
+            'genre': 'Comedy',
             'duration' : timedelta(hours=1, minutes=30), 
             'release_date' :date(2022, 5, 1), 
             'cast' : 'John Doe Anderson',
