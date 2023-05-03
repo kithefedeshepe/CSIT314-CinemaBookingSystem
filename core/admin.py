@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from .models import User, Profile, Movie, MovieSession, CinemaRoom, FoodandBeverage, MovieImage, FoodandBeverageImage, Booking
-from django.db import models
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
@@ -84,10 +83,10 @@ class FBAdmin(admin.ModelAdmin):
  
 class BookingAdmin(admin.ModelAdmin):
     list_display = ('id', 'movie_session', 'ticket_type', 'seat_number', 'FnB', 'price')
-    list_filter = ('movie_session', 'FnB')
+    list_filter = ('movie_session',)
     search_fields = ('movie_session',)
     ordering = ('id', 'movie_session')      
-           
+              
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Movie, MovieAdmin)
@@ -97,3 +96,5 @@ admin.site.register(MovieSession, MovieSessionAdmin)
 admin.site.register(CinemaRoom, CinemaRoomAdmin)
 admin.site.register(FoodandBeverage, FBAdmin)
 admin.site.register(Booking, BookingAdmin)
+
+

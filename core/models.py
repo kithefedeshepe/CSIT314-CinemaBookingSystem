@@ -147,7 +147,7 @@ class FoodandBeverage(models.Model):
 class FoodandBeverageImage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     data = models.TextField()
-    fandb = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE)  
+    FnB = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE)  
 
 
 class Booking(models.Model):
@@ -162,6 +162,7 @@ class Booking(models.Model):
     seat_number = models.CharField(max_length=30)
     FnB = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE, related_name='foodandbeverage') 
     price = models.FloatField()        
-    
+        
     def __str__(self):
         return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
+
