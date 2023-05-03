@@ -128,7 +128,7 @@ class MovieSession(models.Model):
     session_time = models.CharField(choices=TIME, max_length=10)
 
     def __str__(self):
-        return f"{self.movie.movie_title}-{self.session_date}"
+        return f"{self.movie.movie_title}-{self.session_date}-{self.session_time}-{self.cinema_room.name}"
 
 
 class FoodandBeverage(models.Model):
@@ -158,12 +158,19 @@ class FoodandBeverageImage(models.Model):
     data = models.TextField()
     fandb = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE)  
 
-          
-class Seat(models.Model):
+
+class Booking(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     movie_session = models.ForeignKey(MovieSession, on_delete=models.CASCADE, related_name='sessions')
-    row_number = models.CharField(max_length=10)
-    seat_number = models.IntegerField()
+    
+    TICKET_TYPE = (('Adult', 'Adult'),
+             ('Senior', 'Senior'),
+             ('Child', 'Child'))
+    
+    ticket_type = models.CharField(max_length=30, choices=TICKET_TYPE, default='Adult')
+    seat_number = models.CharField(max_length=30)
+    FnB = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE, related_name='foodandbeverage') 
+    price = models.FloatField()        
     
     def __str__(self):
-        return f"{self.movie_session}-{self.movie_session.cinema_room}-{self.row_number,self.seat_number}"
+        return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
