@@ -6,6 +6,7 @@ from api.checklist import *
 import base64
 from django.urls import reverse
 from datetime import timedelta, date
+import uuid
 
 class MovieImageAddTestCase(APITestCase):
     def setUp(self):
@@ -63,7 +64,7 @@ class MovieImageAddTestCase(APITestCase):
             return
         
         payload = {
-            'movie': 'asjdfgajs123',
+            'movie': uuid.uuid4(),
             'data': self.base64_img_data
         }
 
