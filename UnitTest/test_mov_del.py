@@ -19,7 +19,7 @@ class TestMovDel(APITestCase):
         if del_mov:
             self.url = reverse('delMov')
         #setup movie object
-        self.movie_obj = Movie.objects.create(id = 0, movie_title='test', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
+        self.movie_obj = Movie.objects.create(movie_title='test', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
 
 
     def test_del_mov(self):
@@ -28,7 +28,7 @@ class TestMovDel(APITestCase):
         
         self.movie_id = self.movie_obj.id
         payload = {
-            'id' : self.movie_id,
+            'movie_title' : self.movie_obj.movie_title,
         }
 
         response = self.client.post(self.url, payload)
@@ -48,7 +48,7 @@ class TestMovDel(APITestCase):
 
         self.movie_id = self.movie_obj.id
         payload = {
-            'id' : self.movie_id,
+            'movie_title' : self.movie_obj.movie_title,
         }
 
         response = self.client.post(self.url, payload)
