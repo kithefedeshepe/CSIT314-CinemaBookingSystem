@@ -6,9 +6,9 @@ urlpatterns = [
     # other URL patterns here
     path('', AccountController.getUserAccount),
     path('add/', AccountController.RegisterAccount, name='add'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(), name='logout'),
-    path('getUser/', GetUserView.as_view()),
+    path('login/', LoginView.login, name='login'),
+    path('logout/', LogoutView.logout, name='logout'),
+    path('getUser/', GetUserView.getUser, name="getUser"),
     path('suspendUser/', UpdateUser.suspendUser, name='suspendUser'),
     path('reactivateUser/', UpdateUser.reactivateUser, name='reactivateUser'),
     path('changePW/', UpdateUser.changePassword, name='changePassword'),

@@ -40,12 +40,14 @@ from django.core.exceptions import ValidationError
 
 
 class AccountController:
+    #GETS USER ACCOUNT
     @api_view(['GET'])
     def getUserAccount(request):
         user_account = User.objects.all()
         serializer = UserSerializer(user_account, many = True)
         return Response(serializer.data)
 
+    #REGISTERS ACCOUNT PARAMETER: PW
     @api_view(['POST'])
     def RegisterAccount(request):
         try:
@@ -71,7 +73,10 @@ class AccountController:
         
 class LoginView(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
-    def post(self, request):
+
+    #LOGIN(username, pw) 
+    @api_view(['POST'])
+    def login(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
@@ -91,7 +96,10 @@ class LoginView(APIView):
 class LogoutView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    def post(self, request):
+
+    #LOGOUT()
+    @api_view(['POST'])
+    def logout(self, request):
         if not request.user.is_authenticated:
             raise PermissionDenied()
         if request.user.is_authenticated:
@@ -104,7 +112,10 @@ class LogoutView(APIView):
 class GetUserView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    def get(self, request):
+
+    #getUser(id, username, role)
+    @api_view(['GET'])
+    def getUser(self, request):
         user = request.user
         user_data = {
             'id': user.id,
@@ -113,11 +124,11 @@ class GetUserView(APIView):
         }
         return Response(user_data, status=status.HTTP_200_OK)
     
-#4 functions
 class UpdateUser(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    #suspendUser(username)
     @api_view(['POST'])
     def suspendUser(request):
         try:
@@ -371,8 +382,12 @@ class Movies(APIView):
 
         try:
             # Retrieve the movie with the specified id
-            movie_id = request.data.get('id')
-            movie = Movie.objects.get(id=movie_id)
+            #movie_id = request.data.get('id')
+            #movie = Movie.objects.get(id=movie_id)
+
+            # Retrieve the movie with the specified id
+            movie_title_obj = request.data.get('movie_title')
+            movie = Movie.objects.get(move_title=movie_title_obj)
         except Movie.DoesNotExist:
             # If the movie does not exist, return 404 error
             return Response({'message': 'Movie not found.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -390,9 +405,9 @@ class Movies(APIView):
             return Response(status=status.HTTP_403_FORBIDDEN)
         
         # Get the movie object to update
-        movie_id = request.data.get('id')
+        movie_tile_obj = request.data.get('movie_title')
         try:
-            movie = Movie.objects.get(id=movie_id)
+            movie = Movie.objects.get(movie_title=movie_tile_obj)
         except Movie.DoesNotExist:
             return Response({'message': 'Movie does not exist'}, status=status.HTTP_404_NOT_FOUND)
         
