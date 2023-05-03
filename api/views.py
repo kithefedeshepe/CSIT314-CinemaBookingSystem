@@ -277,7 +277,7 @@ class movieIMG(APIView):
     permission_classes = [IsAuthenticated]
 
     @api_view(['GET'])
-    def viewMovieImage(self, request):
+    def viewMovieImage(request):
         """
         Returns a list of all movie images.
         """
@@ -290,7 +290,7 @@ class movieIMG(APIView):
         return Response(serializer.data)
     
     @api_view(['GET'])
-    def getMovieImage(self, request):
+    def getMovieImage(request):
         """
         Returns a list of all image objects that match the given movie ID.
         """
@@ -387,7 +387,7 @@ class Movies(APIView):
 
             # Retrieve the movie with the specified id
             movie_title_obj = request.data.get('movie_title')
-            movie = Movie.objects.get(move_title=movie_title_obj)
+            movie = Movie.objects.get(movie_title=movie_title_obj)
         except Movie.DoesNotExist:
             # If the movie does not exist, return 404 error
             return Response({'message': 'Movie not found.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -400,7 +400,7 @@ class Movies(APIView):
     @api_view(['POST'])    
     def updateMov(request):
         
-        # Check if user is a cinemaManager
+        # Check if user is a cinemaManager.
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
         
