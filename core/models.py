@@ -75,7 +75,7 @@ class Profile(models.Model):
     
     
 class Movie(models.Model):
-    id = models.IntegerField(primary_key=True, auto_created=True, null=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     movie_title = models.CharField(max_length=100)
     genre = models.CharField(max_length=50)
     duration = models.DurationField()
@@ -83,7 +83,6 @@ class Movie(models.Model):
     cast = models.CharField(max_length=200)
     director = models.CharField(max_length=50)
     movie_description = models.TextField()
-    images = models.ImageField(upload_to='movie_images/', null=True, blank=True)
      
     def formatted_duration(self):
         hours, minutes = self.duration.total_seconds() // 3600, \
@@ -133,7 +132,7 @@ class MovieSession(models.Model):
 
 
 class FoodandBeverage(models.Model):
-    id = models.IntegerField(primary_key=True, auto_created=True, null=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     menu = models.CharField(max_length=100)
     menu_description = models.TextField()
     quantity = models.PositiveIntegerField()
