@@ -277,7 +277,7 @@ class movieIMG(APIView):
     permission_classes = [IsAuthenticated]
 
     @api_view(['GET'])
-    def viewMovieImage(self, request):
+    def viewMovieImage(request):
         """
         Returns a list of all movie images.
         """
@@ -290,7 +290,7 @@ class movieIMG(APIView):
         return Response(serializer.data)
     
     @api_view(['GET'])
-    def getMovieImage(self, request):
+    def getMovieImage(request):
         """
         Returns a list of all image objects that match the given movie ID.
         """
