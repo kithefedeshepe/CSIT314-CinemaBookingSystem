@@ -77,9 +77,9 @@ class CinemaRoomAdmin(admin.ModelAdmin):
     ordering = ('name',) 
 
 class FBAdmin(admin.ModelAdmin):
-    list_display = ('id', 'menu', 'quantity', 'get_admin_display')
-    list_filter = ('menu', )
-    search_fields = ('menu',)
+    list_display = ('id', 'menu', 'menu_description','is_available')
+    list_filter = ('menu', 'is_available')
+    search_fields = ('menu','is_available')
     ordering = ('id', 'menu')   
  
 class BookingAdmin(admin.ModelAdmin):
