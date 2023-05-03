@@ -26,4 +26,4 @@ jobs:
     - name: Run Tests for enviroment
       run: python manage.py test Env_test
     - name: Run unit tests
-      run: python manage.py test UnitTest
+      run: python manage.py test UnitTest --failfast
