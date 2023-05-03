@@ -400,7 +400,7 @@ class Movies(APIView):
     @api_view(['POST'])    
     def updateMov(request):
         
-        # Check if user is a cinemaManager
+        # Check if user is a cinemaManager.
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
         
