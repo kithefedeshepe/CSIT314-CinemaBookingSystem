@@ -115,7 +115,7 @@ class GetUserView(APIView):
 
     #getUser(id, username, role)
     @api_view(['GET'])
-    def getUser(self, request):
+    def getUser(request):
         user = request.user
         user_data = {
             'id': user.id,
