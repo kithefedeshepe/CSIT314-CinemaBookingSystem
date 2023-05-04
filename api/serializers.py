@@ -26,6 +26,7 @@ class RegisterAccount(serializers.ModelSerializer):
             'username',
             'password',
             'email',
+            'role',
         ]
 
 class ProfileSerializer(serializers.ModelSerializer):
