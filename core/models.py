@@ -135,20 +135,11 @@ class FoodandBeverage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     menu = models.CharField(max_length=100)
     menu_description = models.TextField()
-    quantity = models.PositiveIntegerField()
     price = models.FloatField() 
+    is_available = models.BooleanField(default=True)
     
-    def get_price(self):
-        total_price = self.price * self.quantity
-        return f"SGD {total_price:.2f}"
-        
     def __str__(self):
-        return f"{self.menu}"
- 
-    def get_admin_display(self):
-        return f"{self.get_price()}"
-    
-    get_admin_display.short_description = 'Price'
+        return f"{self.menu} - {self.menu_description}"
 
     class Meta:
         verbose_name_plural = 'Foods and Beverages'   
@@ -156,7 +147,7 @@ class FoodandBeverage(models.Model):
 class FoodandBeverageImage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     data = models.TextField()
-    fandb = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE)  
+    FnB = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE)  
 
 
 class Booking(models.Model):
@@ -171,6 +162,7 @@ class Booking(models.Model):
     seat_number = models.CharField(max_length=30)
     FnB = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE, related_name='foodandbeverage') 
     price = models.FloatField()        
-    
+        
     def __str__(self):
         return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
+
