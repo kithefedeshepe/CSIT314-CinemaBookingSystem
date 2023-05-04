@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import User, Profile, Movie, MovieSession, CinemaRoom, Seat, FoodandBeverage, MovieImage, FoodandBeverageImage
+from .models import User, Profile, Movie, MovieSession, CinemaRoom, FoodandBeverage, MovieImage, FoodandBeverageImage, Booking
 from django.db import models
 
 class CustomUserAdmin(UserAdmin):
@@ -74,20 +74,20 @@ class CinemaRoomAdmin(admin.ModelAdmin):
     list_display = ('name', 'capacity')
     list_filter = ('name', 'capacity')
     search_fields = ('name',)
-    ordering = ('name',)
-    
-class SeatAdmin(admin.ModelAdmin):
-    list_display = ('movie_session', 'row_number', 'seat_number')
-    list_filter = ('movie_session', )
-    search_fields = ('movie_session',)
-    ordering = ('movie_session',)   
+    ordering = ('name',) 
 
 class FBAdmin(admin.ModelAdmin):
     list_display = ('id', 'menu', 'quantity', 'get_admin_display')
     list_filter = ('menu', )
     search_fields = ('menu',)
     ordering = ('id', 'menu')   
-       
+ 
+class BookingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'movie_session', 'ticket_type', 'seat_number', 'FnB', 'price')
+    list_filter = ('movie_session', 'FnB')
+    search_fields = ('movie_session',)
+    ordering = ('id', 'movie_session')      
+           
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Movie, MovieAdmin)
@@ -95,5 +95,5 @@ admin.site.register(MovieImage)
 admin.site.register(FoodandBeverageImage)
 admin.site.register(MovieSession, MovieSessionAdmin)
 admin.site.register(CinemaRoom, CinemaRoomAdmin)
-admin.site.register(Seat, SeatAdmin)
 admin.site.register(FoodandBeverage, FBAdmin)
+admin.site.register(Booking, BookingAdmin)
