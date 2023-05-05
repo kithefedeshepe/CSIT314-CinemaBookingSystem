@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import User, Profile, Movie, MovieSession, CinemaRoom, FoodandBeverage, MovieImage, FoodandBeverageImage, Booking
+from .models import User, Profile, Movie, MovieSession, CinemaRoom, FoodandBeverage, MovieImage, FoodandBeverageImage, Booking, Report
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
@@ -96,5 +96,6 @@ admin.site.register(MovieSession, MovieSessionAdmin)
 admin.site.register(CinemaRoom, CinemaRoomAdmin)
 admin.site.register(FoodandBeverage, FBAdmin)
 admin.site.register(Booking, BookingAdmin)
+admin.site.register(Report)
 
 
