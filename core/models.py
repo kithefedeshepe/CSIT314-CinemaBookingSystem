@@ -167,3 +167,6 @@ class Booking(models.Model):
     def __str__(self):
         return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
 
+class Report(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    report_description = models.TextField()
