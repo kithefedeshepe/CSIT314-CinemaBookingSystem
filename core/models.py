@@ -162,7 +162,21 @@ class Booking(models.Model):
     ticket_type = models.CharField(max_length=30, choices=TICKET_TYPE, default='Adult')
     seat_number = models.CharField(max_length=30)
     FnB = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE, related_name='foodandbeverage') 
-    price = models.FloatField()        
+    
+    price = models.FloatField(default=0) 
+
+    def get_ticket_price(self):
+        if self.ticket_type == 'Adult':
+            return 10
+        elif self.ticket_type == 'Senior':
+            return 8
+        elif self.ticket_type == 'Child':
+            return 6
+    
+    def save(self, *args, **kwargs):
+        if not self.price:
+            self.price = self.get_ticket_price()
+        super().save(*args, **kwargs)
         
     def __str__(self):
         return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
