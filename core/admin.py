@@ -1,7 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
-from .models import User, Profile, Movie, MovieSession, CinemaRoom, FoodandBeverage, MovieImage, FoodandBeverageImage, Booking, Report
+from .models import User, Profile
+from .models import Movie, MovieSession, CinemaRoom, FoodandBeverage, MovieImage, FoodandBeverageImage
+from .models import PurchaseTicket, PurchaseFnB
+from .models import Report
+
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
@@ -76,26 +80,48 @@ class CinemaRoomAdmin(admin.ModelAdmin):
     ordering = ('name',) 
 
 class FBAdmin(admin.ModelAdmin):
-    list_display = ('id', 'menu', 'menu_description','is_available')
+    list_display = ('id', 'price', 'menu', 'menu_description','is_available')
     list_filter = ('menu', 'is_available')
     search_fields = ('menu','is_available')
     ordering = ('id', 'menu')   
  
-class BookingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'movie_session', 'ticket_type', 'seat_number', 'FnB', 'price')
+class MovieImageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'movie', 'is_poster')
+    ordering = ('movie',) 
+    
+class PurchaseTicketAdmin(admin.ModelAdmin):
+    list_display = ('id', 'price', 'movie_session', 'ticket_type', 'seat_number')
     list_filter = ('movie_session',)
     search_fields = ('movie_session',)
     ordering = ('id', 'movie_session')      
-              
+
+    def get_price(self, obj):
+        return obj.get_ticket_price()
+    get_price.short_description = 'Price'
+    get_price.admin_order_field = 'price'
+    
+class PurchaseFnBAdmin(admin.ModelAdmin):
+    list_display = ('id', 'booking_owner', 'menu', 'price')
+    list_filter = ('booking_owner','menu')
+    search_fields = ('booking_owner','menu')
+    ordering = ('booking_owner','menu')      
+
+    def get_price(self, obj):
+        return obj.menu.price
+    
+    get_price.short_description = 'Price'
+    
+     
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Movie, MovieAdmin)
-admin.site.register(MovieImage)
+admin.site.register(MovieImage,MovieImageAdmin)
 admin.site.register(FoodandBeverageImage)
 admin.site.register(MovieSession, MovieSessionAdmin)
 admin.site.register(CinemaRoom, CinemaRoomAdmin)
 admin.site.register(FoodandBeverage, FBAdmin)
-admin.site.register(Booking, BookingAdmin)
+admin.site.register(PurchaseTicket, PurchaseTicketAdmin)
+admin.site.register(PurchaseFnB, PurchaseFnBAdmin)
 admin.site.register(Report)
 
 

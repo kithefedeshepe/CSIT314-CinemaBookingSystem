@@ -96,7 +96,8 @@ class Movie(models.Model):
 class MovieImage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     data = models.TextField()
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)  
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    is_poster = models.BooleanField(default=True)
        
 class CinemaRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -150,7 +151,7 @@ class FoodandBeverageImage(models.Model):
     FnB = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE)  
 
 
-class Booking(models.Model):
+class PurchaseTicket(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     booking_owner = models.ForeignKey(User, on_delete=models.CASCADE) 
     movie_session = models.ForeignKey(MovieSession, on_delete=models.CASCADE, related_name='sessions')
@@ -161,11 +162,48 @@ class Booking(models.Model):
     
     ticket_type = models.CharField(max_length=30, choices=TICKET_TYPE, default='Adult')
     seat_number = models.CharField(max_length=30)
-    FnB = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE, related_name='foodandbeverage') 
-    price = models.FloatField()        
-        
+    
+    def get_ticket_price(self):
+        if self.ticket_type == 'Adult':
+            return 10
+        elif self.ticket_type == 'Senior':
+            return 8
+        elif self.ticket_type == 'Child':
+            return 6
+    
+    def save(self, *args, **kwargs):
+        if not self.price:
+            self.price = self.get_ticket_price()
+        super().save(*args, **kwargs)
+    
+    @property
+    def price(self):
+        return self.get_ticket_price()
+    
     def __str__(self):
         return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
+
+    
+class PurchaseFnB(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    booking_owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    menu = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE)
+    
+    def get_menu_price(self):
+        return self.menu.price
+    
+    def save(self, *args, **kwargs):
+        if not self.price:
+            self.price = self.get_menu_price()
+        super().save(*args, **kwargs)
+
+    @property
+    def price(self):
+        return self.get_menu_price()
+
+    def __str__(self):
+        return f"{self.menu}X{self.price}"
+
 
 class Report(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
