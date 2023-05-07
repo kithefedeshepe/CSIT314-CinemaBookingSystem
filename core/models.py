@@ -177,7 +177,17 @@ class Booking(models.Model):
         if not self.price:
             self.price = self.get_ticket_price()
         super().save(*args, **kwargs)
-        
+
+    def get_total_price(self):
+        ticket_price = self.get_ticket_price()
+        if self.FnB:
+            return ticket_price + self.FnB.price
+        return ticket_price
+    
+    @property
+    def price(self):
+        return self.get_total_price()
+    
     def __str__(self):
         return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
 
