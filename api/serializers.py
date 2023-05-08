@@ -1,7 +1,7 @@
 #Handle complex data type
 from rest_framework import serializers
 from core.models import User
-from core.models import Profile, Movie, MovieImage, CinemaRoom, FoodandBeverage, MovieSession
+from core.models import Profile, Movie, CinemaRoom, FoodandBeverage, MovieSession
 from django.http import JsonResponse
 
 
@@ -40,13 +40,13 @@ class ProfileSerializer(serializers.ModelSerializer):
             'loyalty_points',
         ]
 
-class MovieImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MovieImage
-        fields = [
-            'data',
-            'movie',
-        ]
+# class MovieImageSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = MovieImage
+#         fields = [
+#             'data',
+#             'movie',
+#         ]
 
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:

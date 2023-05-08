@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from .models import User, Profile
-from .models import Movie, MovieSession, CinemaRoom, FoodandBeverage, MovieImage, FoodandBeverageImage
+from .models import Movie, MovieSession, CinemaRoom, FoodandBeverage
 from .models import PurchaseTicket, PurchaseFnB
 from .models import Report
 
@@ -84,10 +84,6 @@ class FBAdmin(admin.ModelAdmin):
     list_filter = ('menu', 'is_available')
     search_fields = ('menu','is_available')
     ordering = ('id', 'menu')   
- 
-class MovieImageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'movie', 'is_poster')
-    ordering = ('movie',) 
     
 class PurchaseTicketAdmin(admin.ModelAdmin):
     list_display = ('id', 'price', 'movie_session', 'ticket_type', 'seat_number')
@@ -115,8 +111,6 @@ class PurchaseFnBAdmin(admin.ModelAdmin):
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Movie, MovieAdmin)
-admin.site.register(MovieImage,MovieImageAdmin)
-admin.site.register(FoodandBeverageImage)
 admin.site.register(MovieSession, MovieSessionAdmin)
 admin.site.register(CinemaRoom, CinemaRoomAdmin)
 admin.site.register(FoodandBeverage, FBAdmin)
