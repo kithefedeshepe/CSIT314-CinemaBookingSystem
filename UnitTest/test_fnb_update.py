@@ -39,15 +39,16 @@ class TestUpdateFnb(APITestCase):
             return
 
         payload = {
-            'menu': 'test update',
+            'menu': 'test',
             'menu_description': 'test updated',
-            'price': 10.24,
+            'price': 99.99,
             'menuIMG': self.base64_img_data1
         }
 
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.fnb_obj.price, 10.24)
+        fnb_result = FoodandBeverage.objects.filter(menu='test').first()
+        self.assertEqual(fnb_result.price, 99.99)
         print("\nUnit test updateFnb_1 passed")
         
 
@@ -61,7 +62,7 @@ class TestUpdateFnb(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         payload = {
-            'menu': 'test update',
+            'menu': 'test',
             'menu_description': 'test updated',
             'price': 10.24,
             'menuIMG': self.base64_img_data1,
@@ -70,4 +71,6 @@ class TestUpdateFnb(APITestCase):
 
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        fnb_result = FoodandBeverage.objects.filter(menu='test').first()
+        self.assertEqual(fnb_result.price, 10.24)
         print("\nUnit test addFnb_2 passed")
