@@ -3,9 +3,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 from api.checklist import *
-import base64
 from django.urls import reverse
 from datetime import timedelta, date
+import base64
 
 class TestAddMovie(APITestCase):
 
@@ -20,8 +20,10 @@ class TestAddMovie(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.admin_token)
         if add_mov:
             self.url = reverse('addMov')
-        #setup movie object
-        self.movie_obj = Movie.objects.create(movie_title='test', genre='action', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
+        #setup movie img
+        with open('UnitTest/testimg.png', 'rb') as f:
+            img_data = f.read()
+        self.base64_img_data = base64.b64encode(img_data).decode('utf-8')
 
     def test_add_mov_success(self):
         if not add_mov:
@@ -34,7 +36,9 @@ class TestAddMovie(APITestCase):
             'release_date' :date(2022, 5, 1), 
             'cast' : 'John Doe',
             'director' :'Jane Smith',
-            'movie_description' : 'A test movie'
+            'movie_description' : 'A test movie',
+            'posterIMG': self.base64_img_data,
+            'featureIMG': self.base64_img_data
         }
 
         response = self.client.post(self.url, payload)
@@ -58,7 +62,9 @@ class TestAddMovie(APITestCase):
             'release_date' :date(2022, 5, 1), 
             'cast' : 'John Doe',
             'director' :'Jane Smith',
-            'movie_description' : 'A test movie'
+            'movie_description' : 'A test movie',
+            'posterIMG': self.base64_img_data,
+            'featureIMG': self.base64_img_data
         }
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

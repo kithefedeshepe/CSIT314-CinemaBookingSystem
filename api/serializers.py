@@ -59,6 +59,8 @@ class MovieSerializer(serializers.ModelSerializer):
             'cast',
             'director',
             'movie_description',
+            'posterIMG',
+            'featureIMG',
         ]
 
 class UpdateMovieSerializer(serializers.ModelSerializer):
@@ -72,6 +74,8 @@ class UpdateMovieSerializer(serializers.ModelSerializer):
             'cast',
             'director',
             'movie_description',
+            'posterIMG',
+            'featureIMG',
         ]
 
 class CinemaRoomSerializer(serializers.ModelSerializer):
