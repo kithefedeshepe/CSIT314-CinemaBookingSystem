@@ -7,7 +7,7 @@ from django.urls import reverse
 from datetime import timedelta, date
 import base64
 
-class TestUpdateFnb(APITestCase):
+class TestDeleteFnb(APITestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -18,8 +18,8 @@ class TestUpdateFnb(APITestCase):
         response = self.client.post('/login/', {'username': 'admin', 'password': 'password'})
         self.admin_token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.admin_token)
-        if update_fnb:
-            self.url = reverse('updateFnb')
+        if del_fnb:
+            self.url = reverse('delFnb')
         #setup movie img
         with open('UnitTest/testimg.png', 'rb') as f:
             img_data = f.read()
@@ -34,22 +34,19 @@ class TestUpdateFnb(APITestCase):
             menuIMG= self.base64_img_data )
         self.fnb_obj.save()
 
-    def test_update_fnb_success(self):
+    def test_del_fnb_success(self):
         if not update_fnb:
             return
 
+        self.target = 'test'
         payload = {
-            'menu': 'test',
-            'menu_description': 'test updated',
-            'price': 99.99,
-            'menuIMG': self.base64_img_data1
+            'menu': self.target,
         }
 
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        fnb_result = FoodandBeverage.objects.filter(menu='test').first()
-        self.assertEqual(fnb_result.price, 99.99)
-        print("\nUnit test updateFnb_1 passed")
+        self.assertFalse(FoodandBeverage.objects.filter(menu=self.target).exists())
+        print("\nUnit test delFnb_1 passed")
         
 
     def test_update_fnb_unauthorized(self):
@@ -61,16 +58,27 @@ class TestUpdateFnb(APITestCase):
         self.test_token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
+        self.target = 'test'
         payload = {
-            'menu': 'test',
-            'menu_description': 'test updated',
-            'price': 10.24,
-            'menuIMG': self.base64_img_data1,
-            'is_available': False
+            'menu': self.target,
         }
 
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        fnb_result = FoodandBeverage.objects.filter(menu='test').first()
-        self.assertEqual(fnb_result.price, 10.23)
-        print("\nUnit test updateFnb_2 passed")
+        self.assertTrue(FoodandBeverage.objects.filter(menu=self.target).exists())
+        print("\nUnit test delFnb_2 passed")
+
+
+    def test_del_fnb_not_found(self):
+        if not del_fnb:
+            return
+
+        self.target = 'test1234123notfound'
+        payload = {
+            'menu': self.target,
+        }
+
+        response = self.client.post(self.url, payload)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        print("\nUnit test delFnb_3 passed")
+        

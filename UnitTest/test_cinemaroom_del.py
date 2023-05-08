@@ -33,7 +33,7 @@ class TestDelCinemaRoom(APITestCase):
 
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFalse(CinemaRoom.objects.filter(id=self.cr_del_target).exists())
+        self.assertFalse(CinemaRoom.objects.filter(name=self.cr_del_target).exists())
         print("\nUnit test delCR_1 passed")
 
 
@@ -53,7 +53,7 @@ class TestDelCinemaRoom(APITestCase):
 
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertTrue(CinemaRoom.objects.filter(id=self.cr_del_target).exists())
+        self.assertTrue(CinemaRoom.objects.filter(name=self.cr_del_target).exists())
         print("\nUnit test delCR_2 passed")
  
 

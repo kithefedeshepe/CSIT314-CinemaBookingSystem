@@ -32,6 +32,6 @@ urlpatterns = [
     path('getMovieSession/', Movies.getMovieSession, name='getMovieSession'),
     path('addFnb/', Fnbs.addFnb, name='addFnb'),
     path('viewAllFnb/', Fnbs.viewAllFnb, name='viewAllFnb'),
-    path('updateFnB/', Fnbs.updateFnB, name='updateFnB'),
-    path('delFnB/', Fnbs.delFnB, name='delFnB')
+    path('updateFnB/', Fnbs.updateFnB, name='updateFnb'),
+    path('delFnB/', Fnbs.delFnB, name='delFnb')
 ]

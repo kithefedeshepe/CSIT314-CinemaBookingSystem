@@ -30,9 +30,9 @@ class TestAddMovSes(APITestCase):
             return
         
         payload = {
-            'movie': self.movie_obj,
+            'movie_title': self.movie_obj.movie_title,
             'session_date': date(2022, 5, 25),
-            'cinema_room' : self.cr_obj,
+            'cinema_room' : self.cr_obj.name,
             'session_time': '19:30' 
         }
 
