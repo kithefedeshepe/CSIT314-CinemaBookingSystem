@@ -22,7 +22,7 @@ class TestAddMovSes(APITestCase):
         self.movie_obj = Movie.objects.create(movie_title='test', genre='action', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
         self.movie_obj.save()
         #setup cinema room
-        self.cr_obj = CinemaRoom.objects.create_user(name='Sample', capacity=100)
+        self.cr_obj = CinemaRoom.objects.create(name='Sample', capacity=100)
         self.cr_obj.save()
 
     def test_add_MS_success(self):
