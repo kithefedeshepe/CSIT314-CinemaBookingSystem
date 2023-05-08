@@ -32,8 +32,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from core.models import CustomUserManager
 # MOVIE
 from rest_framework.decorators import api_view, permission_classes
-from core.models import Movie, MovieImage
-from .serializers import MovieImageSerializer, MovieSerializer
+from core.models import Movie, MovieImage, CinemaRoom
+from .serializers import MovieImageSerializer, MovieSerializer, CinemaRoomSerializer
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 import base64
 from django.core.exceptions import ValidationError
@@ -355,8 +355,8 @@ class movieIMG(APIView):
     
     
 class Movies(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
     
     @api_view(['POST'])
     def addMov(request):
@@ -421,6 +421,32 @@ class Movies(APIView):
         else:
             # Return 400 if data is invalid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    @api_view(['POST'])
+    def addCR(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        serializer = CinemaRoomSerializer(data=request.data)
+        # Validate serializer data
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            # Return 400 if data is invalid
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @api_view(['GET'])   
+    def viewAllCR(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            #return Response(status=status.HTTP_403_FORBIDDEN)
+            cinemaRooms = CinemaRoom.objects.all()
+            serializer = CinemaRoomSerializer(cinemaRooms, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
 class allowAnyMovie(APIView):
     permission_classes = [AllowAny]
