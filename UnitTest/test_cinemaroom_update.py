@@ -34,7 +34,8 @@ class TestUpdateCinemaRoom(APITestCase):
 
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(self.cr_obj.capacity, 50)
+        obj_result = CinemaRoom.objects.filter(name=self.cr_update_target)
+        self.assertEqual(obj_result.capacity, 50)
         print("\nUnit test updateCR_1 passed")
 
 
