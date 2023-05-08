@@ -19,7 +19,7 @@ class TestDelCinemaRoom(APITestCase):
         if del_cinemaroom:
             self.url = reverse('delCR') 
         # create cinemaroom
-        self.cr_obj = CinemaRoom.objects.create_user(name='Sample', capacity=100)
+        self.cr_obj = CinemaRoom.objects.create(name='Sample', capacity=100)
         self.cr_obj.save()
 
     def test_del_CR_success(self):

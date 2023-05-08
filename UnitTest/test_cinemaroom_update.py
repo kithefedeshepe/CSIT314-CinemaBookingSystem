@@ -19,7 +19,7 @@ class TestUpdateCinemaRoom(APITestCase):
         if update_cinemaroom:
             self.url = reverse('updateCR') 
         # create cinemaroom
-        self.cr_obj = CinemaRoom.objects.create_user(name='Sample', capacity=100)
+        self.cr_obj = CinemaRoom.objects.create(name='Sample', capacity=100)
         self.cr_obj.save()
 
     def test_update_CR_success(self):
