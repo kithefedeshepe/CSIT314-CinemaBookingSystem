@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .views import AccountController, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, UserProfile, movieIMG, Movies, allowAnyMovie
+from .views import AccountController, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, UserProfile, movieIMG, Movies, allowAnyMovie, Fnbs
 
 
 urlpatterns = [
@@ -27,5 +27,11 @@ urlpatterns = [
     path('updateMov/', Movies.updateMov, name='updateMov'),
     path('view/', allowAnyMovie.viewAllMovie, name='viewMov'),
     path('addCR/', Movies.addCR, name='addCR'),
-    path('viewAllCR/', Movies.viewAllCR, name='viewAllCR')
+    path('viewAllCR/', Movies.viewAllCR, name='viewAllCR'),
+    path('updateCR/', Movies.updateCR, name='updateCR'),
+    path('delCR/', Movies.delCR, name='delCR'),
+    path('addFnb/', Fnbs.addFnb, name='addFnb'),
+    path('viewAllFnb/', Fnbs.viewAllFnb, name='viewAllFnb'),
+    path('updateFnB/', Fnbs.updateFnB, name='updateFnB'),
+    path('delFnB/', Fnbs.delFnB, name='delFnB')
 ]

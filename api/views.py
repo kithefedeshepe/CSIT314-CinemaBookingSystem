@@ -32,8 +32,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from core.models import CustomUserManager
 # MOVIE
 from rest_framework.decorators import api_view, permission_classes
-from core.models import Movie, MovieImage, CinemaRoom
-from .serializers import MovieImageSerializer, MovieSerializer, CinemaRoomSerializer
+from core.models import Movie, MovieImage, CinemaRoom, FoodandBeverage
+from .serializers import MovieImageSerializer, MovieSerializer, CinemaRoomSerializer, FoodandBeverageSerializer
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 import base64
 from django.core.exceptions import ValidationError
@@ -355,8 +355,8 @@ class movieIMG(APIView):
     
     
 class Movies(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     
     @api_view(['POST'])
     def addMov(request):
@@ -447,6 +447,45 @@ class Movies(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_403_FORBIDDEN)
+        
+    @api_view(['POST'])
+    def updateCR(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        # Get the movie object to update
+        roomName = request.data.get('name')
+        try:
+            cinemaRoom = CinemaRoom.objects.get(name=roomName)
+        except CinemaRoom.DoesNotExist:
+            return Response({'message': 'Cinema Room does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Create serializer with data from request body
+        serializer = CinemaRoomSerializer(cinemaRoom, data=request.data, partial=True)
+
+        # Validate serializer data
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+    @api_view(['POST'])
+    def delCR(request):
+         # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        # Get the cinema room object to delete
+        roomName = request.data.get('name')
+        try:
+            cinemaRoom = CinemaRoom.objects.get(name=roomName)
+        except CinemaRoom.DoesNotExist:
+            return Response({'message': 'Cinema Room does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Delete the cinema room
+        cinemaRoom.delete()
+        return Response(status=status.HTTP_200_OK)
+        
 
 class allowAnyMovie(APIView):
     permission_classes = [AllowAny]
@@ -476,3 +515,71 @@ class allowAnyMovie(APIView):
         movies = Movie.objects.all()
         serializer = UpdateMovieSerializer(movies, many=True)
         return Response(serializer.data)
+    
+
+class Fnbs(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+    
+    @api_view(['POST'])
+    def addFnb(request):
+         #Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        # Create serializer with data from request body
+        serializer = FoodandBeverageSerializer(data=request.data)
+
+        # Validate serializer data
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    @api_view(['GET'])
+    def viewAllFnb(request):
+         # Get all FnBs
+        fnbs = FoodandBeverage.objects.all()
+
+        # Serialize the queryset
+        serializer = FoodandBeverageSerializer(fnbs, many=True)
+
+        # Return the serialized data
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @api_view(['PUT'])
+    def updateFnB(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        # Get the FnB to update
+        try:
+            fnb = FoodandBeverage.objects.get(menu=request.data['menu'])
+        except FoodandBeverage.DoesNotExist:
+            return Response({'message': 'FnB not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Update the FnB data
+        serializer = FoodandBeverageSerializer(fnb, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    @api_view(['POST'])
+    def delFnB(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        # Get the FnB to delete
+        try:
+            fnb = FoodandBeverage.objects.get(menu=request.data['menu'])
+        except FoodandBeverage.DoesNotExist:
+            return Response({'message': 'FnB not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Delete the FnB
+        fnb.delete()
+        return Response(status=status.HTTP_200_OK)

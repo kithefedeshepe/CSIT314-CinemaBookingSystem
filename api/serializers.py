@@ -1,7 +1,7 @@
 #Handle complex data type
 from rest_framework import serializers
 from core.models import User
-from core.models import Profile, Movie, MovieImage, CinemaRoom
+from core.models import Profile, Movie, MovieImage, CinemaRoom, FoodandBeverage
 from django.http import JsonResponse
 
 
@@ -86,3 +86,13 @@ class CinemaRoomSerializer(serializers.ModelSerializer):
         if value < 1:
             raise serializers.ValidationError("Capacity must be a positive integer.")
         return value
+    
+class FoodandBeverageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FoodandBeverage
+        fields = [
+            'menu',
+            'menu_description',
+            'price',
+            'is_available'
+        ]
