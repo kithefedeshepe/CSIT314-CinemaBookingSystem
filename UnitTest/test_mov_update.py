@@ -5,6 +5,7 @@ from rest_framework import status
 from api.checklist import *
 from django.urls import reverse
 from datetime import timedelta, date
+import base64
 
 class TestMovUpdate(APITestCase):
     def setUp(self):
@@ -18,9 +19,19 @@ class TestMovUpdate(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.admin_token)
         if update_mov:
             self.url = reverse('updateMov')
+        #setup movie img
+        with open('UnitTest/testimg.png', 'rb') as f:
+            img_data = f.read()
+        self.base64_img_data = base64.b64encode(img_data).decode('utf-8')
+        with open('UnitTest/BBB.jpg', 'rb') as f:
+            img_data = f.read()
+        self.base64_img_data1 = base64.b64encode(img_data).decode('utf-8')
         #setup movie object
-        self.movie_obj = Movie.objects.create(movie_title='test', genre='action', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
-
+        self.movie_obj = Movie.objects.create(movie_title='test', duration=timedelta(hours=1, minutes=30), 
+                                              release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',
+                                              movie_description='A test movie',
+                                              posterIMG = self.base64_img_data,
+                                            featureIMG = self.base64_img_data)
 
     def test_update_mov(self):
         if not update_mov:
@@ -32,8 +43,10 @@ class TestMovUpdate(APITestCase):
             'duration' : timedelta(hours=1, minutes=30), 
             'release_date' :date(2022, 5, 1), 
             'cast' : 'John Doe Anderson',
-            'director' :'Jane Smith',
-            'movie_description' : 'A test movie'
+            'director' :'Jane Smith, Johnny Dang',
+            'movie_description' : 'A test movie updated',
+            'posterIMG': self.base64_img_data1,
+            'featureIMG': self.base64_img_data1
         }
 
         response = self.client.post(self.url, payload)
@@ -51,13 +64,15 @@ class TestMovUpdate(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         payload = {
-            'movie_title': 'test123', 
-            'genre': 'action',
+            'movie_title': 'test', 
+            'genre': 'Comedy',
             'duration' : timedelta(hours=1, minutes=30), 
             'release_date' :date(2022, 5, 1), 
             'cast' : 'John Doe Anderson',
-            'director' :'Jane Smith',
-            'movie_description' : 'A test movie'
+            'director' :'Jane Smith, Johnny Dang',
+            'movie_description' : 'A test movie updated',
+            'posterIMG': self.base64_img_data1,
+            'featureIMG': self.base64_img_data1
         }
 
         response = self.client.post(self.url, payload)

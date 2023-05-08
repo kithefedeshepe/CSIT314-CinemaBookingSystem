@@ -5,6 +5,7 @@ from rest_framework import status
 from api.checklist import *
 from django.urls import reverse
 from datetime import timedelta, date
+import base64
 
 class TestMovDel(APITestCase):
     def setUp(self):
@@ -18,8 +19,16 @@ class TestMovDel(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.admin_token)
         if del_mov:
             self.url = reverse('delMov')
+        #setup movie img
+        with open('UnitTest/testimg.png', 'rb') as f:
+            img_data = f.read()
+        self.base64_img_data = base64.b64encode(img_data).decode('utf-8')
         #setup movie object
-        self.movie_obj = Movie.objects.create(movie_title='test', duration=timedelta(hours=1, minutes=30), release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',movie_description='A test movie')
+        self.movie_obj = Movie.objects.create(movie_title='test', duration=timedelta(hours=1, minutes=30), 
+                                              release_date=date(2022, 5, 1), cast='John Doe',director='Jane Smith',
+                                              movie_description='A test movie',
+                                              posterIMG = self.base64_img_data,
+                                            featureIMG = self.base64_img_data)
 
 
     def test_del_mov(self):
