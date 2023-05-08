@@ -10,7 +10,6 @@ get_profile_exists = True
 ##
 add_mov_img = True #T
 del_mov_img = True
-get_mov_img = True
 #
 add_mov = True
 update_mov = True
@@ -23,3 +22,11 @@ del_movses = False
 add_cinemaroom = False
 update_cinemaroom = False
 del_cinemaroom = False
+#
+add_fnb = False
+update_fnb = False
+del_fnb = False
+#
+add_fnbimg = False
+del_fnbimg = False
+
