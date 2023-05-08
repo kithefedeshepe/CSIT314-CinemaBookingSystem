@@ -16,17 +16,14 @@ update_mov = True
 del_mov = True
 search_mov = True
 #
-add_movses = False
-del_movses = False
+add_movses = True
+del_movses = True
 #
-add_cinemaroom = False
-update_cinemaroom = False
-del_cinemaroom = False
+add_cinemaroom = True
+update_cinemaroom = True
+del_cinemaroom = True
 #
-add_fnb = False
-update_fnb = False
-del_fnb = False
-#
-add_fnbimg = False
-del_fnbimg = False
+add_fnb = True
+update_fnb = True
+del_fnb = True
 
