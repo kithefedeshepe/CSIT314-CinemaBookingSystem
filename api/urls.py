@@ -33,5 +33,5 @@ urlpatterns = [
     path('addFnb/', Fnbs.addFnb, name='addFnb'),
     path('viewAllFnb/', Fnbs.viewAllFnb, name='viewAllFnb'),
     path('updateFnB/', Fnbs.updateFnB, name='updateFnB'),
-    path('delFnB/', Fnbs.delFnB, name='delFnB')
+    path('delFnB/', Fnbs.delFnB, name='delFnb')
 ]

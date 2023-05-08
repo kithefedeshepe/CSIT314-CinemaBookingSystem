@@ -70,7 +70,7 @@ class TestDeleteFnb(APITestCase):
 
 
     def test_del_fnb_not_found(self):
-        if not update_fnb:
+        if not del_fnb:
             return
 
         self.target = 'test1234123notfound'
