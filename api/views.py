@@ -32,11 +32,12 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from core.models import CustomUserManager
 # MOVIE
 from rest_framework.decorators import api_view, permission_classes
-from core.models import Movie, MovieImage, CinemaRoom, FoodandBeverage
-from .serializers import MovieImageSerializer, MovieSerializer, CinemaRoomSerializer, FoodandBeverageSerializer
+from core.models import Movie, MovieImage, CinemaRoom, FoodandBeverage, MovieSession
+from .serializers import MovieImageSerializer, MovieSerializer, CinemaRoomSerializer, FoodandBeverageSerializer, MovieSessionSerializer
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 import base64
 from django.core.exceptions import ValidationError
+from datetime import datetime
 
 
 class AccountController:
@@ -485,6 +486,102 @@ class Movies(APIView):
         # Delete the cinema room
         cinemaRoom.delete()
         return Response(status=status.HTTP_200_OK)
+    
+    @api_view(['GET'])   
+    def viewAllCR(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        cinemaRooms = CinemaRoom.objects.all()
+        serializer = CinemaRoomSerializer(cinemaRooms, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+    @api_view(['POST'])
+    def addMS(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        # Get movie, session date, cinema room and session time from request data
+        try:
+            title = request.data['movie_title']
+            session_date = datetime.strptime(request.data['session_date'], '%B %d, %Y').date()
+            cinema_room_name = request.data['cinema_room']
+            session_time = request.data['session_time']
+        except (KeyError, ValueError):
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        # Retrieve movie and cinema room objects from the database
+        try:
+            movie = Movie.objects.get(movie_title=title)
+            cinema_room = CinemaRoom.objects.get(name=cinema_room_name)
+        except (Movie.DoesNotExist, CinemaRoom.DoesNotExist):
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        # Check if session time is valid
+        valid_session_times = ['8:30', '11:30', '14:00', '16:30', '17:50', '18:40', '19:30', '20:40', '21:10']
+        if session_time not in valid_session_times:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        # Create new movie session
+        movie_session = MovieSession.objects.create(
+            movie=movie,
+            session_date=session_date,
+            cinema_room=cinema_room,
+            session_time=session_time
+        )
+
+        return Response(status=status.HTTP_200_OK)
+    
+    @api_view(['GET'])
+    def viewAllMS(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        # Retrieve all movie sessions from the database
+        movie_sessions = MovieSession.objects.all()
+
+        # Serialize the movie sessions
+        serializer = MovieSessionSerializer(movie_sessions, many=True)
+
+        # Return the serialized data
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @api_view(['POST'])
+    def delMS(request):
+        try:
+            title = request.data['movie']
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            movie = Movie.objects.get(movie_title=title)
+            session = MovieSession.objects.filter(movie=movie)
+            if not session:
+                raise MovieSession.DoesNotExist
+        except MovieSession.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        session.delete()
+        return Response(status=status.HTTP_200_OK)
+    
+    @api_view(['POST'])
+    def getMovieSession(request):
+        try:
+            movie_title = request.data['movie']
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            movie = Movie.objects.get(movie_title=movie_title)
+            sessions = MovieSession.objects.filter(movie=movie)
+        except (Movie.DoesNotExist, CinemaRoom.DoesNotExist):
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serialized_sessions = MovieSessionSerializer(sessions, many=True).data
+        return Response(serialized_sessions, status=status.HTTP_200_OK)
         
 
 class allowAnyMovie(APIView):
