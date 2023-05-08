@@ -426,7 +426,7 @@ class Movies(APIView):
         # Get movie, session date, cinema room and session time from request data
         try:
             title = request.data['movie_title']
-            session_date = datetime.strptime(request.data['session_date'], '%B %d, %Y').date()
+            session_date = request.data['session_date']
             cinema_room_name = request.data['cinema_room']
             session_time = request.data['session_time']
         except (KeyError, ValueError):
@@ -470,15 +470,19 @@ class Movies(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     @api_view(['POST'])
+    #Search by movie session id
     def delMS(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        
         try:
-            title = request.data['movie']
+            myid = request.data['id']
         except KeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            movie = Movie.objects.get(movie_title=title)
-            session = MovieSession.objects.filter(movie=movie)
+            session = MovieSession.objects.filter(id=myid)
             if not session:
                 raise MovieSession.DoesNotExist
         except MovieSession.DoesNotExist:
