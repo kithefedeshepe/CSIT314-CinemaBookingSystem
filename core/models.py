@@ -83,7 +83,9 @@ class Movie(models.Model):
     cast = models.CharField(max_length=200)
     director = models.CharField(max_length=50)
     movie_description = models.TextField()
-     
+    posterIMG = models.TextField()
+    featureIMG = models.TextField()
+    
     def formatted_duration(self):
         hours, minutes = self.duration.total_seconds() // 3600, \
                                   (self.duration.total_seconds() // 60) % 60
@@ -91,13 +93,6 @@ class Movie(models.Model):
     
     def __str__(self):
         return self.movie_title
-    
-
-class MovieImage(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    data = models.TextField()
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    is_poster = models.BooleanField(default=True)
        
 class CinemaRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -138,17 +133,13 @@ class FoodandBeverage(models.Model):
     menu_description = models.TextField()
     price = models.FloatField() 
     is_available = models.BooleanField(default=True)
+    menuIMG = models.TextField()
     
     def __str__(self):
         return f"{self.menu} - {self.menu_description}"
 
     class Meta:
         verbose_name_plural = 'Foods and Beverages'   
- 
-class FoodandBeverageImage(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    data = models.TextField()
-    FnB = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE)  
 
 
 class PurchaseTicket(models.Model):
