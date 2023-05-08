@@ -72,5 +72,5 @@ class TestUpdateFnb(APITestCase):
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         fnb_result = FoodandBeverage.objects.filter(menu='test').first()
-        self.assertEqual(fnb_result.price, 10.24)
-        print("\nUnit test addFnb_2 passed")
+        self.assertEqual(fnb_result.price, 10.23)
+        print("\nUnit test updateFnb_2 passed")

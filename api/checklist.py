@@ -26,4 +26,7 @@ del_cinemaroom = True
 add_fnb = True
 update_fnb = True
 del_fnb = True
-
+#
+add_book = False
+update_book = False
+del_book = False
