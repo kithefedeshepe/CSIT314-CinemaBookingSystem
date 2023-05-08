@@ -565,7 +565,7 @@ class Fnbs(APIView):
         # Return the serialized data
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    @api_view(['PUT'])
+    @api_view(['POST'])
     def updateFnB(request):
         # Check if user is a cinemaManager.
         if request.user.role != 'CinemaManager':
