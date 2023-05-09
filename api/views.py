@@ -624,7 +624,7 @@ class Purchase(APIView):
     #authentication_classes = [TokenAuthentication]
     #permission_classes = [IsAuthenticated]
 
-    #still testing
+    #still testing...
     @api_view(['POST'])
     def addBook(request):
         try:
