@@ -4,7 +4,9 @@ from core.models import User
 from core.models import Profile, Movie, CinemaRoom, FoodandBeverage, MovieSession
 from django.http import JsonResponse
 
+# Serializer: Convert model to json format
 
+# User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -15,11 +17,8 @@ class UserSerializer(serializers.ModelSerializer):
             'role'
         ]
 
+# Required field for register account
 class RegisterAccount(serializers.ModelSerializer):
-    #media_type = serializers.CharField(max_length=100)
-    #username = serializers.CharField(max_length=50)
-    #password = serializers.CharField(max_length=50)
-    #email = serializers.EmailField()
     class Meta:
         model = User
         fields = [
@@ -29,25 +28,13 @@ class RegisterAccount(serializers.ModelSerializer):
             'role',
         ]
 
+# User profile
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = [
-            'id',
-            'user',
-            'name',
-            'date_of_birth',
-            'loyalty_points',
-        ]
+        fields = '__all__'
 
-# class MovieImageSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = MovieImage
-#         fields = [
-#             'data',
-#             'movie',
-#         ]
-
+# Movie
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
@@ -63,6 +50,7 @@ class MovieSerializer(serializers.ModelSerializer):
             'featureIMG',
         ]
 
+# Update movie
 class UpdateMovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
@@ -78,6 +66,7 @@ class UpdateMovieSerializer(serializers.ModelSerializer):
             'featureIMG',
         ]
 
+# Cinemaroom
 class CinemaRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = CinemaRoom
@@ -90,7 +79,8 @@ class CinemaRoomSerializer(serializers.ModelSerializer):
         if value < 1:
             raise serializers.ValidationError("Capacity must be a positive integer.")
         return value
-    
+
+# Movie session
 class MovieSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = MovieSession
@@ -100,7 +90,8 @@ class MovieSessionSerializer(serializers.ModelSerializer):
                   'cinema_room', 
                   'session_time'
         ]
-    
+
+# Fnb
 class FoodandBeverageSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodandBeverage

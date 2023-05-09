@@ -267,13 +267,13 @@ class UserProfile(APIView):
         serializer = ProfileSerializer(profiles, many = True)
         return Response(serializer.data)
     
-    @api_view(['GET'])
+    @api_view(['POST'])
     def getProfile(request):
-        token = request.data.get('token')
-        profile = request.user.profiles.first() # retrieve the first profile associated with the user
+        myusername = request.data.get('username')
+        profile = Profile.objects.get(user__username=myusername)
         serializer = ProfileSerializer(profile)
         return Response(serializer.data)
-       
+    
 class Movies(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
