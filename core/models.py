@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from django.db import models
 import uuid
 
-# Custom admin
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, role=None):
         if not username:
@@ -33,7 +33,7 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-# Custom user
+
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(max_length=30, unique=True)
@@ -62,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         return True
 
-# User profile
+
 class Profile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='profiles')
@@ -72,8 +72,8 @@ class Profile(models.Model):
     
     def __str__(self):
         return self.name
-
-# Movie   
+    
+    
 class Movie(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     movie_title = models.CharField(max_length=100)
@@ -83,9 +83,7 @@ class Movie(models.Model):
     cast = models.CharField(max_length=200)
     director = models.CharField(max_length=50)
     movie_description = models.TextField()
-    posterIMG = models.TextField()
-    featureIMG = models.TextField()
-    
+     
     def formatted_duration(self):
         hours, minutes = self.duration.total_seconds() // 3600, \
                                   (self.duration.total_seconds() // 60) % 60
@@ -93,8 +91,14 @@ class Movie(models.Model):
     
     def __str__(self):
         return self.movie_title
+    
 
-# Cinema room     
+class MovieImage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    data = models.TextField()
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    is_poster = models.BooleanField(default=True)
+       
 class CinemaRoom(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
@@ -103,7 +107,7 @@ class CinemaRoom(models.Model):
     def __str__(self):
         return self.name
     
-# Movie session
+    
 class MovieSession(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='sessions')
@@ -127,22 +131,26 @@ class MovieSession(models.Model):
     def __str__(self):
         return f"{self.movie.movie_title}-{self.session_date}-{self.session_time}-{self.cinema_room.name}"
 
-# Fnb
+
 class FoodandBeverage(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     menu = models.CharField(max_length=100)
     menu_description = models.TextField()
     price = models.FloatField() 
     is_available = models.BooleanField(default=True)
-    menuIMG = models.TextField()
     
     def __str__(self):
         return f"{self.menu} - {self.menu_description}"
 
     class Meta:
         verbose_name_plural = 'Foods and Beverages'   
+ 
+class FoodandBeverageImage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    data = models.TextField()
+    FnB = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE)  
 
-# Booking
+
 class PurchaseTicket(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     booking_owner = models.ForeignKey(User, on_delete=models.CASCADE) 
@@ -175,7 +183,7 @@ class PurchaseTicket(models.Model):
     def __str__(self):
         return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
 
-# Pre-order fnb   
+    
 class PurchaseFnB(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     booking_owner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -196,7 +204,7 @@ class PurchaseFnB(models.Model):
     def __str__(self):
         return f"{self.menu}X{self.price}"
 
-# Report (cinema owner)
+
 class Report(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     report_description = models.TextField()
