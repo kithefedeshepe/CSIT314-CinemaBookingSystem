@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .views import AccountController, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, UserProfile, Movies, allowAnyMovie, Fnbs, Purchase
+from .views import AccountController, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, UserProfile, Movies, allowAnyMovie, Fnbs
 
 
 urlpatterns = [
@@ -46,10 +46,6 @@ urlpatterns = [
     path('viewAllFnb/', Fnbs.viewAllFnb, name='viewAllFnb'),
     path('updateFnB/', Fnbs.updateFnB, name='updateFnb'),
     path('delFnB/', Fnbs.delFnB, name='delFnb'),
-
-    # Purchase booking                                                                                      
-    path('addBook/', Purchase.addBook, name='addBook'),
-    path('viewAllBook/', Purchase.viewAllBook, name='viewAllBook'),
 
     #helper function
     path('viewUpcoming/', allowAnyMovie.getUpComing),
