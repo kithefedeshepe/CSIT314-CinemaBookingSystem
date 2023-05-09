@@ -1,7 +1,7 @@
 #Handle complex data type
 from rest_framework import serializers
 from core.models import User
-from core.models import Profile, Movie, CinemaRoom, FoodandBeverage, MovieSession
+from core.models import Profile, Movie, CinemaRoom, FoodandBeverage, MovieSession, PurchaseTicket
 from django.http import JsonResponse
 
 # Serializer: Convert model to json format
@@ -100,4 +100,15 @@ class FoodandBeverageSerializer(serializers.ModelSerializer):
             'menu_description',
             'price',
             'is_available'
+        ]
+
+# Purchase booking
+class PurchaseTicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PurchaseTicket
+        fields = ['id', 
+                  'booking_owner', 
+                  'movie_session', 
+                  'ticket_type', 
+                  'seat_number'
         ]

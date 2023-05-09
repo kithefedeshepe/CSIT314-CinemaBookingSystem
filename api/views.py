@@ -39,6 +39,9 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadReque
 import base64
 from django.core.exceptions import ValidationError
 from datetime import datetime
+# PURCHASE BOOKING
+from .serializers import PurchaseTicketSerializer
+from core.models import PurchaseTicket
 
 
 class AccountController:
@@ -302,10 +305,6 @@ class Movies(APIView):
 
         try:
             # Retrieve the movie with the specified id
-            #movie_id = request.data.get('id')
-            #movie = Movie.objects.get(id=movie_id)
-
-            # Retrieve the movie with the specified id
             movie_title_obj = request.data.get('movie_title')
             movie = Movie.objects.get(movie_title=movie_title_obj)
         except Movie.DoesNotExist:
@@ -555,8 +554,8 @@ class allowAnyMovie(APIView):
         return Response(serialized_sessions, status=status.HTTP_200_OK)
 
 class Fnbs(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     
     @api_view(['POST'])
     def addFnb(request):
@@ -620,3 +619,59 @@ class Fnbs(APIView):
         # Delete the FnB
         fnb.delete()
         return Response(status=status.HTTP_200_OK)
+
+class Purchase(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+
+    #still testing...
+    @api_view(['POST'])
+    def addBook(request):
+        try:
+            username = request.data['booking_owner']
+            session_id = request.data['movie_session']
+            ticket_type = request.data['ticket_type']
+            seat_number = request.data['seat_number']
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = User.objects.get(id=username)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            session = MovieSession.objects.get(id=session_id)
+        except MovieSession.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        booking = PurchaseTicket.objects.create(
+            booking_owner=user,
+            movie_session=session,
+            ticket_type=ticket_type,
+            seat_number=seat_number
+        )
+
+        return Response(status=status.HTTP_200_OK)
+
+    #still testing
+    #@api_view(['POST']) 
+    @api_view(['GET'])
+    def viewAllBook(request):
+        # Check if user is authenticated.
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        #try:
+        #    username = request.data['booking_owner']
+        #except KeyError:
+        #    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            #bookings = PurchaseTicket.objects.filter(booking_owner=username)
+            bookings = PurchaseTicket.objects.filter(booking_owner=request.user)
+        except PurchaseTicket.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = PurchaseTicketSerializer(bookings, many=True)
+        return Response(serializer.data)
