@@ -16,6 +16,7 @@ from .serializers import RegisterAccount
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.hashers import make_password
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from django.utils import timezone
 
 # Create your views here.
 # LOGIN 
@@ -535,6 +536,21 @@ class allowAnyMovie(APIView):
         """
         movies = Movie.objects.all()
         serializer = UpdateMovieSerializer(movies, many=True)
+        return Response(serializer.data)
+    
+    #helper function
+    @api_view(['GET'])
+    def getUpComing(request):
+        current_date = timezone.now().date()
+        movies = Movie.objects.filter(release_date__gte=current_date)
+        serializer = MovieSerializer(movies, many=True)
+        return Response(serializer.data)
+
+    @api_view(['GET'])
+    def getNowShowing(request):
+        current_date = timezone.now().date()
+        movies = Movie.objects.filter(release_date__lt=current_date)
+        serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
     
 
