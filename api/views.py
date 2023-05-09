@@ -491,21 +491,6 @@ class Movies(APIView):
         session.delete()
         return Response(status=status.HTTP_200_OK)
     
-    @api_view(['POST'])
-    def getMovieSession(request):
-        try:
-            movie_title = request.data['movie']
-        except KeyError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            movie = Movie.objects.get(movie_title=movie_title)
-            sessions = MovieSession.objects.filter(movie=movie)
-        except (Movie.DoesNotExist, CinemaRoom.DoesNotExist):
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        serialized_sessions = MovieSessionSerializer(sessions, many=True).data
-        return Response(serialized_sessions, status=status.HTTP_200_OK)
         
 
 class allowAnyMovie(APIView):
@@ -552,6 +537,21 @@ class allowAnyMovie(APIView):
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
     
+    @api_view(['POST'])
+    def getMovieSession(request):
+        try:
+            movie_title = request.data['movie_title']
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            movie = Movie.objects.get(movie_title=movie_title)
+            sessions = MovieSession.objects.filter(movie=movie)
+        except (Movie.DoesNotExist, CinemaRoom.DoesNotExist):
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serialized_sessions = MovieSessionSerializer(sessions, many=True).data
+        return Response(serialized_sessions, status=status.HTTP_200_OK)
 
 class Fnbs(APIView):
     authentication_classes = [TokenAuthentication]
