@@ -69,4 +69,16 @@ class TestDeleteFnb(APITestCase):
         print("\nUnit test delFnb_2 passed")
 
 
+    def test_del_fnb_not_found(self):
+        if not del_fnb:
+            return
+
+        self.target = 'test1234123notfound'
+        payload = {
+            'menu': self.target,
+        }
+
+        response = self.client.post(self.url, payload)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        print("\nUnit test delFnb_3 passed")
         
