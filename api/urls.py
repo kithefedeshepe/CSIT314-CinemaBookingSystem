@@ -39,7 +39,7 @@ urlpatterns = [
     path('addMS/', Movies.addMS, name='addMS'),
     path('viewAllMS/', Movies.viewAllMS, name='viewAllMS'),
     path('delMS/', Movies.delMS, name='delMS'),
-    path('getMovieSession/', Movies.getMovieSession, name='getMovieSession'),
+    path('getMovieSession/', allowAnyMovie.getMovieSession, name='getMovieSession'),
 
     # Fnb management
     path('addFnb/', Fnbs.addFnb, name='addFnb'),
