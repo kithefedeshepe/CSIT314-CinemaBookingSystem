@@ -3,6 +3,8 @@ from django.test import SimpleTestCase
 from pymongo.errors import ConnectionFailure
 
 class TestDB(SimpleTestCase):
+
+    # Test connection between api and mongoDB
     def test_db_con(self):
         try:
             client = MongoClient("mongodb+srv://bsian314:bsian314@bsian.lzgtcdx.mongodb.net/test", username="bsian314", password="bsian314")
