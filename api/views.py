@@ -355,16 +355,7 @@ class Movies(APIView):
             # Return 400 if data is invalid
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @api_view(['GET'])   
-    def viewAllCR(request):
-        # Check if user is a cinemaManager.
-        if request.user.role != 'CinemaManager':
-            #return Response(status=status.HTTP_403_FORBIDDEN)
-            cinemaRooms = CinemaRoom.objects.all()
-            serializer = CinemaRoomSerializer(cinemaRooms, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_403_FORBIDDEN)
+
         
     @api_view(['POST'])
     def updateCR(request):
@@ -415,7 +406,13 @@ class Movies(APIView):
         cinemaRooms = CinemaRoom.objects.all()
         serializer = CinemaRoomSerializer(cinemaRooms, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-        
+    
+
+
+class MovieSession(APIView):
+    Authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     def addMS(request):
         # Check if user is a cinemaManager.
@@ -511,6 +508,17 @@ class allowAnyMovie(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response("No keyword provided", status=status.HTTP_400_BAD_REQUEST)
+        
+    @api_view(['GET'])   
+    def viewAllCR(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            #return Response(status=status.HTTP_403_FORBIDDEN)
+            cinemaRooms = CinemaRoom.objects.all()
+            serializer = CinemaRoomSerializer(cinemaRooms, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
         
     @api_view(['GET'])
     def viewAllMovie(request):
@@ -620,14 +628,14 @@ class Fnbs(APIView):
         return Response(status=status.HTTP_200_OK)
 
 class Purchase(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
 
     @api_view(['POST'])
     def addBook(request):
         # Check if user is authenticated.
-        if not request.user.is_authenticated:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        #if not request.user.is_authenticated:
+            #return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         # Create serializer with data from request body
         serializer = PurchaseTicketSerializer(data=request.data)

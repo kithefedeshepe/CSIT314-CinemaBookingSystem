@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .views import AccountController, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, UserProfile, Movies, allowAnyMovie, Fnbs, Purchase
+from .views import AccountController, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, UserProfile, Movies, allowAnyMovie, Fnbs, Purchase, MovieSession
 
 
 urlpatterns = [
@@ -31,14 +31,14 @@ urlpatterns = [
 
     # Cinema room management
     path('addCR/', Movies.addCR, name='addCR'),
-    path('viewAllCR/', Movies.viewAllCR, name='viewAllCR'),
+    path('viewAllCR/', allowAnyMovie.viewAllCR, name='viewAllCR'),
     path('updateCR/', Movies.updateCR, name='updateCR'),
     path('delCR/', Movies.delCR, name='delCR'),
 
     # Movie session management
-    path('addMS/', Movies.addMS, name='addMS'),
-    path('viewAllMS/', Movies.viewAllMS, name='viewAllMS'),
-    path('delMS/', Movies.delMS, name='delMS'),
+    path('addMS/', MovieSession.addMS, name='addMS'),
+    path('viewAllMS/', MovieSession.viewAllMS, name='viewAllMS'),
+    path('delMS/', MovieSession.delMS, name='delMS'),
     path('getMovieSession/', allowAnyMovie.getMovieSession, name='getMovieSession'),
 
     # Fnb management
