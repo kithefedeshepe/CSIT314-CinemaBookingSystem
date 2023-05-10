@@ -512,13 +512,12 @@ class allowAnyMovie(APIView):
     @api_view(['GET'])   
     def viewAllCR(request):
         # Check if user is a cinemaManager.
-        if request.user.role != 'CinemaManager':
+        #if request.user.role != 'CinemaManager':
             #return Response(status=status.HTTP_403_FORBIDDEN)
-            cinemaRooms = CinemaRoom.objects.all()
-            serializer = CinemaRoomSerializer(cinemaRooms, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(status=status.HTTP_403_FORBIDDEN)
+        cinemaRooms = CinemaRoom.objects.all()
+        serializer = CinemaRoomSerializer(cinemaRooms, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
         
     @api_view(['GET'])
     def viewAllMovie(request):
