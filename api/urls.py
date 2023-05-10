@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .views import AccountController, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, UserProfile, Movies, allowAnyMovie, Fnbs, Purchase, MovieSession
+from .controllers import AccountController, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, UserProfile, Movies, allowAnyMovie, Fnbs, Purchase, MovieSessionC
 
 
 urlpatterns = [
@@ -13,20 +13,25 @@ urlpatterns = [
     path('getUser/', GetUserView.getUser, name="getUser"),
 
     # Account management
-    path('suspendUser/', UpdateUser.suspendUser, name='suspendUser'),
-    path('reactivateUser/', UpdateUser.reactivateUser, name='reactivateUser'),
-    path('changePW/', UpdateUser.changePassword, name='changePassword'),
-    path('changeEmail/', UpdateUser.changeEmail, name='changeEmail'),
+    #path('suspendUser/', UpdateUser.suspendUser, name='suspendUser'),
+    #path('reactivateUser/', UpdateUser.reactivateUser, name='reactivateUser'),
+    #path('changePW/', UpdateUser.changePassword, name='changePassword'),
+    #path('changeEmail/', UpdateUser.changeEmail, name='changeEmail'),
+    path('deleteUser/', UpdateUser.deleteUser, name='deleteUser'),
+    path('updateUser/', UpdateUser.updateUser, name='updateUser'),
     path('searchUser/', SearchUserView.searchUser, name='searchUser'),
+
+    #Profile management
     path('createProfile/', UserProfile.createProfile, name='createProfile'),
     path('viewProfile/', UserProfile.viewProfile, name='viewProfile'),
-    path('getProfile/', UserProfile.getProfile, name='getProfile'),
+    path('searchProfile/', UserProfile.searchProfile, name='searchProfile'),
+    path('deleteProfile/', UserProfile.deleteProfile, name='deleteProfile'),
 
     # Movie management
     path('addMov/', Movies.addMov, name='addMov'),
     path('delMov/', Movies.delMov, name='delMov'),
-    path('SearchMovie/', allowAnyMovie.SearchMov, name='SearchMovie'),
-    path('updateMov/', Movies.updateMov, name='updateMov'),
+    path('searchMovie/', allowAnyMovie.SearchMov, name='SearchMovie'),
+    path('updateMovie/', Movies.updateMov, name='updateMov'),
     path('view/', allowAnyMovie.viewAllMovie, name='viewMov'),
 
     # Cinema room management
@@ -36,9 +41,9 @@ urlpatterns = [
     path('delCR/', Movies.delCR, name='delCR'),
 
     # Movie session management
-    path('addMS/', MovieSession.addMS, name='addMS'),
-    path('viewAllMS/', MovieSession.viewAllMS, name='viewAllMS'),
-    path('delMS/', MovieSession.delMS, name='delMS'),
+    path('addMS/', MovieSessionC.addMS, name='addMS'),
+    path('viewAllMS/', MovieSessionC.viewAllMS, name='viewAllMS'),
+    path('delMS/', MovieSessionC.delMS, name='delMS'),
     path('getMovieSession/', allowAnyMovie.getMovieSession, name='getMovieSession'),
 
     # Fnb management
