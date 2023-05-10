@@ -2,7 +2,7 @@ import base64
 import uuid
 
 # Base64-encoded binary value
-base64_value = 'JmOISFo0Rb6qXKX/uLq/CQ=='
+base64_value = 'oh/odkjESXq1SLaGOIcNJg=='
 
 # Decode Base64 string
 binary_value = base64.b64decode(base64_value)

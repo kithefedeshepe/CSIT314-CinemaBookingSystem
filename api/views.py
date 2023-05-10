@@ -43,7 +43,6 @@ from datetime import datetime
 from .serializers import PurchaseTicketSerializer
 from core.models import PurchaseTicket
 
-
 class AccountController:
     #GETS USER ACCOUNT
     @api_view(['GET'])
@@ -621,38 +620,24 @@ class Fnbs(APIView):
         return Response(status=status.HTTP_200_OK)
 
 class Purchase(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
-    #still testing...
     @api_view(['POST'])
     def addBook(request):
-        try:
-            username = request.data['booking_owner']
-            session_id = request.data['movie_session']
-            ticket_type = request.data['ticket_type']
-            seat_number = request.data['seat_number']
-        except KeyError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        # Check if user is authenticated.
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        try:
-            user = User.objects.get(id=username)
-        except User.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        # Create serializer with data from request body
+        serializer = PurchaseTicketSerializer(data=request.data)
 
-        try:
-            session = MovieSession.objects.get(id=session_id)
-        except MovieSession.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        booking = PurchaseTicket.objects.create(
-            booking_owner=user,
-            movie_session=session,
-            ticket_type=ticket_type,
-            seat_number=seat_number
-        )
-
-        return Response(status=status.HTTP_200_OK)
+        # Validate serializer data
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #still testing
     #@api_view(['POST']) 
