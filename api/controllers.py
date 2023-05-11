@@ -88,6 +88,7 @@ class LoginView(APIView):
         else:
             return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         
+
 class LogoutView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -105,11 +106,11 @@ class LogoutView(APIView):
         myuser.userlogout(request)
         return response
     
+
 class GetUserView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    #getUser(id, username, role)
     @api_view(['GET'])
     def getUser(request):
         user = request.user
@@ -119,6 +120,7 @@ class GetUserView(APIView):
             'role': user.role
         }
         return Response(user_data, status=status.HTTP_200_OK)
+    
     
 class UpdateUser(APIView):
     authentication_classes = [TokenAuthentication]
@@ -145,7 +147,12 @@ class UpdateUser(APIView):
             return Response(status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-    
+
+
+class DeleteUser(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     def deleteUser(request):
         try:
@@ -162,103 +169,16 @@ class UpdateUser(APIView):
         except User.DoesNotExist:
             return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
         
-    '''
-    @api_view(['POST'])
-    def suspendUser(request):
-        try:
-            user = request.user
-            if user.role != 'UserAdmin':
-                return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
-            # Get the username from the request data
-            username = request.data.get('username')
-            # Retrieve the user with the specified username 
-            user1 = User.objects.get(username=username)
-            # Check if the user is already suspended
-            if not user1.is_active:
-                return Response({'message': 'User account is already suspended.'}, status=status.HTTP_400_BAD_REQUEST)
-            # Suspend the user account
-            user1.is_active = False
-            user1.save()
-            # Return a success response
-            return Response({'message': 'User account has been suspended.'}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
     
-    @api_view(['POST'])
-    def reactivateUser(request):
-        try:
-            user = request.user
-            if user.role != 'UserAdmin':
-                return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
-            # Get the username from the request data
-            username = request.data.get('username')
-            # Retrieve the user with the specified username 
-            user1 = User.objects.get(username=username)
-            # Check if the user is already suspended
-            if user1.is_active:
-                return Response({'message': 'User account is not suspended.'}, status=status.HTTP_400_BAD_REQUEST)
-            # Suspend the user account
-            user1.is_active = True
-            user1.save()
-            # Return a success response
-            return Response({'message': 'User account activated.'}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-
-    @api_view(['POST'])
-    def changePassword(request):
-        try:
-            user = request.user
-            if user.role != 'UserAdmin':
-                return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
-            # Get the username and new password from the request data
-            username = request.data.get('username')
-            new_password = request.data.get('new_password')
-            # Retrieve the user with the specified username
-            user1 = User.objects.get(username=username)
-            # Set the new password for the user
-            user1.set_password(new_password)
-            user1.save()
-            # Return a success response
-            return Response({'message': 'User password has been changed.'}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-
-    @api_view(['POST'])
-    def changeEmail(request):
-        try:
-            user = request.user
-            if user.role != 'UserAdmin':
-                return Response({'message': 'You don\'t have permission to suspend account'}, status=403)
-            # Get the username and new email from the request data
-            username = request.data.get('username')
-            new_email = request.data.get('new_email')
-            # Retrieve the user with the specified username
-            user1 = User.objects.get(username=username)
-            # Check if new email is provided
-            if not new_email:
-                raise ValueError('New email is required')
-            # Set the new email for the user
-            user1.email = new_email
-            user1.save()
-            # Return a success response
-            return Response({'message': 'User email has been changed.'}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-        except ValueError as e:
-            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-    '''
-
 class SearchUserView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     @api_view(['POST'])
     def searchUser(request):
-         # Check if user has permission to search user
-        if request.user.role != 'UserAdmin':
-           raise PermissionDenied("You do not have permission to search user.")
+        # Check if user has permission to search user
+        #if request.user.role != 'UserAdmin':
+        #    raise PermissionDenied("You do not have permission to search user.")
         # Get prompt from request body
         keyword = request.data.get('keyword', '')
         if not keyword:
@@ -269,7 +189,7 @@ class SearchUserView(APIView):
         data = [{'id': u.id, 'username': u.username, 'email': u.email, 'role': u.role} for u in users]
         return Response(data)
     
-class UserProfile(APIView):
+class CreateProfile(APIView):
     Authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     @api_view(['POST'])
@@ -281,13 +201,16 @@ class UserProfile(APIView):
 
         user = User()
         profile = Profile()
-
         user_obj = user.userget(username)
+
         profile.profilecreate(user_obj, name, date_of_birth)
 
         # Return a response with the created profile data
         return Response(status=status.HTTP_200_OK)
     
+class ViewProfile(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     @api_view(['GET'])
     def viewProfile(request):
         # check if user has permission to view profiles
@@ -299,6 +222,9 @@ class UserProfile(APIView):
         data = [{'id': p.id, 'user': p.user.username, 'name': p.name, 'date_of_birth': p.date_of_birth} for p in profiles]
         return Response(data)
     
+class SearchProfile(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     @api_view(['POST'])
     def searchProfile(request):
         keyword = request.data.get('keyword', '')
@@ -310,6 +236,9 @@ class UserProfile(APIView):
         data = [{'id': p.id, 'user': p.user.username, 'name': p.name, 'date_of_birth': p.date_of_birth} for p in profiles]
         return Response(data)
     
+class DeleteProfile(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     @api_view(['POST'])
     def deleteProfile(request):
         try:
@@ -326,7 +255,7 @@ class UserProfile(APIView):
         except Profile.DoesNotExist:
             return Response({'message': 'Profile not found.'}, status=status.HTTP_404_NOT_FOUND)
     
-class Movies(APIView):
+class AddMovie(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -351,8 +280,12 @@ class Movies(APIView):
         movie.moviecreate(movie_title, genre, duration, release_date, cast, director, movie_description, posterIMG, featureIMG)
 
         # Return a response with the created profile data
-        return Response(status=status.HTTP_200_OK)
-        
+        return Response(status=status.HTTP_201_CREATED)
+
+class DeleteMovie(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     def delMov(request):
         # Check if user is a cinemaManager
@@ -372,6 +305,10 @@ class Movies(APIView):
         # Return a success response
         return Response(status=status.HTTP_200_OK)
     
+class UpdateMovie(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])    
     def updateMov(request):
         
@@ -417,7 +354,11 @@ class Movies(APIView):
         movie_obj.movieupdate(genre, duration, release_date, cast, director, movie_description, posterIMG, featureIMG)
         # Return a success response
         return Response(status=status.HTTP_200_OK)
-        
+    
+class AddCinemaRoom(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     def addCR(request):
         # Check if user is a cinemaManager.
@@ -435,7 +376,10 @@ class Movies(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-        
+class UpdateCinemaRoom(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     def updateCR(request):
         # Check if user is a cinemaManager.
@@ -455,6 +399,11 @@ class Movies(APIView):
             capacity = None
         cr.cinemaroomupdate(capacity)
         return Response(status=status.HTTP_200_OK)
+        
+class DeleteCinemaRoom(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     
     @api_view(['GET'])   
     def viewAllCR(request):
@@ -486,7 +435,7 @@ class Movies(APIView):
     
 
 
-class MovieSessionC(APIView):
+class AddMovieSession(APIView):
     Authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -523,6 +472,10 @@ class MovieSessionC(APIView):
 
         return Response(status=status.HTTP_200_OK)
     
+class ViewAllMovieSession(APIView):
+    Authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['GET'])
     def viewAllMS(request):
         # Check if user is a cinemaManager.
@@ -535,6 +488,10 @@ class MovieSessionC(APIView):
         data = [{'id': s.id, 'movie': s.movie.movie_title, 'session_date': s.session_date, 'cinema_room': s.cinema_room.name} for s in sessions]
         return Response(data)
     
+class DeleteMovieSession(APIView):
+    Authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     #Search by movie session id
     def delMS(request):
@@ -555,8 +512,7 @@ class MovieSessionC(APIView):
         return Response(status=status.HTTP_200_OK)
     
         
-
-class allowAnyMovie(APIView):
+class SearchMovie(APIView):
     permission_classes = [AllowAny]
 
     @api_view(['POST'])
@@ -577,8 +533,25 @@ class allowAnyMovie(APIView):
             'posterIMG': m.posterIMG,
             'featureIMG': m.featureIMG} for m in movies]
         return Response(data)
-
         
+
+class ViewAllCinemaRoom(APIView):
+    permission_classes = [AllowAny]
+
+    @api_view(['GET'])   
+    def viewAllCR(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        result = CinemaRoom.cinemaroomall()
+        rooms = [r for r in result]
+        data = [{'id': r.id, 'name': r.name, 'capacity': r.capacity} for r in rooms]
+        return Response(data)
+
+
+class ViewAllMovie(APIView):
+    permission_classes = [AllowAny]
+
     @api_view(['GET'])
     def viewAllMovie(request):
         """
@@ -596,7 +569,11 @@ class allowAnyMovie(APIView):
             'posterIMG': m.posterIMG,
             'featureIMG': m.featureIMG} for m in movies]
         return Response(data)
-    
+
+
+class HelperFunction(APIView):
+    permission_classes = [AllowAny]
+
     #helper function
     @api_view(['GET'])
     def getUpComing(request):
@@ -628,7 +605,8 @@ class allowAnyMovie(APIView):
         serialized_sessions = MovieSessionSerializer(sessions, many=True).data
         return Response(serialized_sessions, status=status.HTTP_200_OK)
 
-class Fnbs(APIView):
+
+class AddFnbs(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -647,7 +625,11 @@ class Fnbs(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
+
+class ViewAllFnbs(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     @api_view(['GET'])
     def viewAllFnb(request):
          # Get all FnBs
@@ -659,6 +641,10 @@ class Fnbs(APIView):
         # Return the serialized data
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+
+class UpdateFnbs(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     @api_view(['POST'])
     def updateFnB(request):
         # Check if user is a cinemaManager.
@@ -678,7 +664,12 @@ class Fnbs(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
+
+class DeleteFnbs(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     def delFnB(request):
         # Check if user is a cinemaManager.
@@ -695,7 +686,8 @@ class Fnbs(APIView):
         fnb.delete()
         return Response(status=status.HTTP_200_OK)
 
-class Purchase(APIView):
+
+class AddBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -715,6 +707,11 @@ class Purchase(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class ViewAllBooking(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     #still testing
     #@api_view(['POST']) 
     @api_view(['GET'])
@@ -730,8 +727,8 @@ class Purchase(APIView):
 
         try:
             #bookings = PurchaseTicket.objects.filter(booking_owner=username)
-            bookings = PurchaseTicket.objects.filter(booking_owner=request.user)
-        except PurchaseTicket.DoesNotExist:
+            bookings = MovieBooking.objects.filter(booking_owner=request.user)
+        except MovieBooking.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         serializer = PurchaseTicketSerializer(bookings, many=True)
