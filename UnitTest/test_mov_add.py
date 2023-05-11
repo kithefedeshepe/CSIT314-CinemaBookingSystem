@@ -33,7 +33,7 @@ class TestAddMovie(APITestCase):
             'movie_title': 'test', 
             'genre': 'action',
             'duration' : timedelta(hours=1, minutes=30), 
-            'release_date' :'2022-5-1', 
+            'release_date' :'2022-05-01', 
             'cast' : 'John Doe',
             'director' :'Jane Smith',
             'movie_description' : 'A test movie',
