@@ -345,7 +345,7 @@ class FoodandBeverage(models.Model):
       
 
 # Booking
-class PurchaseTicket(models.Model):
+class MovieBooking(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     booking_owner = models.ForeignKey(User, on_delete=models.CASCADE) 
     movie_session = models.ForeignKey(MovieSession, on_delete=models.CASCADE, related_name='sessions')
@@ -378,7 +378,7 @@ class PurchaseTicket(models.Model):
         return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
 
 # Pre-order fnb   
-class PurchaseFnB(models.Model):
+class FnBBooking(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     booking_owner = models.ForeignKey(User, on_delete=models.CASCADE)
     menu = models.ForeignKey(FoodandBeverage, on_delete=models.CASCADE)
