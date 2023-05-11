@@ -281,8 +281,8 @@ class UserProfile(APIView):
 
         user = User()
         profile = Profile()
-        user_obj = user.userget(username)
 
+        user_obj = user.userget(username)
         profile.profilecreate(user_obj, name, date_of_birth)
 
         # Return a response with the created profile data
