@@ -15,7 +15,7 @@ from .serializers import RegisterAccount
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from django.utils import timezone
-
+from datetime import datetime, timedelta
 # Create your views here.
 # LOGIN 
 from django.contrib.auth import authenticate, login
@@ -268,7 +268,9 @@ class AddMovie(APIView):
         # Get the user data from the request
         movie_title = request.data.get('movie_title')
         genre = request.data.get('genre')
-        duration = request.data.get('duration')
+        duration_str = request.data.get('duration')
+        duration_convert = datetime.strptime(duration_str, '%H:%M:%S').time()
+        duration = timedelta(hours=duration_convert.hour, minutes=duration_convert.minute, seconds=duration_convert.second)
         release_date = request.data.get('release_date')
         cast = request.data.get('cast')
         director = request.data.get('director')
