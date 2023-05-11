@@ -11,11 +11,7 @@ urlpatterns = [
     path('logout/', LogoutView.logout, name='logout'),
     path('getUser/', GetUserView.getUser, name="getUser"),
 
-    # Account management
-    #path('suspendUser/', UpdateUser.suspendUser, name='suspendUser'),
-    #path('reactivateUser/', UpdateUser.reactivateUser, name='reactivateUser'),
-    #path('changePW/', UpdateUser.changePassword, name='changePassword'),
-    #path('changeEmail/', UpdateUser.changeEmail, name='changeEmail'),
+    # User management
     path('deleteUser/', DeleteUser.deleteUser, name='deleteUser'),
     path('updateUser/', UpdateUser.updateUser, name='updateUser'),
     path('searchUser/', SearchUserView.searchUser, name='searchUser'),
