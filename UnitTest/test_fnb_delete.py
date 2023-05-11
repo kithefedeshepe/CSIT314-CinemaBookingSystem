@@ -38,14 +38,14 @@ class TestDeleteFnb(APITestCase):
         if not update_fnb:
             return
 
-        self.target = 'test'
+        self.target = self.fnb_obj.id
         payload = {
-            'menu': self.target,
+            'id': self.target,
         }
 
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFalse(FoodandBeverage.objects.filter(menu=self.target).exists())
+        self.assertFalse(FoodandBeverage.objects.filter(id=self.target).exists())
         print("\nUnit test delFnb_1 passed")
         
 
@@ -58,14 +58,14 @@ class TestDeleteFnb(APITestCase):
         self.test_token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
-        self.target = 'test'
+        self.target = self.fnb_obj.id
         payload = {
-            'menu': self.target,
+            'id': self.target,
         }
 
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertTrue(FoodandBeverage.objects.filter(menu=self.target).exists())
+        self.assertTrue(FoodandBeverage.objects.filter(id=self.target).exists())
         print("\nUnit test delFnb_2 passed")
 
 

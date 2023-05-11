@@ -313,11 +313,10 @@ class FoodandBeverage(models.Model):
     def __str__(self):
         return f"{self.menu} - {self.menu_description}"
 
-    def fnbcreate(self, menu, menu_description, price, is_available, menuIMG, *args, **kwargs):
+    def fnbcreate(self, menu, menu_description, price, menuIMG, *args, **kwargs):
         self.menu = menu
         self.menu_description = menu_description
         self.price = price
-        self.is_available = is_available
         self.menuIMG = menuIMG
         super().save(*args, **kwargs)
     

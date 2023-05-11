@@ -39,10 +39,9 @@ class TestUpdateFnb(APITestCase):
             return
 
         payload = {
-            'menu': 'test',
-            'menu_description': 'test updated',
+            'id': self.fnb_obj.id,
             'price': 99.99,
-            'menuIMG': self.base64_img_data1
+            'is_available': ""
         }
 
         response = self.client.post(self.url, payload)
@@ -62,11 +61,9 @@ class TestUpdateFnb(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.test_token)
 
         payload = {
-            'menu': 'test',
-            'menu_description': 'test updated',
-            'price': 10.24,
-            'menuIMG': self.base64_img_data1,
-            'is_available': False
+            'id': self.fnb_obj.id,
+            'price': 99.99,
+            'is_available': ""
         }
 
         response = self.client.post(self.url, payload)

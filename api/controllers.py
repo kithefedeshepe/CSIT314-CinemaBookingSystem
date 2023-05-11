@@ -517,7 +517,29 @@ class DeleteMovieSession(APIView):
         ms.moviesessiondelete()
         return Response(status=status.HTTP_200_OK)
     
+class UpdateMovieSession(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def updateMS(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        # Get the movie object to update
+        id = request.data.get('id')
+        session_date = request.data.get('session_date')
+        session_time = request.data.get('session_time')
+        moviesession = MovieSession()
+        try:
+            ms = moviesession.moviesessionget(id)
+        except CinemaRoom.DoesNotExist:
+            return Response({'message': 'Cinema Room does not exist'}, status=status.HTTP_404_NOT_FOUND)
         
+        ms.moviesessionupdate(session_date, session_time)
+        return Response(status=status.HTTP_200_OK)        
+    
 class SearchMovie(APIView):
     permission_classes = [AllowAny]
 
@@ -614,11 +636,10 @@ class AddFnbs(APIView):
         menu = request.data.get('menu')
         menu_description = request.data.get('menu_description')
         price = request.data.get('price')
-        is_available = request.data.get('is_available')
         menuIMG = request.data.get('menuIMG')
 
         fnb = FoodandBeverage()
-        fnb.fnbcreate(menu, menu_description, price, is_available, menuIMG)
+        fnb.fnbcreate(menu, menu_description, price, menuIMG)
 
         # Return a response with the created fnb data
         return Response(status=status.HTTP_200_OK)
@@ -656,24 +677,15 @@ class UpdateFnbs(APIView):
 
         fnb = FoodandBeverage()
         id = request.data.get('id')
-        menu = request.data.get('menu')
-        menu_description = request.data.get('menu_description')
         price = request.data.get('price')
         is_available = request.data.get('is_available')
-        menuIMG = request.data.get('menuIMG')
 
         if id == "":
             id = None
-        if menu == "":
-            menu = None
-        if menu_description == "":
-            menu_description = None
         if price == "":
             price = None
         if is_available == "":
             is_available = None
-        if menuIMG == "":
-            menuIMG = None
         
         try:
             fnb_obj = fnb.fnbget(id)
