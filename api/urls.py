@@ -40,7 +40,7 @@ urlpatterns = [
     path('viewAllMS/', ViewAllMovieSession.viewAllMS, name='viewAllMS'),
     path('delMS/', DeleteMovieSession.delMS, name='delMS'),
     path('getMovieSession/', HelperFunction.getMovieSession, name='getMovieSession'),
-    path('updateMovieSession', UpdateMovieSession.updateMS, name = 'updateMs')
+    path('updateMovieSession', UpdateMovieSession.updateMS, name = 'updateMs'),
 
     # Fnb management
     path('addFnb/', AddFnbs.addFnb, name='addFnb'),
