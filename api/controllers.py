@@ -37,7 +37,7 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadReque
 from django.core.exceptions import ValidationError
 # PURCHASE BOOKING
 from .serializers import PurchaseTicketSerializer
-from core.models import PurchaseTicket
+from core.models import MovieBooking
 
 class AccountController:
     #GETS USER ACCOUNT
