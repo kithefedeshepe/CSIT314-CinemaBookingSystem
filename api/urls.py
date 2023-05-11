@@ -36,7 +36,7 @@ urlpatterns = [
 
     # Cinema room management
     path('addCR/', Movies.addCR, name='addCR'),
-    path('viewAllCR/', allowAnyMovie.viewAllCR, name='viewAllCR'),
+    path('viewAllCR/', Movies.viewAllCR, name='viewAllCR'),
     path('updateCR/', Movies.updateCR, name='updateCR'),
     path('delCR/', Movies.delCR, name='delCR'),
 

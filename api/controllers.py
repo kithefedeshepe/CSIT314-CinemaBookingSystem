@@ -455,7 +455,17 @@ class Movies(APIView):
             capacity = None
         cr.cinemaroomupdate(capacity)
         return Response(status=status.HTTP_200_OK)
-        
+    
+    @api_view(['GET'])   
+    def viewAllCR(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        result = CinemaRoom.cinemaroomall()
+        rooms = [r for r in result]
+        data = [{'id': r.id, 'name': r.name, 'capacity': r.capacity} for r in rooms]
+        return Response(data)
+    
     @api_view(['POST'])
     def delCR(request):
          # Check if user is a cinemaManager.
@@ -566,16 +576,6 @@ class allowAnyMovie(APIView):
             'movie_description': m.movie_description,
             'posterIMG': m.posterIMG,
             'featureIMG': m.featureIMG} for m in movies]
-        return Response(data)
-        
-    @api_view(['GET'])   
-    def viewAllCR(request):
-        # Check if user is a cinemaManager.
-        if request.user.role != 'CinemaManager':
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        result = CinemaRoom.cinemaroomall()
-        rooms = [r for r in result]
-        data = [{'id': r.id, 'name': r.name, 'capacity': r.capacity} for r in rooms]
         return Response(data)
 
         
