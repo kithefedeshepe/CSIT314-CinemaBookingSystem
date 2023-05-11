@@ -441,7 +441,6 @@ class ViewAllCinemaRoom(APIView):
         return Response(data)
     
 
-
 class AddMovieSession(APIView):
     Authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -540,20 +539,6 @@ class SearchMovie(APIView):
             'posterIMG': m.posterIMG,
             'featureIMG': m.featureIMG} for m in movies]
         return Response(data)
-        
-
-class ViewAllCinemaRoom(APIView):
-    permission_classes = [AllowAny]
-
-    @api_view(['GET'])   
-    def viewAllCR(request):
-        # Check if user is a cinemaManager.
-        if request.user.role != 'CinemaManager':
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        result = CinemaRoom.cinemaroomall()
-        rooms = [r for r in result]
-        data = [{'id': r.id, 'name': r.name, 'capacity': r.capacity} for r in rooms]
-        return Response(data)
 
 
 class ViewAllMovie(APIView):
@@ -621,34 +606,43 @@ class AddFnbs(APIView):
     
     @api_view(['POST'])
     def addFnb(request):
-         #Check if user is a cinemaManager.
+        #Check if user is a cinemaManager.
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        # Create serializer with data from request body
-        serializer = FoodandBeverageSerializer(data=request.data)
+        # Get the user data from the request
+        menu = request.data.get('menu')
+        menu_description = request.data.get('menu_description')
+        price = request.data.get('price')
+        is_available = request.data.get('is_available')
+        menuIMG = request.data.get('menuIMG')
 
-        # Validate serializer data
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        fnb = FoodandBeverage()
+        fnb.fnbcreate(menu, menu_description, price, is_available, menuIMG)
+
+        # Return a response with the created fnb data
+        return Response(status=status.HTTP_200_OK)
 
 
 class ViewAllFnbs(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
+
     @api_view(['GET'])
     def viewAllFnb(request):
-         # Get all FnBs
-        fnbs = FoodandBeverage.objects.all()
 
-        # Serialize the queryset
-        serializer = FoodandBeverageSerializer(fnbs, many=True)
-
-        # Return the serialized data
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        """
+        Returns a list of all movie images
+        """
+        result = FoodandBeverage.fnball()
+        fnb = [f for f in result]
+        data = [{
+            'id': f.id,
+            'menu': f.menu,
+            'menu_description': f.menu_description,
+            'price': f.price,
+            'is_available': f.is_available,
+            'menuIMG': f.menuIMG} for f in fnb]
+        return Response(data)
     
 
 class UpdateFnbs(APIView):
@@ -660,19 +654,37 @@ class UpdateFnbs(APIView):
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        # Get the FnB to update
-        try:
-            fnb = FoodandBeverage.objects.get(menu=request.data['menu'])
-        except FoodandBeverage.DoesNotExist:
-            return Response({'message': 'FnB not found'}, status=status.HTTP_404_NOT_FOUND)
+        fnb = FoodandBeverage()
+        id = request.data.get('id')
+        menu = request.data.get('menu')
+        menu_description = request.data.get('menu_description')
+        price = request.data.get('price')
+        is_available = request.data.get('is_available')
+        menuIMG = request.data.get('menuIMG')
 
-        # Update the FnB data
-        serializer = FoodandBeverageSerializer(fnb, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if id == "":
+            id = None
+        if menu == "":
+            menu = None
+        if menu_description == "":
+            menu_description = None
+        if price == "":
+            price = None
+        if is_available == "":
+            is_available = None
+        if menuIMG == "":
+            menuIMG = None
+        
+        try:
+            fnb_obj = fnb.fnbget(id)
+        except FoodandBeverage.DoesNotExist:
+            # If the menu does not exist, return 404 error
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        # Delete the menu from the database
+        fnb_obj.fnbupdate(price, is_available)
+        # Return a success response
+        return Response(status=status.HTTP_200_OK)
 
 
 class DeleteFnbs(APIView):
@@ -685,14 +697,17 @@ class DeleteFnbs(APIView):
         if request.user.role != 'CinemaManager':
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        # Get the FnB to delete
+        fnb = FoodandBeverage()
+        id = request.data.get('id')
         try:
-            fnb = FoodandBeverage.objects.get(menu=request.data['menu'])
+            fnb_obj = fnb.fnbget(id)
         except FoodandBeverage.DoesNotExist:
-            return Response({'message': 'FnB not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        # Delete the FnB
-        fnb.delete()
+            # If the movie does not exist, return 404 error
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        # Delete the movie from the database
+        fnb_obj.fnbdelete()
+        # Return a success response
         return Response(status=status.HTTP_200_OK)
 
 
@@ -702,26 +717,25 @@ class AddBooking(APIView):
 
     @api_view(['POST'])
     def addBook(request):
-        # Check if user is authenticated.
-        if not request.user.is_authenticated:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        # Get the booking data from the request
+        booking_owner_id = request.data.get('booking_owner')
+        booking_owner = User.objects.get(id=booking_owner_id)
+        movie_session_id = request.data.get('movie_session')
+        movie_session = MovieSession.objects.get(id=movie_session_id)
+        ticket_type = request.data.get('ticket_type')
+        seat_number = request.data.get('seat_number')
 
-        # Create serializer with data from request body
-        serializer = PurchaseTicketSerializer(data=request.data)
+        booking = MovieBooking(booking_owner=booking_owner, movie_session=movie_session, ticket_type=ticket_type, seat_number=seat_number)
+        booking.save()
 
-        # Validate serializer data
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # Return a response with the created booking data
+        return Response(status=status.HTTP_200_OK)
 
 
 class ViewAllBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-
-    #still testing
+    
     #@api_view(['POST']) 
     @api_view(['GET'])
     def viewAllBook(request):
@@ -729,16 +743,19 @@ class ViewAllBooking(APIView):
         if not request.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
+        #testing purposes
         #try:
-            username = request.data['booking_owner']
+        #    username = request.data['booking_owner']
         #except KeyError:
         #    return Response(status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            #bookings = PurchaseTicket.objects.filter(booking_owner=username)
+            #bookings = MovieBooking.objects.filter(booking_owner=username)
             bookings = MovieBooking.objects.filter(booking_owner=request.user)
         except MovieBooking.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        serializer = PurchaseTicketSerializer(bookings, many=True)
-        return Response(serializer.data)
+        result = MovieBooking.bookingall()
+        bookings = [b for b in result]
+        data = [{'id': b.id, 'booking_owner': b.booking_owner.username, 'movie_session': b.movie_session.id, 'ticket_type': b.ticket_type, 'seat_number': b.seat_number} for b in bookings]
+        return Response(data)

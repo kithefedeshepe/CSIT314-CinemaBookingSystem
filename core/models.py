@@ -369,6 +369,17 @@ class MovieBooking(models.Model):
         if not self.price:
             self.price = self.get_ticket_price()
         super().save(*args, **kwargs)
+
+    def bookingCreate(self, booking_owner, movie_session, ticket_type, seat_number, *args, **kwargs):
+        self.booking_owner = booking_owner
+        self.genmovie_sessionre = movie_session
+        self.ticket_type = ticket_type
+        self.seat_number = seat_number
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def bookingall(cls):
+        return cls.objects.all()
     
     @property
     def price(self):
