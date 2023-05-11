@@ -559,7 +559,9 @@ class ViewAllMovie(APIView):
         """
         result = Movie.movieall()
         movies = [m for m in result]
-        data = [{'movie_title': m.movie_title,
+        data = [{
+            'id': m.id,
+            'movie_title': m.movie_title,
             'genre': m.genre,
             'duration': m.duration,
             'release_date': m.release_date,
