@@ -37,7 +37,7 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadReque
 from django.core.exceptions import ValidationError
 # PURCHASE BOOKING
 from .serializers import PurchaseTicketSerializer
-from core.models import PurchaseTicket
+from core.models import MovieBooking
 
 class AccountController:
     #GETS USER ACCOUNT
@@ -404,6 +404,17 @@ class DeleteCinemaRoom(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    
+    @api_view(['GET'])   
+    def viewAllCR(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        result = CinemaRoom.cinemaroomall()
+        rooms = [r for r in result]
+        data = [{'id': r.id, 'name': r.name, 'capacity': r.capacity} for r in rooms]
+        return Response(data)
+    
     @api_view(['POST'])
     def delCR(request):
          # Check if user is a cinemaManager.
@@ -716,8 +727,8 @@ class ViewAllBooking(APIView):
 
         try:
             #bookings = PurchaseTicket.objects.filter(booking_owner=username)
-            bookings = PurchaseTicket.objects.filter(booking_owner=request.user)
-        except PurchaseTicket.DoesNotExist:
+            bookings = MovieBooking.objects.filter(booking_owner=request.user)
+        except MovieBooking.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         serializer = PurchaseTicketSerializer(bookings, many=True)

@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 from .models import User, Profile
 from .models import Movie, MovieSession, CinemaRoom, FoodandBeverage
-from .models import PurchaseTicket, PurchaseFnB
+from .models import MovieBooking, FnBBooking
 from .models import Report
 
 
@@ -114,8 +114,8 @@ admin.site.register(Movie, MovieAdmin)
 admin.site.register(MovieSession, MovieSessionAdmin)
 admin.site.register(CinemaRoom, CinemaRoomAdmin)
 admin.site.register(FoodandBeverage, FBAdmin)
-admin.site.register(PurchaseTicket, PurchaseTicketAdmin)
-admin.site.register(PurchaseFnB, PurchaseFnBAdmin)
+admin.site.register(MovieBooking, PurchaseTicketAdmin)
+admin.site.register(FnBBooking, PurchaseFnBAdmin)
 admin.site.register(Report)
 
 
