@@ -19,7 +19,7 @@ class TestAddMovie(APITestCase):
         self.admin_token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.admin_token)
         if add_mov:
-            self.url = reverse('addMov')
+            self.url = reverse('addMov/')
         #setup movie img
         with open('UnitTest/testimg.png', 'rb') as f:
             img_data = f.read()
