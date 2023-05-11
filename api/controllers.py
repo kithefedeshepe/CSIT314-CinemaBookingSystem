@@ -219,7 +219,7 @@ class ViewProfile(APIView):
 
         result = Profile.profileall()
         profiles = [p for p in result]
-        data = [{'id': p.id, 'user': p.user.username, 'name': p.name, 'date_of_birth': p.date_of_birth} for p in profiles]
+        data = [{'id': p.id, 'username': p.user.username if p.user is not None else None, 'name': p.name, 'date_of_birth': p.date_of_birth} for p in profiles]
         return Response(data)
     
 class SearchProfile(APIView):
