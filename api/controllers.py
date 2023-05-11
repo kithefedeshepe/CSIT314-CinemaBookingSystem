@@ -282,7 +282,7 @@ class AddMovie(APIView):
         movie.moviecreate(movie_title, genre, duration, release_date, cast, director, movie_description, posterIMG, featureIMG)
 
         # Return a response with the created profile data
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_200_OK)
 
 class DeleteMovie(APIView):
     authentication_classes = [TokenAuthentication]
@@ -321,7 +321,9 @@ class UpdateMovie(APIView):
         movie = Movie()
         movie_title = request.data.get('movie_title')
         genre = request.data.get('genre')
-        duration = request.data.get('duration')
+        duration_str = request.data.get('duration')
+        duration_convert = datetime.strptime(duration_str, '%H:%M:%S').time()
+        duration = timedelta(hours=duration_convert.hour, minutes=duration_convert.minute, seconds=duration_convert.second)
         release_date = request.data.get('release_date')
         cast = request.data.get('cast')
         director = request.data.get('director')
