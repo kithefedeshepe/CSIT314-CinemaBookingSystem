@@ -418,10 +418,9 @@ class DeleteCinemaRoom(APIView):
         name = request.data.get('name')
         cinemaroom = CinemaRoom()
         try:
-            cr = cinemaroom.cinemaroomsearch(name)
+            cr = cinemaroom.cinemaroomget(name)
         except CinemaRoom.DoesNotExist:
             return Response({'message': 'Cinema Room does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        
         # Delete the cinema room
         cr.cinemaroomdelete()
         return Response(status=status.HTTP_200_OK)
