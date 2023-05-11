@@ -423,7 +423,7 @@ class DeleteCinemaRoom(APIView):
             return Response({'message': 'Cinema Room does not exist'}, status=status.HTTP_404_NOT_FOUND)
         
         # Delete the cinema room
-        cr.delete()
+        cr.cinemaroomdelete()
         return Response(status=status.HTTP_200_OK)
 
 class ViewAllCinemaRoom(APIView):
