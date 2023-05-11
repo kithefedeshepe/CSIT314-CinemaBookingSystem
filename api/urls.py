@@ -1,6 +1,5 @@
 from django.urls import include, path
-from .controllers import AccountController, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, UserProfile, Movies, allowAnyMovie, Fnbs, Purchase, MovieSessionC
-
+from .controllers import AccountController, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking
 
 urlpatterns = [
     # Account
@@ -17,46 +16,46 @@ urlpatterns = [
     #path('reactivateUser/', UpdateUser.reactivateUser, name='reactivateUser'),
     #path('changePW/', UpdateUser.changePassword, name='changePassword'),
     #path('changeEmail/', UpdateUser.changeEmail, name='changeEmail'),
-    path('deleteUser/', UpdateUser.deleteUser, name='deleteUser'),
+    path('deleteUser/', DeleteUser.deleteUser, name='deleteUser'),
     path('updateUser/', UpdateUser.updateUser, name='updateUser'),
     path('searchUser/', SearchUserView.searchUser, name='searchUser'),
 
     #Profile management
-    path('createProfile/', UserProfile.createProfile, name='createProfile'),
-    path('viewProfile/', UserProfile.viewProfile, name='viewProfile'),
-    path('searchProfile/', UserProfile.searchProfile, name='searchProfile'),
-    path('deleteProfile/', UserProfile.deleteProfile, name='deleteProfile'),
+    path('createProfile/', CreateProfile.createProfile, name='createProfile'),
+    path('viewProfile/', ViewProfile.viewProfile, name='viewProfile'),
+    path('searchProfile/', SearchProfile.searchProfile, name='searchProfile'),
+    path('deleteProfile/', DeleteProfile.deleteProfile, name='deleteProfile'),
 
     # Movie management
-    path('addMov/', Movies.addMov, name='addMov'),
-    path('delMov/', Movies.delMov, name='delMov'),
-    path('searchMovie/', allowAnyMovie.SearchMov, name='SearchMovie'),
-    path('updateMovie/', Movies.updateMov, name='updateMov'),
-    path('view/', allowAnyMovie.viewAllMovie, name='viewMov'),
+    path('addMov/', AddMovie.addMov, name='addMov'),
+    path('delMov/', DeleteMovie.delMov, name='delMov'),
+    path('searchMovie/', SearchMovie.SearchMov, name='SearchMovie'),
+    path('updateMovie/', UpdateMovie.updateMov, name='updateMov'),
+    path('viewMov/', ViewAllMovie.viewAllMovie, name='viewMov'),
 
     # Cinema room management
-    path('addCR/', Movies.addCR, name='addCR'),
-    path('viewAllCR/', allowAnyMovie.viewAllCR, name='viewAllCR'),
-    path('updateCR/', Movies.updateCR, name='updateCR'),
-    path('delCR/', Movies.delCR, name='delCR'),
+    path('addCR/', AddCinemaRoom.addCR, name='addCR'),
+    path('viewAllCR/', ViewAllCinemaRoom.viewAllCR, name='viewAllCR'),
+    path('updateCR/', UpdateCinemaRoom.updateCR, name='updateCR'),
+    path('delCR/', DeleteCinemaRoom.delCR, name='delCR'),
 
     # Movie session management
-    path('addMS/', MovieSessionC.addMS, name='addMS'),
-    path('viewAllMS/', MovieSessionC.viewAllMS, name='viewAllMS'),
-    path('delMS/', MovieSessionC.delMS, name='delMS'),
-    path('getMovieSession/', allowAnyMovie.getMovieSession, name='getMovieSession'),
+    path('addMS/', AddMovieSession.addMS, name='addMS'),
+    path('viewAllMS/', ViewAllMovieSession.viewAllMS, name='viewAllMS'),
+    path('delMS/', DeleteMovieSession.delMS, name='delMS'),
+    path('getMovieSession/', HelperFunction.getMovieSession, name='getMovieSession'),
 
     # Fnb management
-    path('addFnb/', Fnbs.addFnb, name='addFnb'),
-    path('viewAllFnb/', Fnbs.viewAllFnb, name='viewAllFnb'),
-    path('updateFnB/', Fnbs.updateFnB, name='updateFnb'),
-    path('delFnB/', Fnbs.delFnB, name='delFnb'),
+    path('addFnb/', AddFnbs.addFnb, name='addFnb'),
+    path('viewAllFnb/', ViewAllFnbs.viewAllFnb, name='viewAllFnb'),
+    path('updateFnB/', UpdateFnbs.updateFnB, name='updateFnb'),
+    path('delFnB/', DeleteFnbs.delFnB, name='delFnb'),
 
     # Purchase booking                                                                                      
-    path('addBook/', Purchase.addBook, name='addBook'),
-    path('viewAllBook/', Purchase.viewAllBook, name='viewAllBook'),
+    path('addBook/', AddBooking.addBook, name='addBook'),
+    path('viewAllBook/', ViewAllBooking.viewAllBook, name='viewAllBook'),
 
     #helper function
-    path('viewUpcoming/', allowAnyMovie.getUpComing),
-    path('viewNowShowing/', allowAnyMovie.getNowShowing)
+    path('viewUpcoming/', HelperFunction.getUpComing),
+    path('viewNowShowing/', HelperFunction.getNowShowing)
 ]

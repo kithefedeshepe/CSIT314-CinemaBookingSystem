@@ -88,6 +88,7 @@ class LoginView(APIView):
         else:
             return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         
+
 class LogoutView(APIView):
     #authentication_classes = [TokenAuthentication]
     #permission_classes = [IsAuthenticated]
@@ -105,11 +106,11 @@ class LogoutView(APIView):
         myuser.userlogout(request)
         return response
     
+
 class GetUserView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    #getUser(id, username, role)
     @api_view(['GET'])
     def getUser(request):
         user = request.user
@@ -119,6 +120,7 @@ class GetUserView(APIView):
             'role': user.role
         }
         return Response(user_data, status=status.HTTP_200_OK)
+    
     
 class UpdateUser(APIView):
     #authentication_classes = [TokenAuthentication]
@@ -145,7 +147,12 @@ class UpdateUser(APIView):
             return Response(status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-    
+
+
+class DeleteUser(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     def deleteUser(request):
         try:
@@ -256,7 +263,7 @@ class SearchUserView(APIView):
 
     @api_view(['POST'])
     def searchUser(request):
-         # Check if user has permission to search user
+        # Check if user has permission to search user
         #if request.user.role != 'UserAdmin':
         #    raise PermissionDenied("You do not have permission to search user.")
         # Get prompt from request body
@@ -269,7 +276,7 @@ class SearchUserView(APIView):
         data = [{'id': u.id, 'username': u.username, 'email': u.email, 'role': u.role} for u in users]
         return Response(data)
     
-class UserProfile(APIView):
+class CreateProfile(APIView):
     #Authentication_classes = [TokenAuthentication]
     #permission_classes = [IsAuthenticated]
     @api_view(['POST'])
@@ -288,6 +295,9 @@ class UserProfile(APIView):
         # Return a response with the created profile data
         return Response(status=status.HTTP_201_CREATED)
     
+class ViewProfile(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
     @api_view(['GET'])
     def viewProfile(request):
         # check if user has permission to view profiles
@@ -299,6 +309,9 @@ class UserProfile(APIView):
         data = [{'id': p.id, 'user': p.user.username, 'name': p.name, 'date_of_birth': p.date_of_birth} for p in profiles]
         return Response(data)
     
+class SearchProfile(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
     @api_view(['POST'])
     def searchProfile(request):
         keyword = request.data.get('keyword', '')
@@ -310,6 +323,9 @@ class UserProfile(APIView):
         data = [{'id': p.id, 'user': p.user.username, 'name': p.name, 'date_of_birth': p.date_of_birth} for p in profiles]
         return Response(data)
     
+class DeleteProfile(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
     @api_view(['POST'])
     def deleteProfile(request):
         try:
@@ -326,7 +342,7 @@ class UserProfile(APIView):
         except Profile.DoesNotExist:
             return Response({'message': 'Profile not found.'}, status=status.HTTP_404_NOT_FOUND)
     
-class Movies(APIView):
+class AddMovie(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -352,7 +368,11 @@ class Movies(APIView):
 
         # Return a response with the created profile data
         return Response(status=status.HTTP_201_CREATED)
-        
+
+class DeleteMovie(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     def delMov(request):
         # Check if user is a cinemaManager
@@ -372,6 +392,10 @@ class Movies(APIView):
         # Return a success response
         return Response(status=status.HTTP_200_OK)
     
+class UpdateMovie(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])    
     def updateMov(request):
         
@@ -417,7 +441,11 @@ class Movies(APIView):
         movie_obj.movieupdate(genre, duration, release_date, cast, director, movie_description, posterIMG, featureIMG)
         # Return a success response
         return Response(status=status.HTTP_200_OK)
-        
+    
+class AddCinemaRoom(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     def addCR(request):
         # Check if user is a cinemaManager.
@@ -435,7 +463,10 @@ class Movies(APIView):
         return Response(status=status.HTTP_201_CREATED)
 
 
-        
+class UpdateCinemaRoom(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     def updateCR(request):
         # Check if user is a cinemaManager.
@@ -456,6 +487,10 @@ class Movies(APIView):
         cr.cinemaroomupdate(capacity)
         return Response(status=status.HTTP_200_OK)
         
+class DeleteCinemaRoom(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     def delCR(request):
          # Check if user is a cinemaManager.
@@ -476,7 +511,7 @@ class Movies(APIView):
     
 
 
-class MovieSessionC(APIView):
+class AddMovieSession(APIView):
     Authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -513,6 +548,10 @@ class MovieSessionC(APIView):
 
         return Response(status=status.HTTP_200_OK)
     
+class ViewAllMovieSession(APIView):
+    Authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['GET'])
     def viewAllMS(request):
         # Check if user is a cinemaManager.
@@ -525,6 +564,10 @@ class MovieSessionC(APIView):
         data = [{'id': s.id, 'movie': s.movie.movie_title, 'session_date': s.session_date, 'cinema_room': s.cinema_room.name} for s in sessions]
         return Response(data)
     
+class DeleteMovieSession(APIView):
+    Authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     #Search by movie session id
     def delMS(request):
@@ -545,8 +588,7 @@ class MovieSessionC(APIView):
         return Response(status=status.HTTP_200_OK)
     
         
-
-class allowAnyMovie(APIView):
+class SearchMovie(APIView):
     permission_classes = [AllowAny]
 
     @api_view(['POST'])
@@ -568,6 +610,10 @@ class allowAnyMovie(APIView):
             'featureIMG': m.featureIMG} for m in movies]
         return Response(data)
         
+
+class ViewAllCinemaRoom(APIView):
+    permission_classes = [AllowAny]
+
     @api_view(['GET'])   
     def viewAllCR(request):
         # Check if user is a cinemaManager.
@@ -578,7 +624,10 @@ class allowAnyMovie(APIView):
         data = [{'id': r.id, 'name': r.name, 'capacity': r.capacity} for r in rooms]
         return Response(data)
 
-        
+
+class ViewAllMovie(APIView):
+    permission_classes = [AllowAny]
+
     @api_view(['GET'])
     def viewAllMovie(request):
         """
@@ -596,7 +645,11 @@ class allowAnyMovie(APIView):
             'posterIMG': m.posterIMG,
             'featureIMG': m.featureIMG} for m in movies]
         return Response(data)
-    
+
+
+class HelperFunction(APIView):
+    permission_classes = [AllowAny]
+
     #helper function
     @api_view(['GET'])
     def getUpComing(request):
@@ -628,7 +681,8 @@ class allowAnyMovie(APIView):
         serialized_sessions = MovieSessionSerializer(sessions, many=True).data
         return Response(serialized_sessions, status=status.HTTP_200_OK)
 
-class Fnbs(APIView):
+
+class AddFnbs(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -647,7 +701,11 @@ class Fnbs(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
+
+class ViewAllFnbs(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     @api_view(['GET'])
     def viewAllFnb(request):
          # Get all FnBs
@@ -659,6 +717,10 @@ class Fnbs(APIView):
         # Return the serialized data
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+
+class UpdateFnbs(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     @api_view(['POST'])
     def updateFnB(request):
         # Check if user is a cinemaManager.
@@ -678,7 +740,12 @@ class Fnbs(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
+
+class DeleteFnbs(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     @api_view(['POST'])
     def delFnB(request):
         # Check if user is a cinemaManager.
@@ -695,7 +762,8 @@ class Fnbs(APIView):
         fnb.delete()
         return Response(status=status.HTTP_200_OK)
 
-class Purchase(APIView):
+
+class AddBooking(APIView):
     #authentication_classes = [TokenAuthentication]
     #permission_classes = [IsAuthenticated]
 
@@ -714,6 +782,11 @@ class Purchase(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ViewAllBooking(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
 
     #still testing
     #@api_view(['POST']) 
