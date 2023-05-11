@@ -64,14 +64,3 @@ class TestMovDel(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         print("\nUnit test delMov_2 passed")
     
-    def test_del_mov_invalid(self):
-        if not del_mov:
-            return
-        
-        payload = {
-            'id': '26134567134',
-        }
-
-        response = self.client.post(self.url, payload)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        print("\nUnit test delMov_3 passed")

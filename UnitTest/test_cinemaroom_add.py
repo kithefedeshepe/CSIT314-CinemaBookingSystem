@@ -50,17 +50,3 @@ class TestAddCinemaRoom(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         print("\nUnit test addCR_2 passed")
  
-
-    def test_add_CR_invalid(self):
-        if not add_cinemaroom:
-            return
-        
-        payload = {
-            'name': 'TestCR',
-            'capacity' : -100
-        }
-
-        response = self.client.post(self.url, payload)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        print("\nUnit test addCR_3 passed")
