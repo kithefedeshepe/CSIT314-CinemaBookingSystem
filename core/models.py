@@ -317,7 +317,6 @@ class FoodandBeverage(models.Model):
         self.menu = menu
         self.menu_description = menu_description
         self.price = price
-        self.is_available = is_available
         self.menuIMG = menuIMG
         super().save(*args, **kwargs)
     
