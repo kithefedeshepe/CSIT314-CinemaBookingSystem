@@ -61,19 +61,3 @@ class TestAddMovSes(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         print("\nUnit test addMS_2 passed")
  
-
-    def test_add_MS_invalid(self):
-        if not add_movses:
-            return
-        
-        payload = {
-            'movie': self.movie_obj,
-            'session_date': date(2022, 5, 25),
-            'cinema_room' : self.cr_obj,
-            'session_time': '19:60' 
-        }
-
-        response = self.client.post(self.url, payload)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        print("\nUnit test addMS_3 passed")

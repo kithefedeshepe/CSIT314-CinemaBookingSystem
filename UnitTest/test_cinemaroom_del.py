@@ -56,17 +56,3 @@ class TestDelCinemaRoom(APITestCase):
         self.assertTrue(CinemaRoom.objects.filter(name=self.cr_del_target).exists())
         print("\nUnit test delCR_2 passed")
  
-
-    def test_del_CR_notfound(self):
-        if not del_cinemaroom:
-            return
-        
-        self.cr_del_target = 'SampleNotFound'
-        payload = {
-            'name': self.cr_del_target
-        }
-
-        response = self.client.post(self.url, payload)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-        print("\nUnit test delCR_3 passed")

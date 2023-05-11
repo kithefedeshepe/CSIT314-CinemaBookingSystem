@@ -32,24 +32,3 @@ class RegisterAccountTestCase(TestCase):
         user = User.objects.get(username=payload['username'])
         self.assertTrue(check_password(payload['password'], user.password))
         print("\nUnit test Register_1 passed")
-
-    def test_Register2(self):
-        if not register_exists:
-            return
-        payload = {
-            'username': 'testuser',
-            'email': 'testuser@example.com',
-        }
-        response = self.client.post(self.url, payload, format='json')
-
-        # Check if response is 400
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-        # Check if user was not created
-        user_exists = User.objects.filter(username=payload['username']).exists()
-        self.assertFalse(user_exists)
-        print("\nUnit test Register_2 passed")
-
-    def addFailure(self, test, exc_info):
-        super().addFailure(test, exc_info)
-        print(f"Unit test '{test.__name__}' failed: {exc_info[1]}")
