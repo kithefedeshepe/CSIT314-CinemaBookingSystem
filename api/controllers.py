@@ -286,7 +286,7 @@ class UserProfile(APIView):
         profile.profilecreate(user_obj, name, date_of_birth)
 
         # Return a response with the created profile data
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_200_OK)
     
     @api_view(['GET'])
     def viewProfile(request):
@@ -351,7 +351,7 @@ class Movies(APIView):
         movie.moviecreate(movie_title, genre, duration, release_date, cast, director, movie_description, posterIMG, featureIMG)
 
         # Return a response with the created profile data
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_200_OK)
         
     @api_view(['POST'])
     def delMov(request):
@@ -432,7 +432,7 @@ class Movies(APIView):
         cr.cinemaroomcreate(name, capacity)
 
         # Return a response with the created profile data
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_200_OK)
 
 
         
