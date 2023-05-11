@@ -408,17 +408,6 @@ class DeleteCinemaRoom(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    
-    @api_view(['GET'])   
-    def viewAllCR(request):
-        # Check if user is a cinemaManager.
-        if request.user.role != 'CinemaManager':
-            return Response(status=status.HTTP_403_FORBIDDEN)
-        result = CinemaRoom.cinemaroomall()
-        rooms = [r for r in result]
-        data = [{'id': r.id, 'name': r.name, 'capacity': r.capacity} for r in rooms]
-        return Response(data)
-    
     @api_view(['POST'])
     def delCR(request):
          # Check if user is a cinemaManager.
@@ -436,6 +425,20 @@ class DeleteCinemaRoom(APIView):
         # Delete the cinema room
         cr.delete()
         return Response(status=status.HTTP_200_OK)
+
+class ViewAllCinemaRoom(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
+    @api_view(['GET'])   
+    def viewAllCR(request):
+        # Check if user is a cinemaManager.
+        if request.user.role != 'CinemaManager':
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        result = CinemaRoom.cinemaroomall()
+        rooms = [r for r in result]
+        data = [{'id': r.id, 'name': r.name, 'capacity': r.capacity} for r in rooms]
+        return Response(data)
     
 
 
