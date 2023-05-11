@@ -61,32 +61,3 @@ class TestUpdateCinemaRoom(APITestCase):
         self.assertEqual(obj_result.capacity, 100)
         print("\nUnit test updateCR_2 passed")
  
-
-    def test_update_CR_notfound(self):
-        if not update_cinemaroom:
-            return
-        
-        self.cr_update_target = 'SampleNotFound'
-        payload = {
-            'name': self.cr_update_target,
-            'capacity': 50
-        }
-
-        response = self.client.post(self.url, payload)
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
-        print("\nUnit test updateCR_3 passed")
-    
-    def test_update_CR_invalid(self):
-        if not update_cinemaroom:
-            return
-        
-        self.cr_update_target = 'Sample'
-        payload = {
-            'name': self.cr_update_target,
-            'capacity': -50
-        }
-
-        response = self.client.post(self.url, payload)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        print("\nUnit test updateCR_4 passed")

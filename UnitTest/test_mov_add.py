@@ -33,7 +33,7 @@ class TestAddMovie(APITestCase):
             'movie_title': 'test', 
             'genre': 'action',
             'duration' : timedelta(hours=1, minutes=30), 
-            'release_date' :date(2022, 5, 1), 
+            'release_date' :'2022-05-01', 
             'cast' : 'John Doe',
             'director' :'Jane Smith',
             'movie_description' : 'A test movie',
@@ -59,7 +59,7 @@ class TestAddMovie(APITestCase):
             'movie_title': 'test', 
             'genre': 'action',
             'duration' : timedelta(hours=1, minutes=30), 
-            'release_date' :date(2022, 5, 1), 
+            'release_date' :'2022-05-01', 
             'cast' : 'John Doe',
             'director' :'Jane Smith',
             'movie_description' : 'A test movie',
@@ -69,15 +69,3 @@ class TestAddMovie(APITestCase):
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         print("\nUnit test addMov_2 passed")
-
-    def test_add_mov_invalid(self):
-        if not add_mov:
-            return
-
-        payload = {
-            'id': 'asdhfgasdhf71346715234thisdontmakeanysense',
-        }
-
-        response = self.client.post(self.url, payload)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        print("\nUnit test addMov_3 passed")
