@@ -229,7 +229,7 @@ class SearchProfile(APIView):
         
         result = Profile.profilesearch(keyword)
         profiles = [p for p in result]
-        data = [{'id': p.id, 'user': p.user.username, 'name': p.name, 'date_of_birth': p.date_of_birth} for p in profiles]
+        data = [{'id': p.id, 'user': p.user.username if p.user is not None else None, 'name': p.name, 'date_of_birth': p.date_of_birth} for p in profiles]
         return Response(data)
     
 class DeleteProfile(APIView):
