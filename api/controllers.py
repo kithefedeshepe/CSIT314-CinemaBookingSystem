@@ -237,7 +237,6 @@ class DeleteProfile(APIView):
     permission_classes = [IsAuthenticated]
     @api_view(['POST'])
     def deleteProfile(request):
-        try:
             user1 = request.user
             if user1.role != 'UserAdmin':
                return Response({'message': 'You don\'t have permission to update account'}, status=403)
@@ -248,8 +247,6 @@ class DeleteProfile(APIView):
             myprofile = profile.profileget(id)
             myprofile.profiledelete()
             return Response(status=status.HTTP_200_OK)
-        except Profile.DoesNotExist:
-            return Response({'message': 'Profile not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 class UpdateProfile(APIView):
     authentication_classes = [TokenAuthentication]
