@@ -37,7 +37,7 @@ from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadReque
 from django.core.exceptions import ValidationError
 # PURCHASE BOOKING
 from .serializers import PurchaseTicketSerializer
-from core.models import MovieBooking
+from core.models import MovieBooking, FnBBooking
 
 class AccountController:
     #GETS USER ACCOUNT
@@ -726,6 +726,60 @@ class SearchFnbs(APIView):
             'is_available': f.is_available,
             'menuIMG': f.menuIMG} for f in fnb]
         return Response(data)
+    
+class CreateFnBBooking(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def purchaseFnB(request):
+        # Get the user data from the request
+        booking_owner_id = request.data.get('booking_owner')
+        booking_owner = User.objects.get(id=booking_owner_id)
+        menu_id = request.data.get('menu')
+        menu = FoodandBeverage.objects.get(id=menu_id)
+        
+        FnB = FnBBooking()
+        FnB.FnBBookingCreate(booking_owner, menu)
+
+        # Return a response with the created booking data
+        return Response(status=status.HTTP_200_OK)
+    
+class ViewFnBBooking(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['GET'])
+    def viewAllFnBBooking(request):
+        result = FnBBooking.FnBBookingall()
+        fnbBooking = [f for f in result]
+        data = [{
+            'id': f.id,
+            'booking_owner': f.booking_owner,
+            'menu': f.menu} for f in fnbBooking]
+        return Response(data)
+
+class DeleteFnBBooking(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def delFnBBooking(request):
+        fnb = FnBBooking()
+        id = request.data.get('id')
+        try:
+            fnbooking_obj = fnb.fnbbookingGet(id)
+
+        except FnBBooking.DoesNotExist:
+
+            # If the movie does not exist, return 400 error
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        # Delete the FnB Booking from the database
+        fnbooking_obj.FnBBookingDelete()
+
+        # Return a success response
+        return Response(status=status.HTTP_200_OK)
 
 class AddBooking(APIView):
     authentication_classes = [TokenAuthentication]
