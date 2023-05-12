@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .controllers import AccountController, SearchFnbs, SearchMovieSession, SearchCinemaRoom, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession, AddFnbs, ViewAllFnbs,UpdateFnbs, DeleteFnbs
+from .controllers import AccountController, UpdateProfile, SearchFnbs, SearchMovieSession, SearchCinemaRoom, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession, AddFnbs, ViewAllFnbs,UpdateFnbs, DeleteFnbs
 
 urlpatterns = [
     # Account
@@ -21,7 +21,7 @@ urlpatterns = [
     path('viewProfile/', ViewProfile.viewProfile, name='viewProfile'),
     path('searchProfile/', SearchProfile.searchProfile, name='searchProfile'),
     path('deleteProfile/', DeleteProfile.deleteProfile, name='deleteProfile'),
-
+    path('updateProfile/', UpdateProfile.updateProfile, name='updateProfile'),
     # Movie management
     path('addMov/', AddMovie.addMov, name='addMov'),
     path('delMov/', DeleteMovie.delMov, name='delMov'),
