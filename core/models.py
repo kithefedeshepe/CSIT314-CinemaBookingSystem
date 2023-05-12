@@ -270,7 +270,7 @@ class MovieSession(models.Model):
     session_time = models.CharField(choices=TIME, max_length=10)
 
     def __str__(self):
-        return f"{self.movie.movie_title}-{self.session_date}-{self.session_time}-{self.cinema_room.name}"
+        return f"{self.movie.movie_title}-{self.session_date}-{self.session_time}"
     
     def moviesessioncreate(self, movie, session_date, cinema_room, session_time, *args, **kwargs):
         self.movie = movie
@@ -307,7 +307,6 @@ class FoodandBeverage(models.Model):
     menu = models.CharField(max_length=100)
     menu_description = models.TextField()
     price = models.FloatField() 
-    is_available = models.CharField(max_length=10)
     menuIMG = models.TextField()
     
     def __str__(self):
@@ -320,11 +319,9 @@ class FoodandBeverage(models.Model):
         self.menuIMG = menuIMG
         super().save(*args, **kwargs)
     
-    def fnbupdate(self, price, is_available, *args, **kwargs):
+    def fnbupdate(self, price, *args, **kwargs):
         if price is not None:
             self.price = price
-        if is_available is not None:
-            self.is_available = is_available
         super().save(*args, **kwargs)
     
     def fnbdelete(self, *args, **kwargs):
@@ -365,10 +362,14 @@ class MovieBooking(models.Model):
             return 6
     
     def save(self, *args, **kwargs):
-        if not self.price:
+        if not self.id:
             self.price = self.get_ticket_price()
         super().save(*args, **kwargs)
 
+    def str(self):
+        return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
+
+    
     def bookingCreate(self, booking_owner, movie_session, ticket_type, seat_number, *args, **kwargs):
         self.booking_owner = booking_owner
         self.genmovie_sessionre = movie_session
@@ -384,8 +385,6 @@ class MovieBooking(models.Model):
     def price(self):
         return self.get_ticket_price()
     
-    def __str__(self):
-        return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
 
 # Pre-order fnb   
 class FnBBooking(models.Model):

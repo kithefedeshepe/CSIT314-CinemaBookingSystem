@@ -100,8 +100,7 @@ class FoodandBeverageSerializer(serializers.ModelSerializer):
         fields = [
             'menu',
             'menu_description',
-            'price',
-            'is_available'
+            'price'
         ]
 
 # Purchase booking
