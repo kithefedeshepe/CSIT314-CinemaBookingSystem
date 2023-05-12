@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .controllers import AccountController,SearchCinemaRoom, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession
+from .controllers import AccountController, SearchFnbs, SearchMovieSession, SearchCinemaRoom, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession
 
 urlpatterns = [
     # Account
@@ -42,12 +42,14 @@ urlpatterns = [
     path('delMS/', DeleteMovieSession.delMS, name='delMS'),
     path('getMovieSession/', HelperFunction.getMovieSession, name='getMovieSession'),
     path('updateMovieSession', UpdateMovieSession.updateMS, name = 'updateMs'),
+    path('searchMovieSession', SearchMovieSession.searchMS, name = 'searchMs'),
 
     # Fnb management
     path('addFnb/', AddFnbs.addFnb, name='addFnb'),
     path('viewAllFnb/', ViewAllFnbs.viewAllFnb, name='viewAllFnb'),
     path('updateFnB/', UpdateFnbs.updateFnB, name='updateFnb'),
     path('delFnB/', DeleteFnbs.delFnB, name='delFnb'),
+    path('searchFnB/', SearchFnbs.searchFnB, name='searchFnb'),
 
     # Purchase booking                                                                                      
     path('addBook/', AddBooking.addBook, name='addBook'),
