@@ -307,7 +307,7 @@ class FoodandBeverage(models.Model):
     menu = models.CharField(max_length=100)
     menu_description = models.TextField()
     price = models.FloatField() 
-    is_available = models.BooleanField(default=True)
+    is_available = models.BooleanField()
     menuIMG = models.TextField()
     
     def __str__(self):
