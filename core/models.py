@@ -307,7 +307,7 @@ class FoodandBeverage(models.Model):
     menu = models.CharField(max_length=100)
     menu_description = models.TextField()
     price = models.FloatField() 
-    is_available = models.BooleanField(default=True)
+    is_available = models.CharField(max_length=10)
     menuIMG = models.TextField()
     
     def __str__(self):
@@ -407,6 +407,19 @@ class FnBBooking(models.Model):
 
     def __str__(self):
         return f"{self.menu}X{self.menu_price}"
+    
+    def FnBBookingCreate(self, booking_owner, menu, *args, **kwargs):
+        self.booking_owner = booking_owner
+        self.menu = menu
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def FnBBookingall(cls):
+        return cls.objects.all()
+    
+    def fnbbookingGet(self, id):
+        return FnBBooking.objects.get(pk = id)
+
 
 # Report (cinema owner)
 class Report(models.Model):
