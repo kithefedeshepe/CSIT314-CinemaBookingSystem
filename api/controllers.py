@@ -244,7 +244,7 @@ class DeleteProfile(APIView):
                return Response({'message': 'You don\'t have permission to update account'}, status=403)
             # Get the username from the request data
             profile = Profile()
-            id = UUID(request.data.get('id'))
+            id = request.data.get('id')
             # Retrieve the user with the specified username 
             myprofile = profile.profileget(id)
             myprofile.profiledelete()
