@@ -131,18 +131,18 @@ class Profile(models.Model):
     def profileall(cls):
         return cls.objects.all()
     
-    def profileupdate(self, email, password, *args, **kwargs):
-        if email is not None:
-            self.email = email
-        if password is not None:
-            self.password = make_password(password)
+    def profileupdate(self, name, date_of_birth, *args, **kwargs):
+        if name is not None:
+            self.name = name
+        if date_of_birth is not None:
+            self.date_of_birth = date_of_birth
         super().save(*args, **kwargs)
     
     def profiledelete(self, *args, **kwargs):
         super(Profile, self).delete(*args, **kwargs)
     
     def profileget(self, id):
-        return Profile.objects.get(pk=id)
+        return Profile.objects.get(id=id)
     
     @classmethod
     def profilesearch(cls, keyword):

@@ -251,6 +251,31 @@ class DeleteProfile(APIView):
         except Profile.DoesNotExist:
             return Response({'message': 'Profile not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+class UpdateProfile(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def updateProfile(request):
+        try:
+            user1 = request.user
+            if user1.role != 'UserAdmin':
+                return Response({'message': 'You don\'t have permission to update account'}, status=403)
+
+            profile = Profile()
+            id = request.data.get('id')
+            name = request.data.get('name')
+            date_of_birth = request.data.get('date_of_birth')
+
+            # Retrieve the user with the specified username 
+            myprofile = profile.profileget(id)
+            if name == "": name = None
+            if date_of_birth == "": date_of_birth = None
+
+            myprofile.profileupdate(name, date_of_birth)
+            return Response(status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 class AddMovie(APIView):
     authentication_classes = [TokenAuthentication]
