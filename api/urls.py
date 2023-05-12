@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .controllers import AccountController, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession
+from .controllers import AccountController,SearchCinemaRoom, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession
 
 urlpatterns = [
     # Account
@@ -33,6 +33,7 @@ urlpatterns = [
     path('addCR/', AddCinemaRoom.addCR, name='addCR'),
     path('viewAllCR/', ViewAllCinemaRoom.viewAllCR, name='viewAllCR'),
     path('updateCR/', UpdateCinemaRoom.updateCR, name='updateCR'),
+    path('searchCR/', SearchCinemaRoom.searchCR, name='searchCR'),
     path('delCR/', DeleteCinemaRoom.delCR, name='delCR'),
 
     # Movie session management

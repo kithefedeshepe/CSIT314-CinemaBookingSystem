@@ -65,7 +65,6 @@ class AccountController:
             return Response(status=status.HTTP_200_OK)
         except DatabaseError as e:
             return Response({"error": "Bad data"}, status=500)
-
         
 class LoginView(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -88,7 +87,6 @@ class LoginView(APIView):
         else:
             return Response({'message': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         
-
 class LogoutView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -105,7 +103,7 @@ class LogoutView(APIView):
         myuser = User()
         myuser.userlogout(request)
         return response
-    
+
 
 class GetUserView(APIView):
     authentication_classes = [TokenAuthentication]
@@ -120,7 +118,6 @@ class GetUserView(APIView):
             'role': user.role
         }
         return Response(user_data, status=status.HTTP_200_OK)
-    
     
 class UpdateUser(APIView):
     authentication_classes = [TokenAuthentication]
@@ -148,7 +145,6 @@ class UpdateUser(APIView):
         except User.DoesNotExist:
             return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-
 class DeleteUser(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -169,7 +165,6 @@ class DeleteUser(APIView):
         except User.DoesNotExist:
             return Response({'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
         
-    
 class SearchUserView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -188,7 +183,8 @@ class SearchUserView(APIView):
         users = [u for u in result]
         data = [{'id': u.id, 'username': u.username, 'email': u.email, 'role': u.role} for u in users]
         return Response(data)
-    
+
+
 class CreateProfile(APIView):
     Authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -254,7 +250,8 @@ class DeleteProfile(APIView):
             return Response(status=status.HTTP_200_OK)
         except Profile.DoesNotExist:
             return Response({'message': 'Profile not found.'}, status=status.HTTP_404_NOT_FOUND)
-    
+
+
 class AddMovie(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -358,7 +355,53 @@ class UpdateMovie(APIView):
         movie_obj.movieupdate(genre, duration, release_date, cast, director, movie_description, posterIMG, featureIMG)
         # Return a success response
         return Response(status=status.HTTP_200_OK)
+
+class SearchMovie(APIView):
+    permission_classes = [AllowAny]
+
+    @api_view(['POST'])
+    def SearchMov(request):
+        keyword = request.data.get('keyword', '')
+        if not keyword:
+            return JsonResponse({'error': 'Please provide a keyword to search for'})
+        
+        result = Movie.moviesearch(keyword)
+        movies = [m for m in result]
+        data = [{'movie_title': m.movie_title,
+            'genre': m.genre,
+            'duration': m.duration,
+            'release_date': m.release_date,
+            'cast': m.cast,
+            'director': m.director,
+            'movie_description': m.movie_description,
+            'posterIMG': m.posterIMG,
+            'featureIMG': m.featureIMG} for m in movies]
+        return Response(data)
     
+class ViewAllMovie(APIView):
+    permission_classes = [AllowAny]
+
+    @api_view(['GET'])
+    def viewAllMovie(request):
+        """
+        Returns a list of all movie images
+        """
+        result = Movie.movieall()
+        movies = [m for m in result]
+        data = [{
+            'id': m.id,
+            'movie_title': m.movie_title,
+            'genre': m.genre,
+            'duration': m.duration,
+            'release_date': m.release_date,
+            'cast': m.cast,
+            'director': m.director,
+            'movie_description': m.movie_description,
+            'posterIMG': m.posterIMG,
+            'featureIMG': m.featureIMG} for m in movies]
+        return Response(data)
+    
+
 class AddCinemaRoom(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -378,7 +421,6 @@ class AddCinemaRoom(APIView):
 
         # Return a response with the created profile data
         return Response(status=status.HTTP_200_OK)
-
 
 class UpdateCinemaRoom(APIView):
     authentication_classes = [TokenAuthentication]
@@ -439,6 +481,20 @@ class ViewAllCinemaRoom(APIView):
         data = [{'id': r.id, 'name': r.name, 'capacity': r.capacity} for r in rooms]
         return Response(data)
     
+class SearchCinemaRoom(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    @api_view(['POST'])
+    def searchCR(request):
+        keyword = request.data.get('keyword', '')
+        if not keyword:
+            return JsonResponse({'error': 'Please provide a keyword to search for'})
+        
+        result = CinemaRoom.cinemaroomsearch(keyword)
+        rooms = [cr for cr in result]
+        data = [{'id': cr.id, 'name': cr.name, 'capacity': cr.capacity} for cr in rooms]
+        return Response(data)
+
 
 class AddMovieSession(APIView):
     Authentication_classes = [TokenAuthentication]
@@ -538,88 +594,7 @@ class UpdateMovieSession(APIView):
         
         ms.moviesessionupdate(session_date, session_time)
         return Response(status=status.HTTP_200_OK)        
-    
-class SearchMovie(APIView):
-    permission_classes = [AllowAny]
-
-    @api_view(['POST'])
-    def SearchMov(request):
-        keyword = request.data.get('keyword', '')
-        if not keyword:
-            return JsonResponse({'error': 'Please provide a keyword to search for'})
-        
-        result = Movie.moviesearch(keyword)
-        movies = [m for m in result]
-        data = [{'movie_title': m.movie_title,
-            'genre': m.genre,
-            'duration': m.duration,
-            'release_date': m.release_date,
-            'cast': m.cast,
-            'director': m.director,
-            'movie_description': m.movie_description,
-            'posterIMG': m.posterIMG,
-            'featureIMG': m.featureIMG} for m in movies]
-        return Response(data)
-
-
-class ViewAllMovie(APIView):
-    permission_classes = [AllowAny]
-
-    @api_view(['GET'])
-    def viewAllMovie(request):
-        """
-        Returns a list of all movie images
-        """
-        result = Movie.movieall()
-        movies = [m for m in result]
-        data = [{
-            'id': m.id,
-            'movie_title': m.movie_title,
-            'genre': m.genre,
-            'duration': m.duration,
-            'release_date': m.release_date,
-            'cast': m.cast,
-            'director': m.director,
-            'movie_description': m.movie_description,
-            'posterIMG': m.posterIMG,
-            'featureIMG': m.featureIMG} for m in movies]
-        return Response(data)
-
-
-class HelperFunction(APIView):
-    permission_classes = [AllowAny]
-
-    #helper function
-    @api_view(['GET'])
-    def getUpComing(request):
-        current_date = timezone.now().date()
-        movies = Movie.objects.filter(release_date__gte=current_date)
-        serializer = MovieSerializer(movies, many=True)
-        return Response(serializer.data)
-
-    @api_view(['GET'])
-    def getNowShowing(request):
-        current_date = timezone.now().date()
-        movies = Movie.objects.filter(release_date__lt=current_date)
-        serializer = MovieSerializer(movies, many=True)
-        return Response(serializer.data)
-    
-    @api_view(['POST'])
-    def getMovieSession(request):
-        try:
-            movie_title = request.data['movie_title']
-        except KeyError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            movie = Movie.objects.get(movie_title=movie_title)
-            sessions = MovieSession.objects.filter(movie=movie)
-        except (Movie.DoesNotExist, CinemaRoom.DoesNotExist):
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        serialized_sessions = MovieSessionSerializer(sessions, many=True).data
-        return Response(serialized_sessions, status=status.HTTP_200_OK)
-
+  
 
 class AddFnbs(APIView):
     authentication_classes = [TokenAuthentication]
@@ -643,7 +618,6 @@ class AddFnbs(APIView):
         # Return a response with the created fnb data
         return Response(status=status.HTTP_200_OK)
 
-
 class ViewAllFnbs(APIView):
     permission_classes = [AllowAny]
 
@@ -664,7 +638,6 @@ class ViewAllFnbs(APIView):
             'menuIMG': f.menuIMG} for f in fnb]
         return Response(data)
     
-
 class UpdateFnbs(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -696,7 +669,6 @@ class UpdateFnbs(APIView):
         fnb_obj.fnbupdate(price, is_available)
         # Return a success response
         return Response(status=status.HTTP_200_OK)
-
 
 class DeleteFnbs(APIView):
     authentication_classes = [TokenAuthentication]
@@ -742,7 +714,6 @@ class AddBooking(APIView):
         # Return a response with the created booking data
         return Response(status=status.HTTP_200_OK)
 
-
 class ViewAllBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -770,3 +741,38 @@ class ViewAllBooking(APIView):
         bookings = [b for b in result]
         data = [{'id': b.id, 'booking_owner': b.booking_owner.username, 'movie_session': b.movie_session.id, 'ticket_type': b.ticket_type, 'seat_number': b.seat_number} for b in bookings]
         return Response(data)
+    
+
+class HelperFunction(APIView):
+    permission_classes = [AllowAny]
+
+    #helper function
+    @api_view(['GET'])
+    def getUpComing(request):
+        current_date = timezone.now().date()
+        movies = Movie.objects.filter(release_date__gte=current_date)
+        serializer = MovieSerializer(movies, many=True)
+        return Response(serializer.data)
+
+    @api_view(['GET'])
+    def getNowShowing(request):
+        current_date = timezone.now().date()
+        movies = Movie.objects.filter(release_date__lt=current_date)
+        serializer = MovieSerializer(movies, many=True)
+        return Response(serializer.data)
+    
+    @api_view(['POST'])
+    def getMovieSession(request):
+        try:
+            movie_title = request.data['movie_title']
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            movie = Movie.objects.get(movie_title=movie_title)
+            sessions = MovieSession.objects.filter(movie=movie)
+        except (Movie.DoesNotExist, CinemaRoom.DoesNotExist):
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serialized_sessions = MovieSessionSerializer(sessions, many=True).data
+        return Response(serialized_sessions, status=status.HTTP_200_OK)
