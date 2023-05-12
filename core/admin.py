@@ -85,7 +85,7 @@ class FBAdmin(admin.ModelAdmin):
     search_fields = ('menu','is_available')
     ordering = ('id', 'menu')   
     
-class PurchaseTicketAdmin(admin.ModelAdmin):
+class MovieBookingAdmin(admin.ModelAdmin):
     list_display = ('id', 'price', 'movie_session', 'ticket_type', 'seat_number')
     list_filter = ('movie_session',)
     search_fields = ('movie_session',)
@@ -95,9 +95,9 @@ class PurchaseTicketAdmin(admin.ModelAdmin):
         return obj.get_ticket_price()
     get_price.short_description = 'Price'
     get_price.admin_order_field = 'price'
-    
-class PurchaseFnBAdmin(admin.ModelAdmin):
-    list_display = ('id', 'booking_owner', 'menu', 'price')
+
+class FnBBookingAdmin(admin.ModelAdmin):
+    list_display = ('id', 'booking_owner', 'menu', 'menu_price')
     list_filter = ('booking_owner','menu')
     search_fields = ('booking_owner','menu')
     ordering = ('booking_owner','menu')      
@@ -114,8 +114,8 @@ admin.site.register(Movie, MovieAdmin)
 admin.site.register(MovieSession, MovieSessionAdmin)
 admin.site.register(CinemaRoom, CinemaRoomAdmin)
 admin.site.register(FoodandBeverage, FBAdmin)
-admin.site.register(MovieBooking, PurchaseTicketAdmin)
-admin.site.register(FnBBooking, PurchaseFnBAdmin)
+admin.site.register(MovieBooking, MovieBookingAdmin)
+admin.site.register(FnBBooking, FnBBookingAdmin)
 admin.site.register(Report)
 
 
