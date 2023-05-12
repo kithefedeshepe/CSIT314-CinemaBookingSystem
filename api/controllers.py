@@ -40,6 +40,7 @@ from django.core.exceptions import ValidationError
 from .serializers import PurchaseTicketSerializer
 from core.models import MovieBooking
 
+# Login/logout
 class AccountController:
     #GETS USER ACCOUNT
     @api_view(['GET'])
@@ -106,6 +107,7 @@ class LogoutView(APIView):
         return response
 
 
+# User account
 class GetUserView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -185,7 +187,7 @@ class SearchUserView(APIView):
         data = [{'id': u.id, 'username': u.username, 'email': u.email, 'role': u.role} for u in users]
         return Response(data)
 
-
+# User profile
 class CreateProfile(APIView):
     Authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -278,6 +280,7 @@ class UpdateProfile(APIView):
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+# Movie
 class AddMovie(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -427,7 +430,7 @@ class ViewAllMovie(APIView):
             'featureIMG': m.featureIMG} for m in movies]
         return Response(data)
     
-
+# Cinema room
 class AddCinemaRoom(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -521,7 +524,7 @@ class SearchCinemaRoom(APIView):
         data = [{'id': cr.id, 'name': cr.name, 'capacity': cr.capacity} for cr in rooms]
         return Response(data)
 
-
+# Movie session
 class AddMovieSession(APIView):
     Authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -635,7 +638,7 @@ class SearchMovieSession(APIView):
         data = [{'id': s.id, 'movie': s.movie.movie_title, 'session_date': s.session_date, 'cinema_room': s.cinema_room.name if s.cinema_room is not None else None} for s in sessions]
         return Response(data)
 
-
+# FnB
 class AddFnbs(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -748,7 +751,7 @@ class SearchFnbs(APIView):
             'menuIMG': f.menuIMG} for f in fnb]
         return Response(data)
 
-
+# Booking
 class AddBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -850,7 +853,8 @@ class DeleteFnBBooking(APIView):
 
         # Return a success response
         return Response(status=status.HTTP_200_OK)
-    
+
+# ETC    
 class HelperFunction(APIView):
     permission_classes = [AllowAny]
 
