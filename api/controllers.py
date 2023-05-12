@@ -32,7 +32,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from core.models import CustomUserManager
 # MOVIE
 from rest_framework.decorators import api_view, permission_classes
-from core.models import Movie, CinemaRoom, FoodandBeverage, MovieSession
+from core.models import Movie, CinemaRoom, FoodandBeverage, MovieSession, FnBBooking
 from .serializers import MovieSerializer, CinemaRoomSerializer, FoodandBeverageSerializer, MovieSessionSerializer
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 from django.core.exceptions import ValidationError
@@ -753,6 +753,7 @@ class SearchFnbs(APIView):
             'menuIMG': f.menuIMG} for f in fnb]
         return Response(data)
 
+
 class AddBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -801,7 +802,60 @@ class ViewAllBooking(APIView):
         data = [{'id': b.id, 'booking_owner': b.booking_owner.username, 'movie_session': b.movie_session.id, 'ticket_type': b.ticket_type, 'seat_number': b.seat_number} for b in bookings]
         return Response(data)
     
+class CreateFnBBooking(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
+    @api_view(['POST'])
+    def purchaseFnB(request):
+        # Get the user data from the request
+        booking_owner_id = request.data.get('booking_owner')
+        booking_owner = User.objects.get(id=booking_owner_id)
+        menu_id = request.data.get('menu')
+        menu = FoodandBeverage.objects.get(id=menu_id)
+        
+        FnB = FnBBooking()
+        FnB.FnBBookingCreate(booking_owner, menu)
+
+        # Return a response with the created booking data
+        return Response(status=status.HTTP_200_OK)
+    
+class ViewFnBBooking(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['GET'])
+    def viewAllFnBBooking(request):
+        result = FnBBooking.FnBBookingall()
+        fnbBooking = [f for f in result]
+        data = [{
+            'id': f.id,
+            'booking_owner': f.booking_owner,
+            'menu': f.menu} for f in fnbBooking]
+        return Response(data)
+
+class DeleteFnBBooking(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def delFnBBooking(request):
+        fnb = FnBBooking()
+        id = request.data.get('id')
+        try:
+            fnbooking_obj = fnb.fnbbookingGet(id)
+
+        except FnBBooking.DoesNotExist:
+
+            # If the movie does not exist, return 400 error
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        # Delete the FnB Booking from the database
+        fnbooking_obj.FnBBookingDelete()
+
+        # Return a success response
+        return Response(status=status.HTTP_200_OK)
+    
 class HelperFunction(APIView):
     permission_classes = [AllowAny]
 
