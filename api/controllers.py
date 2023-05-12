@@ -16,7 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from django.utils import timezone
 from datetime import datetime, timedelta
-import uuid
+from uuid import UUID
 # Create your views here.
 # LOGIN 
 from django.contrib.auth import authenticate, login
