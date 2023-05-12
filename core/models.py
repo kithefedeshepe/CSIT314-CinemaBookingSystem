@@ -397,16 +397,16 @@ class FnBBooking(models.Model):
         return self.menu.price
     
     def save(self, *args, **kwargs):
-        if not self.price:
-            self.price = self.get_menu_price()
+        if not self.menu_price:
+            self.menu_price = self.get_menu_price()
         super().save(*args, **kwargs)
 
     @property
-    def price(self):
+    def menu_price(self):
         return self.get_menu_price()
 
     def __str__(self):
-        return f"{self.menu}X{self.price}"
+        return f"{self.menu}X{self.menu_price}"
 
 # Report (cinema owner)
 class Report(models.Model):
