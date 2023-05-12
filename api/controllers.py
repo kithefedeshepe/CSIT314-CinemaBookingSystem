@@ -674,7 +674,6 @@ class ViewAllFnbs(APIView):
             'menu': f.menu,
             'menu_description': f.menu_description,
             'price': f.price,
-            'is_available': f.is_available,
             'menuIMG': f.menuIMG} for f in fnb]
         return Response(data)
     
@@ -690,14 +689,11 @@ class UpdateFnbs(APIView):
         fnb = FoodandBeverage()
         id = request.data.get('id')
         price = request.data.get('price')
-        is_available = request.data.get('is_available')
 
         if id == "":
             id = None
         if price == "":
             price = None
-        if is_available == "":
-            is_available = None
         
         try:
             fnb_obj = fnb.fnbget(id)
@@ -706,7 +702,7 @@ class UpdateFnbs(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # Delete the menu from the database
-        fnb_obj.fnbupdate(price, is_available)
+        fnb_obj.fnbupdate(price)
         # Return a success response
         return Response(status=status.HTTP_200_OK)
 
@@ -749,7 +745,6 @@ class SearchFnbs(APIView):
             'menu': f.menu,
             'menu_description': f.menu_description,
             'price': f.price,
-            'is_available': f.is_available,
             'menuIMG': f.menuIMG} for f in fnb]
         return Response(data)
 
