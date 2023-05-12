@@ -546,7 +546,7 @@ class ViewAllMovieSession(APIView):
         # Retrieve all movie sessions from the database
         result = MovieSession.moviesessionall()
         sessions = [s for s in result]
-        data = [{'id': s.id, 'movie': s.movie.movie_title, 'session_date': s.session_date, 'cinema_room': s.cinema_room.name} for s in sessions]
+        data = [{'id': s.id, 'movie': s.movie.movie_title, 'session_date': s.session_date, 'cinema_room': s.cinema_room.name if s.cinema_room is not None else None} for s in sessions]
         return Response(data)
     
 class DeleteMovieSession(APIView):
@@ -595,6 +595,20 @@ class UpdateMovieSession(APIView):
         ms.moviesessionupdate(session_date, session_time)
         return Response(status=status.HTTP_200_OK)        
   
+class SearchMovieSession(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    @api_view(['POST'])
+    def searchMS(request):
+        keyword = request.data.get('keyword', '')
+        if not keyword:
+            return JsonResponse({'error': 'Please provide a keyword to search for'})
+        
+        result = MovieSession.moviesessionsearch(keyword)
+        sessions = [s for s in result]
+        data = [{'id': s.id, 'movie': s.movie.movie_title, 'session_date': s.session_date, 'cinema_room': s.cinema_room.name if s.cinema_room is not None else None} for s in sessions]
+        return Response(data)
+
 
 class AddFnbs(APIView):
     authentication_classes = [TokenAuthentication]
@@ -693,6 +707,25 @@ class DeleteFnbs(APIView):
         # Return a success response
         return Response(status=status.HTTP_200_OK)
 
+class SearchFnbs(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    @api_view(['POST'])
+    def searchFnB(request):
+        keyword = request.data.get('keyword', '')
+        if not keyword:
+            return JsonResponse({'error': 'Please provide a keyword to search for'})
+        
+        result = FoodandBeverage.fnbsearch(keyword)
+        fnb = [f for f in result]
+        data = [{
+            'id': f.id,
+            'menu': f.menu,
+            'menu_description': f.menu_description,
+            'price': f.price,
+            'is_available': f.is_available,
+            'menuIMG': f.menuIMG} for f in fnb]
+        return Response(data)
 
 class AddBooking(APIView):
     authentication_classes = [TokenAuthentication]
