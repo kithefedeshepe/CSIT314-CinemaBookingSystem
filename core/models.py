@@ -407,6 +407,19 @@ class FnBBooking(models.Model):
 
     def __str__(self):
         return f"{self.menu}X{self.menu_price}"
+    
+    def FnBBookingCreate(self, booking_owner, menu, *args, **kwargs):
+        self.booking_owner = booking_owner
+        self.menu = menu
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def FnBBookingall(cls):
+        return cls.objects.all()
+    
+    def fnbbookingGet(self, id):
+        return FnBBooking.objects.get(pk = id)
+
 
 # Report (cinema owner)
 class Report(models.Model):
