@@ -1,6 +1,5 @@
 from django.urls import include, path
-from .controllers import AccountController, UpdateProfile, SearchFnbs, SearchMovieSession, SearchCinemaRoom, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession, CreateFnBBooking, ViewFnBBooking, DeleteFnBBooking
-
+from .controllers import AccountController, UpdateProfile, SearchFnbs, SearchMovieSession, SearchCinemaRoom, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession, CreateFnBBooking, ViewFnBBooking, DeleteFnBBooking , updateBooking, DeleteMovieBooking, SearchMovieBooking
 urlpatterns = [
     # Account
     path('', AccountController.getUserAccount),
@@ -56,9 +55,12 @@ urlpatterns = [
     path('viewFnBBooking/', ViewFnBBooking.viewAllFnBBooking, name='viewFnBBooking'),
     path('delFnBBooking/', DeleteFnBBooking.delFnBBooking, name='delFnBBooking'),
 
-    # Purchase booking                                                                                      
+    # Movie booking                                                                                      
     path('addBook/', AddBooking.addBook, name='addBook'),
     path('viewAllBook/', ViewAllBooking.viewAllBook, name='viewAllBook'),
+    path('updateBook/', updateBooking.updateBook, name='updateBook'),
+    path('delBook/', DeleteMovieBooking.delBook, name='delBook'),
+    path('SearchBook/', SearchMovieBooking.SearchBook, name='SearchBook'),
 
     #helper function
     path('viewUpcoming/', HelperFunction.getUpComing),

@@ -800,6 +800,84 @@ class ViewAllBooking(APIView):
         data = [{'id': b.id, 'booking_owner': b.booking_owner.username, 'movie_session': b.movie_session.id, 'ticket_type': b.ticket_type, 'seat_number': b.seat_number} for b in bookings]
         return Response(data)
     
+#still in progress
+class updateBooking(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])    
+    def updateBook(request):
+        
+        # Check if user is authenticated.
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        moviebook = MovieBooking()
+        id = request.data.get('id')
+        seat_number = request.data.get('seat_number')
+
+        if id == "":
+            id = None
+        if seat_number == "":
+            seat_number = None
+
+        try:
+            moviebook_obj = moviebook.bookingGet(id)
+        except MovieBooking.DoesNotExist:
+            # If the movie does not exist, return 404 error
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        # Delete the movie from the database
+        moviebook_obj.movieBookingUpdate(seat_number)
+        # Return a success response
+        return Response(status=status.HTTP_200_OK)
+
+
+class DeleteMovieBooking(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def delBook(request):
+        # Check if user is authenticated.
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        moviebook = MovieBooking()
+        id = request.data.get('id')
+        try:
+            moviebook_obj = moviebook.bookingGet(id)
+        except FoodandBeverage.DoesNotExist:
+            # If the movie booking id does not exist, return 404 error
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        # Delete the movie booking from the database
+        moviebook_obj.bookingDelete()
+        # Return a success response
+        return Response(status=status.HTTP_200_OK)
+    
+#still in progress
+class SearchMovieBooking(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def SearchBook(request):
+        # Check if user is authenticated.
+        if not request.user.is_authenticated:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        #search by ID reference number given to customer
+        keyword = request.data.get('keyword', '')
+        if not keyword:
+            return JsonResponse({'error': 'Please provide a keyword to search for'})
+        
+        result = MovieBooking.movieBookSearch(keyword)
+        moviebook = [m for m in result]
+        data = [{'movie_session': m.movie_session,
+            'ticket_type': m.ticket_type,
+            'seat_number': m.seat_number} for m in moviebook]
+        return Response(data)
+    
 class CreateFnBBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
