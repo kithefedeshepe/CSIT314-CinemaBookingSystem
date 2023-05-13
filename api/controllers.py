@@ -858,7 +858,8 @@ class DeleteMovieBooking(APIView):
     
 #still in progress
 class SearchMovieBooking(APIView):
-    permission_classes = [AllowAny]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     @api_view(['POST'])
     def SearchBook(request):
