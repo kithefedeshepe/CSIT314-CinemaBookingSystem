@@ -563,19 +563,19 @@ class AddMovieSession(APIView):
         return Response(status=status.HTTP_200_OK)
     
 class ViewAllMovieSession(APIView):
-    Authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #Authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
 
     @api_view(['GET'])
     def viewAllMS(request):
         # Check if user is a cinemaManager.
-        if request.user.role != 'CinemaManager':
-           return Response(status=status.HTTP_403_FORBIDDEN)
+        #if request.user.role != 'CinemaManager':
+        #   return Response(status=status.HTTP_403_FORBIDDEN)
 
         # Retrieve all movie sessions from the database
         result = MovieSession.moviesessionall()
         sessions = [s for s in result]
-        data = [{'id': s.id, 'movie': s.movie.movie_title, 'session_date': s.session_date, 'cinema_room': s.cinema_room.name if s.cinema_room is not None else None} for s in sessions]
+        data = [{'id': s.id, 'movie': s.movie.movie_title, 'session_date': s.session_date, 'session_time': s.session_time, 'cinema_room': s.cinema_room.name if s.cinema_room is not None else None} for s in sessions]
         return Response(data)
     
 class DeleteMovieSession(APIView):
