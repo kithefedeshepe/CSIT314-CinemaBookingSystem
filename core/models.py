@@ -390,14 +390,7 @@ class MovieBooking(models.Model):
     
     @classmethod
     def movieBookSearch(cls, keyword):
-        return cls.objects.filter(id__icontains=keyword)
-
-    def bookingCreate(self, booking_owner, movie_session, ticket_type, seat_number, *args, **kwargs):
-        self.booking_owner = booking_owner
-        self.genmovie_sessionre = movie_session
-        self.ticket_type = ticket_type
-        self.seat_number = seat_number
-        super().save(*args, **kwargs)
+        return cls.objects.filter(ticket_type__icontains=keyword)
     
     @property
     def price(self):

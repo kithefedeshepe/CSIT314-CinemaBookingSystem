@@ -866,14 +866,17 @@ class SearchMovieBooking(APIView):
         # Check if user is authenticated.
         if not request.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        #search by ID reference number given to customer
+        
         keyword = request.data.get('keyword', '')
         if not keyword:
             return JsonResponse({'error': 'Please provide a keyword to search for'})
         
         result = MovieBooking.movieBookSearch(keyword)
         moviebook = [m for m in result]
-        data = [{'movie_session': m.movie_session,
+        data = [{
+            'movie_title': m.movie_session.movie.movie_title,
+            'movie_session_date': m.movie_session.session_date,
+            'movie_session_time': m.movie_session.session_time,
             'ticket_type': m.ticket_type,
             'seat_number': m.seat_number} for m in moviebook]
         return Response(data)
