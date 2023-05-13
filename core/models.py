@@ -360,19 +360,15 @@ class MovieBooking(models.Model):
             return 8
         elif self.ticket_type == 'Child':
             return 6
-    
-    def save(self, *args, **kwargs):
-        if not self.id:
-            self.price = self.get_ticket_price()
-        super().save(*args, **kwargs)
 
     def str(self):
         return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
 
-    
-    def bookingCreate(self, booking_owner, movie_session, ticket_type, seat_number, *args, **kwargs):
+    def movieBookingCreate(self, booking_owner, movie_session, ticket_type, seat_number, *args, **kwargs):
+        if not self.price:
+            self.price = self.get_ticket_price()
         self.booking_owner = booking_owner
-        self.genmovie_sessionre = movie_session
+        self.movie_session = movie_session
         self.ticket_type = ticket_type
         self.seat_number = seat_number
         super().save(*args, **kwargs)
@@ -380,6 +376,28 @@ class MovieBooking(models.Model):
     @classmethod
     def bookingall(cls):
         return cls.objects.all()
+
+    def bookingDelete(self, *args, **kwargs):
+        super(MovieBooking, self).delete(*args, **kwargs)
+
+    def movieBookingUpdate(self, seat_number, *args, **kwargs):
+        if seat_number is not None:
+            self.seat_number = seat_number
+        super().save(*args, **kwargs)
+
+    def bookingGet(self, id):
+        return MovieBooking.objects.get(pk = id)
+    
+    @classmethod
+    def movieBookSearch(cls, keyword):
+        return cls.objects.filter(id__icontains=keyword)
+
+    def bookingCreate(self, booking_owner, movie_session, ticket_type, seat_number, *args, **kwargs):
+        self.booking_owner = booking_owner
+        self.genmovie_sessionre = movie_session
+        self.ticket_type = ticket_type
+        self.seat_number = seat_number
+        super().save(*args, **kwargs)
     
     @property
     def price(self):
