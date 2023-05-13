@@ -291,7 +291,7 @@ class MovieSession(models.Model):
 
 
     def moviesessionget(self, id):
-        return MovieSession.objects.get(pk = id)
+        return MovieSession.objects.get(id = id)
     
     @classmethod
     def moviesessionsearch(cls, keyword):
