@@ -380,7 +380,7 @@ class UpdateMovie(APIView):
             # If the movie does not exist, return 404 error
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        # Delete the movie from the database
+        # Update the movie from the database
         movie_obj.movieupdate(genre, duration, release_date, cast, director, movie_description, posterIMG, featureIMG)
         # Return a success response
         return Response(status=status.HTTP_200_OK)
@@ -701,7 +701,7 @@ class UpdateFnbs(APIView):
         try:
             fnb_obj = fnb.fnbget(id)
         except FoodandBeverage.DoesNotExist:
-            # If the menu does not exist, return 404 error
+            # If the menu does not exist, return 400 error
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # Delete the menu from the database
@@ -925,8 +925,7 @@ class DeleteFnBBooking(APIView):
             fnbooking_obj = fnb.fnbbookingGet(id)
 
         except FnBBooking.DoesNotExist:
-
-            # If the movie does not exist, return 400 error
+            # If the booking does not exist, return 400 error
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         # Delete the FnB Booking from the database
@@ -934,6 +933,51 @@ class DeleteFnBBooking(APIView):
 
         # Return a success response
         return Response(status=status.HTTP_200_OK)
+    
+class UpdateFnBBooking(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def updateFnBBooking(request):
+        fnb = FnBBooking()
+        id = request.data.get('id')
+        menu = request.data.get('menu')
+
+        if menu == "":
+            menu = None
+
+        # Update the FnB Booking
+        try:
+            fnbbook_id = fnb.fnbbookingGet(id)
+        except FnBBooking.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        # Update the FnB booking
+        new_menu = FoodandBeverage.objects.get(menu = menu)
+        fnbbook_id.fnbbookingUpdate(new_menu)
+        # Return a success response
+        return Response(status=status.HTTP_200_OK)
+    
+class SearchFnBBooking(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def searchFnBBooking(request):
+        keyword = request.data.get('keyword', '')
+        if not keyword:
+            return JsonResponse({'error': 'Please provide a keyword to search for'})
+        
+        result = FnBBooking.fnbbookingSearch(keyword)
+        fnbbooking = [f for f in result]
+        data = [{
+            'id':f.id,
+            'booking_owner_id': f.booking_owner.username,
+            'menu':f.menu} for f in fnbbooking]
+        return Response(data)
+
+
 
 # ETC    
 class HelperFunction(APIView):
