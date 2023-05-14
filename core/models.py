@@ -429,6 +429,14 @@ class FnBBooking(models.Model):
     
     def fnbbookingGet(self, id):
         return FnBBooking.objects.get(pk = id)
+    
+    def fnbbookingUpdate(self, new_menu, *args, **kwargs):
+        self.menu = new_menu
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def fnbbookingSearch(cls, keyword):
+        return cls.objects.filter(menu__menu__icontains=keyword)
 
 
 # Report (cinema owner)
