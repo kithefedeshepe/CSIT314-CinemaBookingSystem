@@ -98,9 +98,11 @@ class FoodandBeverageSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodandBeverage
         fields = [
-            'menu',
-            'menu_description',
+            'id' 
+            'menu'
+            'menu_description'
             'price'
+            'menuIMG'
         ]
 
 # Purchase booking
