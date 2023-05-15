@@ -1020,7 +1020,7 @@ class HelperFunction(APIView):
             fnb = FoodandBeverage.objects.filter(pk = fnbid)
         except FoodandBeverage.DoesNotExist:
             return Response(status=404)
-        serializer = FoodandBeverageSerializer(fnbs)
+        serializer = FoodandBeverageSerializer(fnb)
         return Response(serializer.data, status=200)
 
     @api_view(['GET'])
