@@ -776,29 +776,30 @@ class ViewAllBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
-    #@api_view(['POST']) 
-    @api_view(['GET'])
+    @api_view(['POST']) 
+    #@api_view(['GET'])
     def viewAllBook(request):
         # Check if user is authenticated.
         if not request.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        #testing purposes
-        #try:
-        #    username = request.data['booking_owner']
-        #except KeyError:
-        #    return Response(status=status.HTTP_400_BAD_REQUEST)
-
+        #frontend "auto input uuid"
         try:
-            #bookings = MovieBooking.objects.filter(booking_owner=username)
-            bookings = MovieBooking.objects.filter(booking_owner=request.user)
-        except MovieBooking.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            username = request.data['booking_owner']
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        result = MovieBooking.bookingall()
-        bookings = [b for b in result]
-        data = [{'id': b.id, 'booking_owner': b.booking_owner.username, 'movie_session': b.movie_session.id, 'ticket_type': b.ticket_type, 'seat_number': b.seat_number} for b in bookings]
+        result = MovieBooking.bookingall(username)
+        moviebook = [m for m in result]
+        data = [{
+            'booking_owner': m.booking_owner.username,
+            'movie_title': m.movie_session.movie.movie_title,
+            'movie_session_date': m.movie_session.session_date,
+            'movie_session_time': m.movie_session.session_time,
+            'ticket_type': m.ticket_type,
+            'seat_number': m.seat_number} for m in moviebook]
         return Response(data)
+
     
 #still in progress
 class updateBooking(APIView):
@@ -856,7 +857,6 @@ class DeleteMovieBooking(APIView):
         # Return a success response
         return Response(status=status.HTTP_200_OK)
     
-#still in progress
 class SearchMovieBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -867,13 +867,17 @@ class SearchMovieBooking(APIView):
         if not request.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
+        #ticket type user required to manually select
         keyword = request.data.get('keyword', '')
         if not keyword:
             return JsonResponse({'error': 'Please provide a keyword to search for'})
+        #id will be filled by frontend automatically
+        booking_owner_id = request.data.get('booking_owner', '')
         
-        result = MovieBooking.movieBookSearch(keyword)
+        result = MovieBooking.movieBookSearch(keyword, booking_owner_id)
         moviebook = [m for m in result]
         data = [{
+            'booking_owner': m.booking_owner.username,
             'movie_title': m.movie_session.movie.movie_title,
             'movie_session_date': m.movie_session.session_date,
             'movie_session_time': m.movie_session.session_time,
@@ -903,15 +907,25 @@ class ViewFnBBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    @api_view(['GET'])
+    @api_view(['POST'])
     def viewAllFnBBooking(request):
-        result = FnBBooking.FnBBookingall()
+
+        #id will be filled by frontend automatically
+        try:
+            username = request.data['booking_owner']
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        result = FnBBooking.FnBBookingall(username)
         fnbBooking = [f for f in result]
         data = [{
-            'id': f.id,
-            'booking_owner': f.booking_owner,
-            'menu': f.menu} for f in fnbBooking]
+            'booking_owner': f.booking_owner.username,
+            'menu': str(f.menu),
+            'menu-description': str(f.menu.menu_description),
+            'price': str(f.menu.price),
+            'menuIMG': str(f.menu.menuIMG)} for f in fnbBooking]
         return Response(data)
+
 
 class DeleteFnBBooking(APIView):
     authentication_classes = [TokenAuthentication]
