@@ -909,8 +909,8 @@ class ViewFnBBooking(APIView):
         fnbBooking = [f for f in result]
         data = [{
             'id': f.id,
-            'booking_owner': f.booking_owner,
-            'menu': f.menu} for f in fnbBooking]
+            'booking_owner': f.booking_owner.username,
+            'menu': f.menu.menu} for f in fnbBooking]
         return Response(data)
 
 class DeleteFnBBooking(APIView):

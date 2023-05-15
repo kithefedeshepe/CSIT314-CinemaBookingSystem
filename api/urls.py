@@ -55,7 +55,7 @@ urlpatterns = [
     path('viewFnBBooking/', ViewFnBBooking.viewAllFnBBooking, name='viewFnBBooking'),
     path('delFnBBooking/', DeleteFnBBooking.delFnBBooking, name='delFnBBooking'),
     path('updateFnBBooking/', UpdateFnBBooking.updateFnBBooking, name='updateFnBBooking'),
-    path('searchFnBBooking/', SearchFnBBooking.searchFnBBooking, name='searchFnBBooking'),
+    path('searchFnBBooking/', SearchFnBBooking.searchFnBBooking , name='searchFnBBooking'),
 
     # Movie booking                                                                                      
     path('addBook/', AddBooking.addBook, name='addBook'),
