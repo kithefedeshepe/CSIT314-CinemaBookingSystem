@@ -776,21 +776,21 @@ class ViewAllBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
-    @api_view(['POST']) 
-    #@api_view(['GET'])
+    #@api_view(['POST']) 
+    @api_view(['GET'])
     def viewAllBook(request):
         # Check if user is authenticated.
         if not request.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
         #frontend "auto input uuid" simulate get method
-        try:
-            username = request.data['booking_owner']
-        except KeyError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        #try:
+        #    username = request.data['booking_owner']
+        #except KeyError:
+        #    return Response(status=status.HTTP_400_BAD_REQUEST)
         
         #alternate method 
-        #username = request.user.id
+        username = request.user.id
 
         result = MovieBooking.bookingall(username)
         moviebook = [m for m in result]
@@ -875,9 +875,10 @@ class SearchMovieBooking(APIView):
         if not keyword:
             return JsonResponse({'error': 'Please provide a keyword to search for'})
         #id will be filled by frontend automatically
-        booking_owner_id = request.data.get('booking_owner', '')
+        #booking_owner_id = request.data.get('booking_owner', '')
+        
         #alternate method 
-        #booking_owner_id = request.user.id
+        booking_owner_id = request.user.id
         
         result = MovieBooking.movieBookSearch(keyword, booking_owner_id)
         moviebook = [m for m in result]
@@ -911,16 +912,18 @@ class ViewFnBBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    @api_view(['POST'])
+    #@api_view(['POST'])
+    @api_view(['GET'])
     def viewAllFnBBooking(request):
 
         #testing purposes
-        try:
-            username = request.data['booking_owner']
-        except KeyError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        #try:
+        #    username = request.data['booking_owner']
+        #except KeyError:
+        #    return Response(status=status.HTTP_400_BAD_REQUEST)
+
         #alternate method 
-        #username = request.user.id
+        username = request.user.id
 
         result = FnBBooking.FnBBookingall(username)
         fnbBooking = [f for f in result]
