@@ -1016,12 +1016,18 @@ class HelperFunction(APIView):
     @api_view(['POST'])
     def getFnB(request):
         fnbid = request.data.get('id')
+        fnb = FoodandBeverage()
         try:
-            fnb = FoodandBeverage.objects.filter(id = fnbid)
+            fnbmain = fnb.fnbget(fnbid)
         except FoodandBeverage.DoesNotExist:
             return Response(status=404)
-        serializer = FoodandBeverageSerializer(fnb)
-        return Response(serializer.data, status=200)
+        data = {
+            'id': fnbmain.id,
+            'menu': fnbmain.menu,
+            'menu_description': fnbmain.menu_description,
+            'price': fnbmain.price,
+            'menuIMG': fnbmain.menuIMG}
+        return Response(data, status=200)
 
     @api_view(['GET'])
     def getNowShowing(request):
