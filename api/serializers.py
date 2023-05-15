@@ -97,12 +97,7 @@ class MovieSessionSerializer(serializers.ModelSerializer):
 class FoodandBeverageSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodandBeverage
-        fields = [
-            'menu',
-            'menu_description',
-            'price',
-            'menuIMG'
-        ]
+        fields = '__all__'
 
 # Purchase booking
 class PurchaseTicketSerializer(serializers.ModelSerializer):
