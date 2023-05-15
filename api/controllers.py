@@ -1015,7 +1015,7 @@ class HelperFunction(APIView):
     
     @api_view(['GET'])
     def getFnB(request):
-        fnbid = request.data['id']
+        fnbid = request.data.get('id')
         try:
             fnb = FoodAndBeverage.objects.get(id = fnbid)
         except FoodAndBeverage.DoesNotExist:
