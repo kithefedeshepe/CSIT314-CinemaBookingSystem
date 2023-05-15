@@ -759,7 +759,7 @@ class AddBooking(APIView):
     @api_view(['POST'])
     def addBook(request):
         # Get the booking data from the request
-        booking_owner_id = request.user.id
+        booking_owner_id = request.data.get('booking_owner')
         booking_owner = User.objects.get(id=booking_owner_id)
         movie_session_id = request.data.get('movie_session')
         movie_session = MovieSession.objects.get(id=movie_session_id)
@@ -783,11 +783,14 @@ class ViewAllBooking(APIView):
         if not request.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        #frontend "auto input uuid"
+        #frontend "auto input uuid" simulate get method
         try:
             username = request.data['booking_owner']
         except KeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        #alternate method 
+        #username = request.user.id
 
         result = MovieBooking.bookingall(username)
         moviebook = [m for m in result]
@@ -799,7 +802,6 @@ class ViewAllBooking(APIView):
             'ticket_type': m.ticket_type,
             'seat_number': m.seat_number} for m in moviebook]
         return Response(data)
-
     
 #still in progress
 class updateBooking(APIView):
@@ -857,6 +859,7 @@ class DeleteMovieBooking(APIView):
         # Return a success response
         return Response(status=status.HTTP_200_OK)
     
+#still in progress
 class SearchMovieBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -873,11 +876,12 @@ class SearchMovieBooking(APIView):
             return JsonResponse({'error': 'Please provide a keyword to search for'})
         #id will be filled by frontend automatically
         booking_owner_id = request.data.get('booking_owner', '')
+        #alternate method 
+        #booking_owner_id = request.user.id
         
         result = MovieBooking.movieBookSearch(keyword, booking_owner_id)
         moviebook = [m for m in result]
         data = [{
-            'booking_owner': m.booking_owner.username,
             'movie_title': m.movie_session.movie.movie_title,
             'movie_session_date': m.movie_session.session_date,
             'movie_session_time': m.movie_session.session_time,
@@ -910,11 +914,13 @@ class ViewFnBBooking(APIView):
     @api_view(['POST'])
     def viewAllFnBBooking(request):
 
-        #id will be filled by frontend automatically
+        #testing purposes
         try:
             username = request.data['booking_owner']
         except KeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        #alternate method 
+        #username = request.user.id
 
         result = FnBBooking.FnBBookingall(username)
         fnbBooking = [f for f in result]
@@ -925,7 +931,6 @@ class ViewFnBBooking(APIView):
             'price': str(f.menu.price),
             'menuIMG': str(f.menu.menuIMG)} for f in fnbBooking]
         return Response(data)
-
 
 class DeleteFnBBooking(APIView):
     authentication_classes = [TokenAuthentication]
