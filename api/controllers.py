@@ -900,8 +900,8 @@ class CreateFnBBooking(APIView):
         return Response(status=status.HTTP_200_OK)
     
 class ViewFnBBooking(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
 
     @api_view(['GET'])
     def viewAllFnBBooking(request):

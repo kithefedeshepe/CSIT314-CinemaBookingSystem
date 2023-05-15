@@ -437,6 +437,9 @@ class FnBBooking(models.Model):
     @classmethod
     def fnbbookingSearch(cls, keyword):
         return cls.objects.filter(menu__menu__icontains=keyword)
+    
+    def FnBBookingDelete(self, *args, **kwargs):
+        super(FnBBooking, self).delete(*args, **kwargs)
 
 
 # Report (cinema owner)
