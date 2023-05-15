@@ -1013,11 +1013,11 @@ class HelperFunction(APIView):
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
     
-    @api_view(['GET'])
+    @api_view(['POST'])
     def getFnB(request):
         fnbid = request.data.get('id')
         try:
-            fnb = FoodAndBeverage.objects.get(id = fnbid)
+            fnb = FoodAndBeverage.objects.filter(pk = fnbid)
         except FoodAndBeverage.DoesNotExist:
             return Response(status=404)
         serializer = FoodandBeverageSerializer(fnbs)
