@@ -1017,7 +1017,7 @@ class HelperFunction(APIView):
     def getFnB(request):
         fnbid = request.data.get('id')
         try:
-            fnb = FoodandBeverage.objects.filter(pk = fnbid)
+            fnb = FoodandBeverage.objects.filter(id = fnbid)
         except FoodandBeverage.DoesNotExist:
             return Response(status=404)
         serializer = FoodandBeverageSerializer(fnb)
