@@ -1012,6 +1012,16 @@ class HelperFunction(APIView):
         movies = Movie.objects.filter(release_date__gte=current_date)
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
+    
+    @api_view(['GET'])
+    def getFnB(request):
+        fnbid = request.data['id']
+        try:
+            fnb = FoodAndBeverage.objects.get(id = fnbid)
+        except FoodAndBeverage.DoesNotExist
+            return Response(status=404)
+        serializer = FoodandBeverageSerializer(fnbs)
+        return Response(serializer.data)
 
     @api_view(['GET'])
     def getNowShowing(request):
