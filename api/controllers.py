@@ -930,7 +930,7 @@ class ViewFnBBooking(APIView):
         data = [{
             'booking_owner': f.booking_owner.username,
             'menu': str(f.menu),
-            'menu-description': str(f.menu.menu_description),
+            'menu_description': str(f.menu.menu_description),
             'price': str(f.menu.price),
             'menuIMG': str(f.menu.menuIMG)} for f in fnbBooking]
         return Response(data)
