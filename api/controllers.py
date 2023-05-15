@@ -759,7 +759,7 @@ class AddBooking(APIView):
     @api_view(['POST'])
     def addBook(request):
         # Get the booking data from the request
-        booking_owner_id = request.user.id
+        booking_owner_id = request.data.get('booking_owner')
         booking_owner = User.objects.get(id=booking_owner_id)
         movie_session_id = request.data.get('movie_session')
         movie_session = MovieSession.objects.get(id=movie_session_id)
@@ -783,21 +783,24 @@ class ViewAllBooking(APIView):
         if not request.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-        #testing purposes
+        #frontend "auto input uuid" simulate get method
         #try:
         #    username = request.data['booking_owner']
         #except KeyError:
         #    return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        #alternate method 
+        username = request.user.id
 
-        try:
-            #bookings = MovieBooking.objects.filter(booking_owner=username)
-            bookings = MovieBooking.objects.filter(booking_owner=request.user)
-        except MovieBooking.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        result = MovieBooking.bookingall()
-        bookings = [b for b in result]
-        data = [{'id': b.id, 'booking_owner': b.booking_owner.username, 'movie_session': b.movie_session.id, 'ticket_type': b.ticket_type, 'seat_number': b.seat_number} for b in bookings]
+        result = MovieBooking.bookingall(username)
+        moviebook = [m for m in result]
+        data = [{
+            'booking_owner': m.booking_owner.username,
+            'movie_title': m.movie_session.movie.movie_title,
+            'movie_session_date': m.movie_session.session_date,
+            'movie_session_time': m.movie_session.session_time,
+            'ticket_type': m.ticket_type,
+            'seat_number': m.seat_number} for m in moviebook]
         return Response(data)
     
 #still in progress
@@ -867,11 +870,17 @@ class SearchMovieBooking(APIView):
         if not request.user.is_authenticated:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         
+        #ticket type user required to manually select
         keyword = request.data.get('keyword', '')
         if not keyword:
             return JsonResponse({'error': 'Please provide a keyword to search for'})
+        #id will be filled by frontend automatically
+        #booking_owner_id = request.data.get('booking_owner', '')
         
-        result = MovieBooking.movieBookSearch(keyword)
+        #alternate method 
+        booking_owner_id = request.user.id
+        
+        result = MovieBooking.movieBookSearch(keyword, booking_owner_id)
         moviebook = [m for m in result]
         data = [{
             'movie_title': m.movie_session.movie.movie_title,
@@ -888,7 +897,7 @@ class CreateFnBBooking(APIView):
     @api_view(['POST'])
     def purchaseFnB(request):
         # Get the user data from the request
-        booking_owner_id = request.data.get('booking_owner')
+        booking_owner_id = request.user.id
         booking_owner = User.objects.get(id=booking_owner_id)
         menu_id = request.data.get('menu')
         menu = FoodandBeverage.objects.get(id=menu_id)
@@ -903,14 +912,27 @@ class ViewFnBBooking(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    #@api_view(['POST'])
     @api_view(['GET'])
     def viewAllFnBBooking(request):
-        result = FnBBooking.FnBBookingall()
+
+        #testing purposes
+        #try:
+        #    username = request.data['booking_owner']
+        #except KeyError:
+        #    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        #alternate method 
+        username = request.user.id
+
+        result = FnBBooking.FnBBookingall(username)
         fnbBooking = [f for f in result]
         data = [{
-            'id': f.id,
             'booking_owner': f.booking_owner.username,
-            'menu': f.menu.menu} for f in fnbBooking]
+            'menu': str(f.menu),
+            'menu_description': str(f.menu.menu_description),
+            'price': str(f.menu.price),
+            'menuIMG': str(f.menu.menuIMG)} for f in fnbBooking]
         return Response(data)
 
 class DeleteFnBBooking(APIView):
@@ -990,6 +1012,22 @@ class HelperFunction(APIView):
         movies = Movie.objects.filter(release_date__gte=current_date)
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
+    
+    @api_view(['POST'])
+    def getFnB(request):
+        fnbid = request.data.get('id')
+        fnb = FoodandBeverage()
+        try:
+            fnbmain = fnb.fnbget(fnbid)
+        except FoodandBeverage.DoesNotExist:
+            return Response(status=404)
+        data = {
+            'id': fnbmain.id,
+            'menu': fnbmain.menu,
+            'menu_description': fnbmain.menu_description,
+            'price': fnbmain.price,
+            'menuIMG': fnbmain.menuIMG}
+        return Response(data, status=200)
 
     @api_view(['GET'])
     def getNowShowing(request):

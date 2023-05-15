@@ -374,8 +374,9 @@ class MovieBooking(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def bookingall(cls):
-        return cls.objects.all()
+    def bookingall(cls, username):
+        #return cls.objects.all()
+        return cls.objects.filter(booking_owner=username)
 
     def bookingDelete(self, *args, **kwargs):
         super(MovieBooking, self).delete(*args, **kwargs)
@@ -389,8 +390,8 @@ class MovieBooking(models.Model):
         return MovieBooking.objects.get(pk = id)
     
     @classmethod
-    def movieBookSearch(cls, keyword):
-        return cls.objects.filter(ticket_type__icontains=keyword)
+    def movieBookSearch(cls, keyword, booking_owner_id):
+        return cls.objects.filter(booking_owner_id=booking_owner_id, ticket_type__icontains=keyword)
     
     @property
     def price(self):
@@ -424,8 +425,9 @@ class FnBBooking(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def FnBBookingall(cls):
-        return cls.objects.all()
+    def FnBBookingall(cls, username):
+        #return cls.objects.all()
+        return cls.objects.filter(booking_owner=username)
     
     def fnbbookingGet(self, id):
         return FnBBooking.objects.get(pk = id)

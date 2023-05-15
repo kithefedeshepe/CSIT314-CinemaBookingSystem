@@ -66,5 +66,6 @@ urlpatterns = [
 
     #helper function
     path('viewUpcoming/', HelperFunction.getUpComing),
-    path('viewNowShowing/', HelperFunction.getNowShowing)
+    path('viewNowShowing/', HelperFunction.getNowShowing),
+    path('getFnBItem/', HelperFunction.getFnB),
 ]
