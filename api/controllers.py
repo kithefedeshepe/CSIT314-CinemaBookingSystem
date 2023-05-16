@@ -918,9 +918,10 @@ class ViewPrePurchaseFnB(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    @api_view(['GET'])
-    def viewFnB(request, booking_id):
+    @api_view(['POST'])
+    def viewFnB(request):
         try:
+            booking_id = request.data.get('id')
             booking = FnBBooking.objects.get(id=booking_id)
         except FnBBooking.DoesNotExist:
             return Response({'error': 'Booking not found'}, status=status.HTTP_404_NOT_FOUND)
@@ -938,8 +939,8 @@ class ViewPrePurchaseFnB(APIView):
             
     
 class ViewFnBBooking(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
 
     #@api_view(['POST'])
     @api_view(['GET'])
