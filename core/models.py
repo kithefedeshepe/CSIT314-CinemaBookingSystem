@@ -458,8 +458,9 @@ class FnBBooking(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def fnbbookingSearch(cls, keyword):
-        return cls.objects.filter(menu__menu__icontains=keyword)
+    def fnbbookingSearch(cls, keyword, owner_id):
+        #return cls.objects.filter(menu__menu__icontains=keyword)
+        return cls.objects.filter(booking_owner_id=owner_id, menu__menu__icontains=keyword)
     
     def FnBBookingDelete(self, *args, **kwargs):
         super(FnBBooking, self).delete(*args, **kwargs)
