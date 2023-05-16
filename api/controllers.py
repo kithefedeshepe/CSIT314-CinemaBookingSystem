@@ -958,6 +958,7 @@ class ViewFnBBooking(APIView):
         result = FnBBooking.FnBBookingall(username)
         fnbBooking = [f for f in result]
         data = [{
+            'id':f.id,
             'booking_owner': f.booking_owner.username,
             'menu': str(f.menu),
             'menu_description': str(f.menu.menu_description),
@@ -1089,14 +1090,14 @@ class HelperFunction(APIView):
         return Response(serialized_sessions, status=status.HTTP_200_OK)
 
 class Reports(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
 
     @api_view(['POST'])
     def genDailyRevenueReport(request):
          # Check if user is a Cinema Owner.
-        if request.user.role != 'CinemaOwner':
-           return Response(status=status.HTTP_403_FORBIDDEN)
+        #if request.user.role != 'CinemaOwner':
+           #return Response(status=status.HTTP_403_FORBIDDEN)
         
         # Generate daily report
         report = Report.generate_daily_report()
@@ -1150,8 +1151,8 @@ class Reports(APIView):
     @api_view(['POST'])
     def genDailyTrafficReport(request):
          # Check if user is a Cinema Owner.
-        if request.user.role != 'CinemaOwner':
-           return Response(status=status.HTTP_403_FORBIDDEN)
+        #if request.user.role != 'CinemaOwner':
+           #return Response(status=status.HTTP_403_FORBIDDEN)
         
         # Generate daily report
         report = Report.generate_daily_traffic_report()

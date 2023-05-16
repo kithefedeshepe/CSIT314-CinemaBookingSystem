@@ -493,32 +493,26 @@ class Report(models.Model):
     
     @staticmethod
     def generate_weekly_report():
-        # Get today's date
-        today = date.today()
-
         # Calculate the total revenue for the week
-        movieBookingRevenue = MovieBooking.calculate_total_ticket_price() * 5
-        fnbBookingRevenue = FnBBooking.calculate_total_price() * 5
+        movieBookingRevenue = MovieBooking.calculate_total_ticket_price() * 7
+        fnbBookingRevenue = FnBBooking.calculate_total_price() * 7
         revenue = movieBookingRevenue + fnbBookingRevenue
 
         # Create a new report object
-        report = Report(report_description=f"Weekly revenue for {today}: {revenue}")
+        report = Report(report_description=f"Weekly revenue: {revenue}")
         report.save()
 
         return report
     
     @staticmethod
     def generate_monthly_report():
-        # Get today's date
-        today = date.today()
-
         # Calculate the total revenue for the week
-        movieBookingRevenue = MovieBooking.calculate_total_ticket_price() * 20
-        fnbBookingRevenue = FnBBooking.calculate_total_price() * 20
+        movieBookingRevenue = MovieBooking.calculate_total_ticket_price() * 28
+        fnbBookingRevenue = FnBBooking.calculate_total_price() * 28
         revenue = movieBookingRevenue + fnbBookingRevenue
 
         # Create a new report object
-        report = Report(report_description=f"Monthly revenue for {today}: {revenue}")
+        report = Report(report_description=f"Monthly revenue: {revenue}")
         report.save()
 
         return report
@@ -538,25 +532,20 @@ class Report(models.Model):
     
     @staticmethod
     def generate_weekly_traffic_report():
-        # Get today's date
-        today = date.today()
-
         num_users = Report.weeklyUsers
 
         # Create a new report object
-        report = Report(report_description=f"Weekly traffic for {today}: {num_users} users")
+        report = Report(report_description=f"Weekly traffic: {num_users} users")
         report.save()
 
         return report
     
     @staticmethod
     def generate_Monthly_traffic_report():
-        # Get today's date
-        today = date.today()
         num_users = Report.monthlyUsers
 
         # Create a new report object
-        report = Report(report_description=f"Monthly traffic for {today}: {num_users} users")
+        report = Report(report_description=f"Monthly traffic: {num_users} users")
         report.save()
 
         return report
