@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .controllers import AccountController, UpdateProfile, SearchFnbs, SearchMovieSession, SearchCinemaRoom, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession, CreateFnBBooking, ViewFnBBooking, DeleteFnBBooking , updateBooking, DeleteMovieBooking, SearchMovieBooking, UpdateFnBBooking, SearchFnBBooking, Reports
+from .controllers import AccountController, UpdateProfile, SearchFnbs, SearchMovieSession, SearchCinemaRoom, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession, CreateFnBBooking, ViewFnBBooking, DeleteFnBBooking , updateBooking, DeleteMovieBooking, SearchMovieBooking, UpdateFnBBooking, SearchFnBBooking, Reports, ViewPrePurchaseFnB
 urlpatterns = [
     # Account
     path('', AccountController.getUserAccount),
@@ -56,6 +56,7 @@ urlpatterns = [
     path('delFnBBooking/', DeleteFnBBooking.delFnBBooking, name='delFnBBooking'),
     path('updateFnBBooking/', UpdateFnBBooking.updateFnBBooking, name='updateFnBBooking'),
     path('searchFnBBooking/', SearchFnBBooking.searchFnBBooking , name='searchFnBBooking'),
+    path('viewPrePurchaseFnB/', ViewPrePurchaseFnB.viewFnB , name='viewPrePurchaseFnB'),
 
     # Movie booking                                                                                      
     path('addBook/', AddBooking.addBook, name='addBook'),
