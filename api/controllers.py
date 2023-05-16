@@ -993,12 +993,17 @@ class SearchFnBBooking(APIView):
         if not keyword:
             return JsonResponse({'error': 'Please provide a keyword to search for'})
         
-        result = FnBBooking.fnbbookingSearch(keyword)
+        #booking_owner_id = request.data.get('booking_owner', '')
+        booking_owner_id = request.user.id
+
+        result = FnBBooking.fnbbookingSearch(keyword, booking_owner_id)
         fnbbooking = [f for f in result]
         data = [{
-            'id':f.id,
-            'booking_owner_id': f.booking_owner.username,
-            'menu':f.menu} for f in fnbbooking]
+            'booking_owner': f.booking_owner.username,
+            'menu': str(f.menu),
+            'menu_description': str(f.menu.menu_description),
+            'price': str(f.menu.price),
+            'menuIMG': str(f.menu.menuIMG)} for f in fnbbooking]
         return Response(data)
 
 
