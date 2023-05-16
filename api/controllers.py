@@ -768,8 +768,9 @@ class AddBooking(APIView):
         ticket_type = request.data.get('ticket_type')
         seat_number = request.data.get('seat_number')
 
-        booking = MovieBooking(booking_owner=booking_owner, movie_session=movie_session, ticket_type=ticket_type, seat_number=seat_number)
-        booking.save()
+        #entity
+        booking = MovieBooking()
+        booking.movieBookingCreate(booking_owner, movie_session, ticket_type, seat_number)
 
         # Return a response with the created booking data
         return Response(status=status.HTTP_200_OK)
