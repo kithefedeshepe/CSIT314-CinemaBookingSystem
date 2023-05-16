@@ -897,7 +897,7 @@ class CreateFnBBooking(APIView):
     @api_view(['POST'])
     def purchaseFnB(request):
         # Get the user data from the request
-        booking_owner_id = request.data.get('booking_owner')
+        booking_owner_id = request.user.id
         booking_owner = User.objects.get(id=booking_owner_id)
         menu_id = request.data.get('menu')
         menu = FoodandBeverage.objects.get(id=menu_id)
@@ -1027,6 +1027,7 @@ class HelperFunction(APIView):
             'menu_description': fnbmain.menu_description,
             'price': fnbmain.price,
             'menuIMG': fnbmain.menuIMG}
+        
         return Response(data, status=200)
 
     @api_view(['GET'])
