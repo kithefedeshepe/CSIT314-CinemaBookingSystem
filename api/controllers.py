@@ -905,7 +905,7 @@ class CreateFnBBooking(APIView):
         # Get the user data from the request
         booking_owner_id = request.user.id
         booking_owner = User.objects.get(id=booking_owner_id)
-        menu_id = request.data.get('menu')
+        menu_id = request.data.get('menu_id')
         menu = FoodandBeverage.objects.get(id=menu_id)
         
         FnB = FnBBooking()
