@@ -919,28 +919,23 @@ class ViewPrePurchaseFnB(APIView):
     permission_classes = [IsAuthenticated]
 
     @api_view(['GET'])
-    def viewFnB(request):
-        # Get the user data from the request
-        booking_owner_id = request.user.id
-        booking_owner = User.objects.get(id=booking_owner_id)
-        menu_id = request.data.get('menu')
-        menu = FoodandBeverage.objects.get(id=menu_id)
-        
-        # Retrieve the bookings for the specified menu ID and owner
-        bookings = FnBBooking.objects.filter(menu=menu, booking_owner=booking_owner)
-        
-        # Construct the response data for the bookings
-        data = [{
+    def viewFnB(request, booking_id):
+        try:
+            booking = FnBBooking.objects.get(id=booking_id)
+        except FnBBooking.DoesNotExist:
+            return Response({'error': 'Booking not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        data = {
             'booking_owner': booking.booking_owner.username,
             'menu': str(booking.menu),
             'menu_description': str(booking.menu.menu_description),
             'price': str(booking.menu.price),
             'menuIMG': str(booking.menu.menuIMG)
-        } for booking in bookings]
-        
-        # Return a response with the bookings data
+        }
+
+        # Return a response with the booking data
         return Response(data, status=status.HTTP_200_OK)
-        
+            
     
 class ViewFnBBooking(APIView):
     authentication_classes = [TokenAuthentication]
