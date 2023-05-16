@@ -39,15 +39,20 @@ from django.core.exceptions import ValidationError
 # PURCHASE BOOKING
 from .serializers import PurchaseTicketSerializer
 from core.models import MovieBooking
+# Report
+from core.models import Report
 
 # Login/logout
 class AccountController:
     #GETS USER ACCOUNT
     @api_view(['GET'])
     def getUserAccount(request):
-        user_account = User.objects.all()
-        serializer = UserSerializer(user_account, many = True)
-        return Response(serializer.data)
+        result = User.userall()
+
+        user = [u for u in result]
+        data = [{'user_id': u.id, 'username': u.username, 'email': u.email, 'role': u.role} for u in user]
+        return Response(data)
+        
 
     #REGISTERS ACCOUNT PARAMETER: PW
     @api_view(['POST'])
@@ -766,8 +771,9 @@ class AddBooking(APIView):
         ticket_type = request.data.get('ticket_type')
         seat_number = request.data.get('seat_number')
 
-        booking = MovieBooking(booking_owner=booking_owner, movie_session=movie_session, ticket_type=ticket_type, seat_number=seat_number)
-        booking.save()
+        #entity
+        booking = MovieBooking()
+        booking.movieBookingCreate(booking_owner, movie_session, ticket_type, seat_number)
 
         # Return a response with the created booking data
         return Response(status=status.HTTP_200_OK)
@@ -930,7 +936,7 @@ class ViewFnBBooking(APIView):
         data = [{
             'booking_owner': f.booking_owner.username,
             'menu': str(f.menu),
-            'menu-description': str(f.menu.menu_description),
+            'menu_description': str(f.menu.menu_description),
             'price': str(f.menu.price),
             'menuIMG': str(f.menu.menuIMG)} for f in fnbBooking]
         return Response(data)
@@ -991,12 +997,17 @@ class SearchFnBBooking(APIView):
         if not keyword:
             return JsonResponse({'error': 'Please provide a keyword to search for'})
         
-        result = FnBBooking.fnbbookingSearch(keyword)
+        #booking_owner_id = request.data.get('booking_owner', '')
+        booking_owner_id = request.user.id
+
+        result = FnBBooking.fnbbookingSearch(keyword, booking_owner_id)
         fnbbooking = [f for f in result]
         data = [{
-            'id':f.id,
-            'booking_owner_id': f.booking_owner.username,
-            'menu':f.menu} for f in fnbbooking]
+            'booking_owner': f.booking_owner.username,
+            'menu': str(f.menu),
+            'menu_description': str(f.menu.menu_description),
+            'price': str(f.menu.price),
+            'menuIMG': str(f.menu.menuIMG)} for f in fnbbooking]
         return Response(data)
 
 
@@ -1052,3 +1063,116 @@ class HelperFunction(APIView):
 
         serialized_sessions = MovieSessionSerializer(sessions, many=True).data
         return Response(serialized_sessions, status=status.HTTP_200_OK)
+
+class Reports(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def genDailyRevenueReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate daily report
+        report = Report.generate_daily_report()
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+    @api_view(['POST'])
+    def genWeeklyRevenueReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate daily report
+        report = Report.generate_weekly_report()
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+    @api_view(['POST'])
+    def genMonthlyRevenueReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate daily report
+        report = Report.generate_monthly_report()
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+
+    @api_view(['POST'])
+    def genDailyTrafficReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate daily report
+        report = Report.generate_daily_traffic_report()
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+    @api_view(['POST'])
+    def genWeeklyTrafficReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate daily report
+        report = Report.generate_weekly_traffic_report()
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+    @api_view(['POST'])
+    def genMonthlyTrafficReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate daily report
+        report = Report.generate_Monthly_traffic_report()
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)
