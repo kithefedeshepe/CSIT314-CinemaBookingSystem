@@ -528,7 +528,6 @@ class Report(models.Model):
         # Get today's date
         today = date.today()
 
-        # Generate a random number of users
         num_users = Report.dailyUsers
 
         # Create a new report object
@@ -542,7 +541,6 @@ class Report(models.Model):
         # Get today's date
         today = date.today()
 
-        # Generate a random number of users
         num_users = Report.weeklyUsers
 
         # Create a new report object
@@ -555,8 +553,6 @@ class Report(models.Model):
     def generate_Monthly_traffic_report():
         # Get today's date
         today = date.today()
-
-        # Generate a random number of users
         num_users = Report.monthlyUsers
 
         # Create a new report object
