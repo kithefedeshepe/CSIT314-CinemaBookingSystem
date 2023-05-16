@@ -764,7 +764,7 @@ class AddBooking(APIView):
     @api_view(['POST'])
     def addBook(request):
         # Get the booking data from the request
-        booking_owner_id = request.data.get('booking_owner')
+        booking_owner_id = request.user.id
         booking_owner = User.objects.get(id=booking_owner_id)
         movie_session_id = request.data.get('movie_session')
         movie_session = MovieSession.objects.get(id=movie_session_id)
