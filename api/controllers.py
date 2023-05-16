@@ -39,6 +39,8 @@ from django.core.exceptions import ValidationError
 # PURCHASE BOOKING
 from .serializers import PurchaseTicketSerializer
 from core.models import MovieBooking
+# Report
+from core.models import Report
 
 # Login/logout
 class AccountController:
@@ -1051,3 +1053,116 @@ class HelperFunction(APIView):
 
         serialized_sessions = MovieSessionSerializer(sessions, many=True).data
         return Response(serialized_sessions, status=status.HTTP_200_OK)
+
+class Reports(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def genDailyRevenueReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate daily report
+        report = Report.generate_daily_report()
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+    @api_view(['POST'])
+    def genWeeklyRevenueReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate daily report
+        report = Report.generate_weekly_report()
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+    @api_view(['POST'])
+    def genMonthlyRevenueReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate daily report
+        report = Report.generate_monthly_report()
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+
+    @api_view(['POST'])
+    def genDailyTrafficReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate daily report
+        report = Report.generate_daily_traffic_report()
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+    @api_view(['POST'])
+    def genWeeklyTrafficReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate daily report
+        report = Report.generate_weekly_traffic_report()
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)
+    
+    @api_view(['POST'])
+    def genMonthlyTrafficReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        # Generate daily report
+        report = Report.generate_Monthly_traffic_report()
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)

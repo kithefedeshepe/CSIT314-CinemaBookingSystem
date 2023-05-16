@@ -5,8 +5,12 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import logout, login
 from rest_framework.authtoken.models import Token
 from rest_framework.authentication import TokenAuthentication
+from django.db.models import Sum
+from datetime import date
 from django.db.models import Q
+from django.contrib.auth.models import UserManager
 import uuid
+import random
 
 # Custom admin
 class CustomUserManager(BaseUserManager):
@@ -108,6 +112,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def userlogout(self, request):
         logout(request)
+
     
 
 # User profile
@@ -360,6 +365,15 @@ class MovieBooking(models.Model):
             return 8
         elif self.ticket_type == 'Child':
             return 6
+        else:
+            return 0
+        
+    def calculate_total_ticket_price():
+        total_price = 0
+        bookings = MovieBooking.objects.all()
+        for booking in bookings:
+            total_price += booking.get_ticket_price()
+        return total_price
 
     def str(self):
         return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
@@ -412,6 +426,13 @@ class FnBBooking(models.Model):
             self.menu_price = self.get_menu_price()
         super().save(*args, **kwargs)
 
+    @staticmethod
+    def calculate_total_price():
+        total_price = 0
+        for booking in FnBBooking.objects.all():
+            total_price += booking.menu_price
+        return total_price
+
     @property
     def menu_price(self):
         return self.get_menu_price()
@@ -448,3 +469,97 @@ class FnBBooking(models.Model):
 class Report(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     report_description = models.TextField()
+
+    dailyUsers = random.randint(10, 50)
+    weeklyUsers = random.randint(50, 200)
+    monthlyUsers = random.randint(200, 400)
+
+    @staticmethod
+    def generate_daily_report():
+        # Get today's date
+        today = date.today()
+
+        # Calculate the total revenue for today
+        movieBookingRevenue = MovieBooking.calculate_total_ticket_price()
+        fnbBookingRevenue = FnBBooking.calculate_total_price()
+        revenue = movieBookingRevenue + fnbBookingRevenue
+
+        # Create a new report object
+        report = Report(report_description=f"Daily revenue for {today}: {revenue}")
+        report.save()
+
+        return report
+    
+    @staticmethod
+    def generate_weekly_report():
+        # Get today's date
+        today = date.today()
+
+        # Calculate the total revenue for the week
+        movieBookingRevenue = MovieBooking.calculate_total_ticket_price() * 5
+        fnbBookingRevenue = FnBBooking.calculate_total_price() * 5
+        revenue = movieBookingRevenue + fnbBookingRevenue
+
+        # Create a new report object
+        report = Report(report_description=f"Weekly revenue for {today}: {revenue}")
+        report.save()
+
+        return report
+    
+    @staticmethod
+    def generate_monthly_report():
+        # Get today's date
+        today = date.today()
+
+        # Calculate the total revenue for the week
+        movieBookingRevenue = MovieBooking.calculate_total_ticket_price() * 20
+        fnbBookingRevenue = FnBBooking.calculate_total_price() * 20
+        revenue = movieBookingRevenue + fnbBookingRevenue
+
+        # Create a new report object
+        report = Report(report_description=f"Monthly revenue for {today}: {revenue}")
+        report.save()
+
+        return report
+    
+    @staticmethod
+    def generate_daily_traffic_report():
+        # Get today's date
+        today = date.today()
+
+        # Generate a random number of users
+        num_users = Report.dailyUsers
+
+        # Create a new report object
+        report = Report(report_description=f"Daily traffic for {today}: {num_users} users")
+        report.save()
+
+        return report
+    
+    @staticmethod
+    def generate_weekly_traffic_report():
+        # Get today's date
+        today = date.today()
+
+        # Generate a random number of users
+        num_users = Report.weeklyUsers
+
+        # Create a new report object
+        report = Report(report_description=f"Weekly traffic for {today}: {num_users} users")
+        report.save()
+
+        return report
+    
+    @staticmethod
+    def generate_Monthly_traffic_report():
+        # Get today's date
+        today = date.today()
+
+        # Generate a random number of users
+        num_users = Report.monthlyUsers
+
+        # Create a new report object
+        report = Report(report_description=f"Monthly traffic for {today}: {num_users} users")
+        report.save()
+
+        return report
