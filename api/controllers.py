@@ -47,9 +47,12 @@ class AccountController:
     #GETS USER ACCOUNT
     @api_view(['GET'])
     def getUserAccount(request):
-        user_account = User.objects.all()
-        serializer = UserSerializer(user_account, many = True)
-        return Response(serializer.data)
+        result = User.userall()
+
+        user = [u for u in result]
+        data = [{'user_id': u.id, 'username': u.username, 'email': u.email, 'role': u.role} for u in user]
+        return Response(data)
+        
 
     #REGISTERS ACCOUNT PARAMETER: PW
     @api_view(['POST'])
