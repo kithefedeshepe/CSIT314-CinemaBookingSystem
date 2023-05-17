@@ -801,6 +801,7 @@ class ViewAllBooking(APIView):
         result = MovieBooking.bookingall(username)
         moviebook = [m for m in result]
         data = [{
+            'id':m.id,
             'booking_owner': m.booking_owner.username,
             'movie_title': m.movie_session.movie.movie_title,
             'movie_session_date': m.movie_session.session_date,
@@ -856,7 +857,7 @@ class DeleteMovieBooking(APIView):
         id = request.data.get('id')
         try:
             moviebook_obj = moviebook.bookingGet(id)
-        except FoodandBeverage.DoesNotExist:
+        except MovieBooking.DoesNotExist:
             # If the movie booking id does not exist, return 404 error
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
@@ -1090,14 +1091,14 @@ class HelperFunction(APIView):
         return Response(serialized_sessions, status=status.HTTP_200_OK)
 
 class Reports(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     @api_view(['POST'])
     def genDailyRevenueReport(request):
          # Check if user is a Cinema Owner.
-        #if request.user.role != 'CinemaOwner':
-           #return Response(status=status.HTTP_403_FORBIDDEN)
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
         
         # Generate daily report
         report = Report.generate_daily_report()
@@ -1151,8 +1152,8 @@ class Reports(APIView):
     @api_view(['POST'])
     def genDailyTrafficReport(request):
          # Check if user is a Cinema Owner.
-        #if request.user.role != 'CinemaOwner':
-           #return Response(status=status.HTTP_403_FORBIDDEN)
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
         
         # Generate daily report
         report = Report.generate_daily_traffic_report()
