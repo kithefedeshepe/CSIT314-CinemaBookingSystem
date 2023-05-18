@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .controllers import AccountController, UpdateProfile, SearchFnbs, SearchMovieSession, SearchCinemaRoom, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession, CreateFnBBooking, ViewFnBBooking, DeleteFnBBooking , updateBooking, DeleteMovieBooking, SearchMovieBooking, UpdateFnBBooking, SearchFnBBooking, Reports, ViewPrePurchaseFnB
+from .controllers import AccountController, UpdateProfile, SearchFnbs, SearchMovieSession, SearchCinemaRoom, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession, CreateFnBBooking, ViewFnBBooking, DeleteFnBBooking , updateBooking, DeleteMovieBooking, SearchMovieBooking, UpdateFnBBooking, SearchFnBBooking, Reports, ViewPrePurchaseFnB, RetrieveMovieDetail
 urlpatterns = [
     # Account
     path('', AccountController.getUserAccount),
@@ -21,6 +21,7 @@ urlpatterns = [
     path('searchProfile/', SearchProfile.searchProfile, name='searchProfile'),
     path('deleteProfile/', DeleteProfile.deleteProfile, name='deleteProfile'),
     path('updateProfile/', UpdateProfile.updateProfile, name='updateProfile'),
+
     # Movie management
     path('addMov/', AddMovie.addMov, name='addMov'),
     path('delMov/', DeleteMovie.delMov, name='delMov'),
@@ -57,6 +58,7 @@ urlpatterns = [
     path('updateFnBBooking/', UpdateFnBBooking.updateFnBBooking, name='updateFnBBooking'),
     path('searchFnBBooking/', SearchFnBBooking.searchFnBBooking , name='searchFnBBooking'),
     path('viewPrePurchaseFnB/', ViewPrePurchaseFnB.viewFnB , name='viewPrePurchaseFnB'),
+    path('retrieveMovieDetail/', RetrieveMovieDetail.getMovDetail),
 
     # Movie booking                                                                                      
     path('addBook/', AddBooking.addBook, name='addBook'),
@@ -77,5 +79,4 @@ urlpatterns = [
     path('viewUpcoming/', HelperFunction.getUpComing),
     path('viewNowShowing/', HelperFunction.getNowShowing),
     path('getFnBItem/', HelperFunction.getFnB),
-    path('retrieveMovieDetail/', HelperFunction.getMovDetail),
 ]
