@@ -649,13 +649,8 @@ class RetrieveMovieDetail(APIView):
 
         movie = Movie()
         movie_title = request.data.get('movie_title')
-        try:
-            movie_obj = movie.movieget(movie_title)
-        except Movie.DoesNotExist:
-            # If the movie does not exist, return 400 error
-            return Response(status=status.HTTP_400_BAD_REQUEST)
         
-        result = movie_obj.moviesearch(movie_title)
+        result = movie.moviesearch(movie_title)
         movies = [m for m in result]
         data = [{'movie_title': m.movie_title,
             'genre': m.genre,
