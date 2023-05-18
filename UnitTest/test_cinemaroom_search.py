@@ -28,6 +28,7 @@ class SearchCinemaRoomTestCase(APITestCase):
         self.assertEqual(response.data[0]['id'], cinema_room1.id)
         self.assertEqual(response.data[0]['name'], cinema_room1.name)
         self.assertEqual(response.data[0]['capacity'], cinema_room1.capacity)
+        print('\nUnit test searchCR_1 passed')
 
     def test_search_cinema_room_without_keyword(self):
         url = reverse('searchCR')  # Assuming you have defined the URL pattern for searchCR view
@@ -35,3 +36,4 @@ class SearchCinemaRoomTestCase(APITestCase):
         response = self.client.post(url)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        print('\nUnit test searchCR_2 passed')
