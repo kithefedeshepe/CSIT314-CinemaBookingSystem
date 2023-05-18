@@ -1042,6 +1042,13 @@ class SearchFnBBooking(APIView):
 class HelperFunction(APIView):
     permission_classes = [AllowAny]
 
+    @api_view(['GET'])
+    def getMovDetail(request):
+        movie_title = request.data.get('movie_title')
+        movies = Movie.objects.filter(movie_title = movie_title)
+        serializer = MovieSerializer(movies, many=True)
+        return Response(serializer.data)
+    
     #helper function
     @api_view(['GET'])
     def getUpComing(request):
