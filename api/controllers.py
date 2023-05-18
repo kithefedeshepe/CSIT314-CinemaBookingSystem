@@ -330,7 +330,7 @@ class DeleteMovie(APIView):
         try:
             movie_obj = movie.movieget(movie_title)
         except Movie.DoesNotExist:
-            # If the movie does not exist, return 404 error
+            # If the movie does not exist, return 400 error
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # Delete the movie from the database
@@ -641,6 +641,32 @@ class SearchMovieSession(APIView):
         result = MovieSession.moviesessionsearch(keyword)
         sessions = [s for s in result]
         data = [{'id': s.id, 'movie': s.movie.movie_title, 'session_date': s.session_date, 'cinema_room': s.cinema_room.name if s.cinema_room is not None else None} for s in sessions]
+        return Response(data)
+    
+class RetrieveMovieDetail(APIView):
+    @api_view(['POST'])
+    def getMovDetail(request):
+
+        movie = Movie()
+        movie_title = request.data.get('movie_title')
+        try:
+            movie_obj = movie.movieget(movie_title)
+        except Movie.DoesNotExist:
+            # If the movie does not exist, return 400 error
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        result = movie_obj.moviesearch(movie_title)
+        movies = [m for m in result]
+        data = [{'movie_title': m.movie_title,
+            'genre': m.genre,
+            'duration': m.duration,
+            'release_date': m.release_date,
+            'cast': m.cast,
+            'director': m.director,
+            'movie_description': m.movie_description,
+            'posterIMG': m.posterIMG,
+            'featureIMG': m.featureIMG} for m in movies]
+
         return Response(data)
 
 # FnB
@@ -1042,12 +1068,7 @@ class SearchFnBBooking(APIView):
 class HelperFunction(APIView):
     permission_classes = [AllowAny]
 
-    @api_view(['POST'])
-    def getMovDetail(request):
-        movie_title = request.data.get('movie_title')
-        movies = Movie.objects.filter(movie_title = movie_title)
-        serializer = MovieSerializer(movies, many=True)
-        return Response(serializer.data)
+
     
     #helper function
     @api_view(['GET'])
