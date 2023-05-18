@@ -77,4 +77,5 @@ urlpatterns = [
     path('viewUpcoming/', HelperFunction.getUpComing),
     path('viewNowShowing/', HelperFunction.getNowShowing),
     path('getFnBItem/', HelperFunction.getFnB),
+    path('retrieveMovieDetail/', HelperFunction.getMovDetail),
 ]
