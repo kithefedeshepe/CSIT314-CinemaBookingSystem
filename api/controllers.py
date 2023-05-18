@@ -801,6 +801,7 @@ class ViewAllBooking(APIView):
         result = MovieBooking.bookingall(username)
         moviebook = [m for m in result]
         data = [{
+            'id':m.id,
             'booking_owner': m.booking_owner.username,
             'movie_title': m.movie_session.movie.movie_title,
             'movie_session_date': m.movie_session.session_date,
@@ -856,7 +857,7 @@ class DeleteMovieBooking(APIView):
         id = request.data.get('id')
         try:
             moviebook_obj = moviebook.bookingGet(id)
-        except FoodandBeverage.DoesNotExist:
+        except MovieBooking.DoesNotExist:
             # If the movie booking id does not exist, return 404 error
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
@@ -914,9 +915,33 @@ class CreateFnBBooking(APIView):
         # Return a response with the created booking data
         return Response(status=status.HTTP_200_OK)
     
-class ViewFnBBooking(APIView):
+class ViewPrePurchaseFnB(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
+    @api_view(['POST'])
+    def viewFnB(request):
+        try:
+            booking_id = request.data.get('id')
+            booking = FnBBooking.objects.get(id=booking_id)
+        except FnBBooking.DoesNotExist:
+            return Response({'error': 'Booking not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        data = {
+            'booking_owner': booking.booking_owner.username,
+            'menu': str(booking.menu),
+            'menu_description': str(booking.menu.menu_description),
+            'price': str(booking.menu.price),
+            'menuIMG': str(booking.menu.menuIMG)
+        }
+
+        # Return a response with the booking data
+        return Response(data, status=status.HTTP_200_OK)
+            
+    
+class ViewFnBBooking(APIView):
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
 
     #@api_view(['POST'])
     @api_view(['GET'])
@@ -934,6 +959,7 @@ class ViewFnBBooking(APIView):
         result = FnBBooking.FnBBookingall(username)
         fnbBooking = [f for f in result]
         data = [{
+            'id':f.id,
             'booking_owner': f.booking_owner.username,
             'menu': str(f.menu),
             'menu_description': str(f.menu.menu_description),
