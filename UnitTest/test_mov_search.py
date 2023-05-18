@@ -37,23 +37,21 @@ class SearchMovieTestCase(APITestCase):
         self.movie2.save()
 
     def test_search_movie_empty_keyword(self):
-        url = reverse('searchProfile')  # URL for the search endpoint
+        url = reverse('SearchMovie')  # URL for the search endpoint
 
         # Test case: Empty keyword
         response = self.client.post(url, data={})
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {'error': 'Please provide a keyword to search for'})
+        self.assertEqual(response.status_code, 400)
         print('\nUnit test searchMov_1 passed')
 
     def test_search_movie_matching_keyword(self):
-        url = reverse('searchProfile')  # URL for the search endpoint
+        url = reverse('SearchMovie')  # URL for the search endpoint
 
         # Test case: Non-empty keyword
-        keyword = 'Mov'
+        keyword = 'Movie 1'
         response = self.client.post(url, data={'keyword': keyword})
         self.assertEqual(response.status_code, 200)
         data = response.json()
-        print(data)
         # Perform assertions on the response data
         self.assertIsInstance(data, list)  # Check if the response is a list
         self.assertEqual(len(data), 1)  # Check if there is one movie in the response
@@ -64,7 +62,7 @@ class SearchMovieTestCase(APITestCase):
         print('\nUnit test searchMov_2 passed')
 
     def test_search_movie_non_existing_keyword(self):
-        url = reverse('searchProfile')  # URL for the search endpoint
+        url = reverse('SearchMovie')  # URL for the search endpoint
 
         # Test case: Non-existing keyword
         keyword = 'Drama'

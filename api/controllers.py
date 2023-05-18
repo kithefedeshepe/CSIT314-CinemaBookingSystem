@@ -397,7 +397,7 @@ class SearchMovie(APIView):
     def SearchMov(request):
         keyword = request.data.get('keyword', '')
         if not keyword:
-            return JsonResponse({'error': 'Please provide a keyword to search for'})
+            return JsonResponse({'error': 'Please provide a keyword to search for'}, status=400)
         
         result = Movie.moviesearch(keyword)
         movies = [m for m in result]
@@ -522,7 +522,7 @@ class SearchCinemaRoom(APIView):
     def searchCR(request):
         keyword = request.data.get('keyword', '')
         if not keyword:
-            return JsonResponse({'error': 'Please provide a keyword to search for'})
+            return JsonResponse({'error': 'Please provide a keyword to search for'}, status=400)
         
         result = CinemaRoom.cinemaroomsearch(keyword)
         rooms = [cr for cr in result]
