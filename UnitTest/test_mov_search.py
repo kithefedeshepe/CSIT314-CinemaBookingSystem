@@ -53,6 +53,7 @@ class SearchMovieTestCase(APITestCase):
         response = self.client.post(url, data={'keyword': keyword})
         self.assertEqual(response.status_code, 200)
         data = response.json()
+        print(data)
         # Perform assertions on the response data
         self.assertIsInstance(data, list)  # Check if the response is a list
         self.assertEqual(len(data), 1)  # Check if there is one movie in the response
