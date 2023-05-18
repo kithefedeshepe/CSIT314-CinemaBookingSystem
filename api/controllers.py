@@ -1042,7 +1042,7 @@ class SearchFnBBooking(APIView):
 class HelperFunction(APIView):
     permission_classes = [AllowAny]
 
-    @api_view(['GET'])
+    @api_view(['POST'])
     def getMovDetail(request):
         movie_title = request.data.get('movie_title')
         movies = Movie.objects.filter(movie_title = movie_title)
