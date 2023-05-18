@@ -22,7 +22,7 @@ class SearchMovieTestCase(APITestCase):
             posterIMG=self.base64_img_data,
             featureIMG=self.base64_img_data
         )
-
+        self.movie1.save()
         self.movie2 = Movie.objects.create(
             movie_title='Movie 2',
             genre='Comedy',
@@ -34,7 +34,7 @@ class SearchMovieTestCase(APITestCase):
             posterIMG=self.base64_img_data,
             featureIMG=self.base64_img_data
         )
-        
+        self.movie2.save()
 
     def test_search_movie_empty_keyword(self):
         url = reverse('searchProfile')  # URL for the search endpoint
@@ -49,7 +49,7 @@ class SearchMovieTestCase(APITestCase):
         url = reverse('searchProfile')  # URL for the search endpoint
 
         # Test case: Non-empty keyword
-        keyword = 'Action'
+        keyword = 'Mov'
         response = self.client.post(url, data={'keyword': keyword})
         self.assertEqual(response.status_code, 200)
         data = response.json()
