@@ -644,6 +644,8 @@ class SearchMovieSession(APIView):
         return Response(data)
     
 class RetrieveMovieDetail(APIView):
+    permission_classes = [AllowAny]
+    
     @api_view(['POST'])
     def getMovDetail(request):
 
@@ -1062,8 +1064,6 @@ class SearchFnBBooking(APIView):
 # ETC    
 class HelperFunction(APIView):
     permission_classes = [AllowAny]
-
-
     
     #helper function
     @api_view(['GET'])
