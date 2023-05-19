@@ -1133,8 +1133,9 @@ class Reports(APIView):
         if request.user.role != 'CinemaOwner':
            return Response(status=status.HTTP_403_FORBIDDEN)
         
+        date = request.data.get('date')
         # Generate daily report
-        report = Report.generate_daily_report()
+        report = Report.generate_daily_report(date)
 
             # Return response with report details
         response_data = {
@@ -1151,8 +1152,10 @@ class Reports(APIView):
         if request.user.role != 'CinemaOwner':
            return Response(status=status.HTTP_403_FORBIDDEN)
         
+        sdate = request.data.get('sdate')
+        edate = request.data.get('edate')
         # Generate daily report
-        report = Report.generate_weekly_report()
+        report = Report.generate_weekly_report(sdate, edate)
 
             # Return response with report details
         response_data = {
@@ -1169,27 +1172,10 @@ class Reports(APIView):
         if request.user.role != 'CinemaOwner':
            return Response(status=status.HTTP_403_FORBIDDEN)
         
+        sdate = request.data.get('sdate')
+        edate = request.data.get('edate')
         # Generate daily report
-        report = Report.generate_monthly_report()
-
-            # Return response with report details
-        response_data = {
-            'report_id': report.id,
-            'report_description': report.report_description,
-        }
-
-        # Return response
-        return Response(response_data, status=status.HTTP_200_OK)
-    
-
-    @api_view(['POST'])
-    def genDailyTrafficReport(request):
-         # Check if user is a Cinema Owner.
-        if request.user.role != 'CinemaOwner':
-           return Response(status=status.HTTP_403_FORBIDDEN)
-        
-        # Generate daily report
-        report = Report.generate_daily_traffic_report()
+        report = Report.generate_monthly_report(sdate, edate)
 
             # Return response with report details
         response_data = {
@@ -1201,13 +1187,14 @@ class Reports(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
     
     @api_view(['POST'])
-    def genWeeklyTrafficReport(request):
+    def genDailyTicketReport(request):
          # Check if user is a Cinema Owner.
         if request.user.role != 'CinemaOwner':
            return Response(status=status.HTTP_403_FORBIDDEN)
         
+        date = request.data.get('date')
         # Generate daily report
-        report = Report.generate_weekly_traffic_report()
+        report = Report.generate_daily_ticket_report(date)
 
             # Return response with report details
         response_data = {
@@ -1219,13 +1206,15 @@ class Reports(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
     
     @api_view(['POST'])
-    def genMonthlyTrafficReport(request):
+    def genWeeklyTicketReport(request):
          # Check if user is a Cinema Owner.
         if request.user.role != 'CinemaOwner':
            return Response(status=status.HTTP_403_FORBIDDEN)
         
+        sdate = request.data.get('sdate')
+        edate = request.data.get('edate')
         # Generate daily report
-        report = Report.generate_Monthly_traffic_report()
+        report = Report.generate_weekly_ticket_report(sdate, edate)
 
             # Return response with report details
         response_data = {
@@ -1235,3 +1224,24 @@ class Reports(APIView):
 
         # Return response
         return Response(response_data, status=status.HTTP_200_OK)
+    
+    @api_view(['POST'])
+    def genMonthlyTicketReport(request):
+         # Check if user is a Cinema Owner.
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
+        
+        sdate = request.data.get('sdate')
+        edate = request.data.get('edate')
+        # Generate daily report
+        report = Report.generate_monthly_ticket_report(sdate, edate)
+
+            # Return response with report details
+        response_data = {
+            'report_id': report.id,
+            'report_description': report.report_description,
+        }
+
+        # Return response
+        return Response(response_data, status=status.HTTP_200_OK)
+    
