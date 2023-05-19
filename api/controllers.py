@@ -1124,8 +1124,8 @@ class HelperFunction(APIView):
         return Response(serializer.data)
 
 class Reports(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    #authentication_classes = [TokenAuthentication]
+    #permission_classes = [IsAuthenticated]
 
     @api_view(['POST'])
     def genDailyRevenueReport(request):
