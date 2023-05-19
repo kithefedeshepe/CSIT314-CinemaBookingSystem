@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .controllers import AccountController, UpdateProfile, SearchFnbs, SearchMovieSession, SearchCinemaRoom, LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession, CreateFnBBooking, ViewFnBBooking, DeleteFnBBooking , updateBooking, DeleteMovieBooking, SearchMovieBooking, UpdateFnBBooking, SearchFnBBooking, Reports, ViewPrePurchaseFnB, RetrieveMovieDetail
+from .controllers import AccountController, UpdateProfile, SearchFnbs, SearchMovieSession, SearchCinemaRoom,  LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession, CreateFnBBooking, ViewFnBBooking, DeleteFnBBooking , updateBooking, DeleteMovieBooking, SearchMovieBooking, UpdateFnBBooking, SearchFnBBooking, Reports, ViewPrePurchaseFnB, RetrieveMovieDetail, RetrieveMovieSession
 urlpatterns = [
     # Account
     path('', AccountController.getUserAccount),
@@ -40,7 +40,7 @@ urlpatterns = [
     path('addMS/', AddMovieSession.addMS, name='addMS'),
     path('viewAllMS/', ViewAllMovieSession.viewAllMS, name='viewAllMS'),
     path('delMS/', DeleteMovieSession.delMS, name='delMS'),
-    path('getMovieSession/', HelperFunction.getMovieSession, name='getMovieSession'),
+    path('getMovieSession/', RetrieveMovieSession.getMovieSession, name='getMovieSession'),
     path('updateMovieSession/', UpdateMovieSession.updateMS, name = 'updateMs'),
     path('searchMovieSession/', SearchMovieSession.searchMS, name = 'searchMs'),
 
