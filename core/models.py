@@ -378,17 +378,17 @@ class MovieBooking(models.Model):
 
 
     def count_adult_ticket(sdate, edate):
-        adult_bookings = MovieBooking.objects.filter(ticket_type='Adult', movie_session__session_date__range=(sdate, edate))
+        adult_bookings = MovieBooking.objects.filter(Q(ticket_type__icontains='Adult'), movie_session__session_date__range=(sdate, edate))
         count = adult_bookings.count()
         return count
     
     def count_senior_ticket(sdate, edate):
-        senior_bookings = MovieBooking.objects.filter(ticket_type='Senior', movie_session__session_date__range=(sdate, edate))
+        senior_bookings = MovieBooking.objects.filter(Q(ticket_type__icontains='Senior'), movie_session__session_date__range=(sdate, edate))
         count = senior_bookings.count()
         return count
     
     def count_child_ticket(sdate, edate):
-        child_bookings = MovieBooking.objects.filter(ticket_type='Child', movie_session__session_date__range=(sdate, edate))
+        child_bookings = MovieBooking.objects.filter(Q(ticket_type__icontains='Child'), movie_session__session_date__range=(sdate, edate))
         count = child_bookings.count()
         return count
 
