@@ -627,7 +627,33 @@ class UpdateMovieSession(APIView):
             return Response({'message': 'Cinema Room does not exist'}, status=status.HTTP_404_NOT_FOUND)
         
         ms.moviesessionupdate(session_date, session_time)
-        return Response(status=status.HTTP_200_OK)        
+        return Response(status=status.HTTP_200_OK)  
+
+class RetrieveMovieSession(APIView):
+    permission_classes = [AllowAny]
+
+    @api_view(['POST'])
+    def getMovieSession(request):
+        try:
+            movie_title = request.data['movie_title']
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            movie_obj = Movie().movieget(movie_title)
+            result = MovieSession.moviesessionsearch(movie_obj)
+
+            data = [{ 'id': str(m.id),
+                      'movie': str(m.movie),
+                      'session_date': str(m.session_date),
+                      'cinema_room': str(m.cinema_room),
+                      'session_time': m.session_time}for m in result]
+            return Response(data)
+
+        except (Movie.DoesNotExist, MovieSession.DoesNotExist):
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
   
 class SearchMovieSession(APIView):
     authentication_classes = [TokenAuthentication]
@@ -1096,22 +1122,6 @@ class HelperFunction(APIView):
         movies = Movie.objects.filter(release_date__lt=current_date)
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
-    
-    @api_view(['POST'])
-    def getMovieSession(request):
-        try:
-            movie_title = request.data['movie_title']
-        except KeyError:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            movie = Movie.objects.get(movie_title=movie_title)
-            sessions = MovieSession.objects.filter(movie=movie)
-        except (Movie.DoesNotExist, CinemaRoom.DoesNotExist):
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-        serialized_sessions = MovieSessionSerializer(sessions, many=True).data
-        return Response(serialized_sessions, status=status.HTTP_200_OK)
 
 class Reports(APIView):
     authentication_classes = [TokenAuthentication]
