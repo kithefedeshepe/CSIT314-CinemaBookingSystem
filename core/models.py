@@ -368,12 +368,29 @@ class MovieBooking(models.Model):
         else:
             return 0
         
-    def calculate_total_ticket_price():
+
+    def calculate_total_ticket_price(sdate, edate):
         total_price = 0
-        bookings = MovieBooking.objects.all()
+        bookings = MovieBooking.objects.filter(movie_session__session_date__range=(sdate, edate))
         for booking in bookings:
             total_price += booking.get_ticket_price()
         return total_price
+
+
+    def count_adult_ticket(sdate, edate):
+        adult_bookings = MovieBooking.objects.filter(ticket_type='Adult', movie_session__session_date__range=(sdate, edate))
+        count = adult_bookings.count()
+        return count
+    
+    def count_senior_ticket(sdate, edate):
+        senior_bookings = MovieBooking.objects.filter(ticket_type='Senior', movie_session__session_date__range=(sdate, edate))
+        count = senior_bookings.count()
+        return count
+    
+    def count_child_ticket(sdate, edate):
+        child_bookings = MovieBooking.objects.filter(ticket_type='Child', movie_session__session_date__range=(sdate, edate))
+        count = child_bookings.count()
+        return count
 
     def str(self):
         return f"{self.movie_session}X{self.ticket_type}-{self.seat_number}"
@@ -471,30 +488,22 @@ class Report(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     report_description = models.TextField()
 
-    dailyUsers = random.randint(10, 50)
-    weeklyUsers = random.randint(50, 200)
-    monthlyUsers = random.randint(200, 400)
-
     @staticmethod
-    def generate_daily_report():
-        # Get today's date
-        today = date.today()
-
+    def generate_daily_report(date):
         # Calculate the total revenue for today
-        movieBookingRevenue = MovieBooking.calculate_total_ticket_price()
+        movieBookingRevenue = MovieBooking.calculate_total_ticket_price(date, date)
         fnbBookingRevenue = FnBBooking.calculate_total_price()
         revenue = movieBookingRevenue + fnbBookingRevenue
-
         # Create a new report object
-        report = Report(report_description=f"Daily revenue for {today}: {revenue}")
+        report = Report(report_description=f"Daily revenue for {date}: {revenue}")
         report.save()
 
         return report
     
     @staticmethod
-    def generate_weekly_report():
+    def generate_weekly_report(sdate, edate):
         # Calculate the total revenue for the week
-        movieBookingRevenue = MovieBooking.calculate_total_ticket_price() * 7
+        movieBookingRevenue = MovieBooking.calculate_total_ticket_price(sdate, edate)
         fnbBookingRevenue = FnBBooking.calculate_total_price() * 7
         revenue = movieBookingRevenue + fnbBookingRevenue
 
@@ -505,9 +514,9 @@ class Report(models.Model):
         return report
     
     @staticmethod
-    def generate_monthly_report():
+    def generate_monthly_report(sdate, edate):
         # Calculate the total revenue for the week
-        movieBookingRevenue = MovieBooking.calculate_total_ticket_price() * 28
+        movieBookingRevenue = MovieBooking.calculate_total_ticket_price(sdate, edate)
         fnbBookingRevenue = FnBBooking.calculate_total_price() * 28
         revenue = movieBookingRevenue + fnbBookingRevenue
 
@@ -518,34 +527,53 @@ class Report(models.Model):
         return report
     
     @staticmethod
-    def generate_daily_traffic_report():
-        # Get today's date
-        today = date.today()
-
-        num_users = Report.dailyUsers
-
+    def generate_daily_ticket_report(date):
+        # Calculate the total revenue for the week
+        ticket_adult = MovieBooking.count_adult_ticket(date, date)
+        ticket_senior = MovieBooking.count_senior_ticket(date, date)
+        ticket_child = MovieBooking.count_child_ticket(date, date)
+        total_ticket = ticket_adult + ticket_child + ticket_senior
         # Create a new report object
-        report = Report(report_description=f"Daily traffic for {today}: {num_users} users")
+        report_description = f"Adult tickets: {ticket_adult}. " \
+                         f"Senior tickets: {ticket_senior}. " \
+                         f"Child tickets: {ticket_child}. " \
+                         f"Total tickets: {total_ticket}."
+        report = Report(report_description=report_description)
+        report.save()
+        return report
+    
+    @staticmethod
+    def generate_weekly_ticket_report(sdate, edate):
+        # Calculate the total revenue for the week
+        ticket_adult = MovieBooking.count_adult_ticket(sdate, edate)
+        ticket_senior = MovieBooking.count_senior_ticket(sdate, edate)
+        ticket_child = MovieBooking.count_child_ticket(sdate, edate)
+        total_ticket = ticket_adult + ticket_child + ticket_senior
+        # Create a new report object
+        report_description = f"Adult tickets: {ticket_adult}. " \
+                         f"Senior tickets: {ticket_senior}. " \
+                         f"Child tickets: {ticket_child}. " \
+                         f"Total tickets: {total_ticket}."
+        report = Report(report_description=report_description)
         report.save()
 
         return report
     
     @staticmethod
-    def generate_weekly_traffic_report():
-        num_users = Report.weeklyUsers
-
+    def generate_monthly_ticket_report(sdate, edate):
+        # Calculate the total revenue for the week
+        ticket_adult = MovieBooking.count_adult_ticket(sdate, edate)
+        ticket_senior = MovieBooking.count_senior_ticket(sdate, edate)
+        ticket_child = MovieBooking.count_child_ticket(sdate, edate)
+        total_ticket = ticket_adult + ticket_child + ticket_senior
         # Create a new report object
-        report = Report(report_description=f"Weekly traffic: {num_users} users")
+        report_description = f"Adult tickets: {ticket_adult}. " \
+                         f"Senior tickets: {ticket_senior}. " \
+                         f"Child tickets: {ticket_child}. " \
+                         f"Total tickets: {total_ticket}."
+        report = Report(report_description=report_description)
         report.save()
 
         return report
     
-    @staticmethod
-    def generate_Monthly_traffic_report():
-        num_users = Report.monthlyUsers
-
-        # Create a new report object
-        report = Report(report_description=f"Monthly traffic: {num_users} users")
-        report.save()
-
-        return report
+    

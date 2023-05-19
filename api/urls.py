@@ -71,9 +71,9 @@ urlpatterns = [
     path('genDailyRevenueReport/', Reports.genDailyRevenueReport, name='genDailyRevenueReport'),
     path('genWeeklyRevenueReport/', Reports.genWeeklyRevenueReport, name='genWeeklyRevenueReport'),
     path('genMonthlyRevenueReport/', Reports.genMonthlyRevenueReport, name='genMonthlyRevenueReport'),
-    path('genDailyTrafficReport/', Reports.genDailyTrafficReport, name='genDailyTrafficReport'),
-    path('genWeeklyTrafficReport/', Reports.genWeeklyTrafficReport, name='genWeeklyTrafficReport'),
-    path('genMonthlyTrafficReport/', Reports.genMonthlyTrafficReport, name='genMonthlyTrafficReport'),
+    path('genDailyTicketReport/', Reports.genDailyTicketReport),
+    path('genWeeklyTicketReport/', Reports.genWeeklyTicketReport),
+    path('genMonthlyTicketReport/', Reports.genMonthlyTicketReport),
 
     #helper function
     path('viewUpcoming/', HelperFunction.getUpComing),
