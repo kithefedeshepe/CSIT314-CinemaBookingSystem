@@ -10,7 +10,7 @@ from datetime import date
 from django.db.models import Q
 from django.contrib.auth.models import UserManager
 import uuid
-import random
+from django.template.defaultfilters import floatformat
 
 # Custom admin
 class CustomUserManager(BaseUserManager):
@@ -492,10 +492,8 @@ class Report(models.Model):
     def generate_daily_report(date):
         # Calculate the total revenue for today
         movieBookingRevenue = MovieBooking.calculate_total_ticket_price(date, date)
-        fnbBookingRevenue = FnBBooking.calculate_total_price()
-        revenue = movieBookingRevenue + fnbBookingRevenue
         # Create a new report object
-        report = Report(report_description=f"Daily revenue for {date}: {revenue}")
+        report = Report(report_description=f"Daily revenue: {floatformat(float(movieBookingRevenue), 2)} SGD")
         report.save()
 
         return report
@@ -504,11 +502,9 @@ class Report(models.Model):
     def generate_weekly_report(sdate, edate):
         # Calculate the total revenue for the week
         movieBookingRevenue = MovieBooking.calculate_total_ticket_price(sdate, edate)
-        fnbBookingRevenue = FnBBooking.calculate_total_price() * 7
-        revenue = movieBookingRevenue + fnbBookingRevenue
 
         # Create a new report object
-        report = Report(report_description=f"Weekly revenue: {revenue}")
+        report = Report(report_description=f"Weekly revenue from: {floatformat(float(movieBookingRevenue), 2)} SGD")
         report.save()
 
         return report
@@ -517,11 +513,9 @@ class Report(models.Model):
     def generate_monthly_report(sdate, edate):
         # Calculate the total revenue for the week
         movieBookingRevenue = MovieBooking.calculate_total_ticket_price(sdate, edate)
-        fnbBookingRevenue = FnBBooking.calculate_total_price() * 28
-        revenue = movieBookingRevenue + fnbBookingRevenue
 
         # Create a new report object
-        report = Report(report_description=f"Monthly revenue: {revenue}")
+        report = Report(report_description=f"Monthly revenue: {floatformat(float(movieBookingRevenue), 2)} SGD")
         report.save()
 
         return report
