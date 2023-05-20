@@ -1123,15 +1123,15 @@ class HelperFunction(APIView):
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
 
-class Reports(APIView):
-    #authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+class DailyRevenueReportController(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     @api_view(['POST'])
     def genDailyRevenueReport(request):
          # Check if user is a Cinema Owner.
-        #if request.user.role != 'CinemaOwner':
-           #return Response(status=status.HTTP_403_FORBIDDEN)
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
         
         date = request.data.get('date')
         # Generate daily report
@@ -1146,11 +1146,15 @@ class Reports(APIView):
         # Return response
         return Response(response_data, status=status.HTTP_200_OK)
     
+class WeeklyRevenueReportController(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     @api_view(['POST'])
     def genWeeklyRevenueReport(request):
          # Check if user is a Cinema Owner.
-        #if request.user.role != 'CinemaOwner':
-           #return Response(status=status.HTTP_403_FORBIDDEN)
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
         
         sdate = request.data.get('sdate')
         edate = request.data.get('edate')
@@ -1166,11 +1170,15 @@ class Reports(APIView):
         # Return response
         return Response(response_data, status=status.HTTP_200_OK)
     
+class MonthlyRevenueReportController(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     @api_view(['POST'])
     def genMonthlyRevenueReport(request):
          # Check if user is a Cinema Owner.
-        #if request.user.role != 'CinemaOwner':
-           #return Response(status=status.HTTP_403_FORBIDDEN)
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
         
         sdate = request.data.get('sdate')
         edate = request.data.get('edate')
@@ -1186,11 +1194,15 @@ class Reports(APIView):
         # Return response
         return Response(response_data, status=status.HTTP_200_OK)
     
+class DailyTicketReportController(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     @api_view(['POST'])
     def genDailyTicketReport(request):
          # Check if user is a Cinema Owner.
-        #if request.user.role != 'CinemaOwner':
-           #return Response(status=status.HTTP_403_FORBIDDEN)
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
         
         date = request.data.get('date')
         # Generate daily report
@@ -1205,11 +1217,15 @@ class Reports(APIView):
         # Return response
         return Response(response_data, status=status.HTTP_200_OK)
     
+class WeeklyTicketReportController(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     @api_view(['POST'])
     def genWeeklyTicketReport(request):
          # Check if user is a Cinema Owner.
-        #if request.user.role != 'CinemaOwner':
-           #return Response(status=status.HTTP_403_FORBIDDEN)
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
         
         sdate = request.data.get('sdate')
         edate = request.data.get('edate')
@@ -1225,11 +1241,15 @@ class Reports(APIView):
         # Return response
         return Response(response_data, status=status.HTTP_200_OK)
     
+class MonthlyTicketReportController(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     @api_view(['POST'])
     def genMonthlyTicketReport(request):
          # Check if user is a Cinema Owner.
-        #if request.user.role != 'CinemaOwner':
-           #return Response(status=status.HTTP_403_FORBIDDEN)
+        if request.user.role != 'CinemaOwner':
+           return Response(status=status.HTTP_403_FORBIDDEN)
         
         sdate = request.data.get('sdate')
         edate = request.data.get('edate')
