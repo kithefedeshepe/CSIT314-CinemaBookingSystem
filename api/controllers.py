@@ -1123,7 +1123,7 @@ class HelperFunction(APIView):
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
 
-class DailyRevenueReportController(APIView):
+class DailyRevenueReport(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -1146,7 +1146,7 @@ class DailyRevenueReportController(APIView):
         # Return response
         return Response(response_data, status=status.HTTP_200_OK)
     
-class WeeklyRevenueReportController(APIView):
+class WeeklyRevenueReport(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -1170,7 +1170,7 @@ class WeeklyRevenueReportController(APIView):
         # Return response
         return Response(response_data, status=status.HTTP_200_OK)
     
-class MonthlyRevenueReportController(APIView):
+class MonthlyRevenueReport(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -1194,7 +1194,7 @@ class MonthlyRevenueReportController(APIView):
         # Return response
         return Response(response_data, status=status.HTTP_200_OK)
     
-class DailyTicketReportController(APIView):
+class DailyTicketReport(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -1217,7 +1217,7 @@ class DailyTicketReportController(APIView):
         # Return response
         return Response(response_data, status=status.HTTP_200_OK)
     
-class WeeklyTicketReportController(APIView):
+class WeeklyTicketReport(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
@@ -1241,7 +1241,7 @@ class WeeklyTicketReportController(APIView):
         # Return response
         return Response(response_data, status=status.HTTP_200_OK)
     
-class MonthlyTicketReportController(APIView):
+class MonthlyTicketReport(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     
