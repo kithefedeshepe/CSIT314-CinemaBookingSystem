@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .controllers import AccountController, UpdateProfile, SearchFnbs, SearchMovieSession, SearchCinemaRoom,  LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession, CreateFnBBooking, ViewFnBBooking, DeleteFnBBooking , updateBooking, DeleteMovieBooking, SearchMovieBooking, UpdateFnBBooking, SearchFnBBooking, Reports, ViewPrePurchaseFnB, RetrieveMovieDetail, RetrieveMovieSession
+from .controllers import AccountController, UpdateProfile, SearchFnbs, SearchMovieSession, SearchCinemaRoom,  LoginView, LogoutView, GetUserView, UpdateUser, SearchUserView, DeleteUser, CreateProfile, ViewProfile, SearchProfile, DeleteProfile, AddMovie, DeleteMovie, SearchMovie, UpdateMovie, ViewAllMovie, AddCinemaRoom, ViewAllCinemaRoom, DeleteCinemaRoom, UpdateCinemaRoom, DeleteMovieSession, AddMovieSession, ViewAllMovieSession, HelperFunction, AddFnbs, ViewAllFnbs, UpdateFnbs, DeleteFnbs, AddBooking, ViewAllBooking, UpdateMovieSession, CreateFnBBooking, ViewFnBBooking, DeleteFnBBooking , updateBooking, DeleteMovieBooking, SearchMovieBooking, UpdateFnBBooking, SearchFnBBooking, DailyRevenueReport,WeeklyRevenueReport,MonthlyRevenueReport, DailyTicketReport, WeeklyTicketReport,   ViewPrePurchaseFnB, RetrieveMovieDetail, RetrieveMovieSession, MonthlyTicketReport
 urlpatterns = [
     # Account
     path('', AccountController.getUserAccount),
@@ -68,12 +68,12 @@ urlpatterns = [
     path('SearchBook/', SearchMovieBooking.SearchBook, name='SearchBook'),
 
     #Report
-    path('genDailyRevenueReport/', Reports.genDailyRevenueReport, name='genDailyRevenueReport'),
-    path('genWeeklyRevenueReport/', Reports.genWeeklyRevenueReport, name='genWeeklyRevenueReport'),
-    path('genMonthlyRevenueReport/', Reports.genMonthlyRevenueReport, name='genMonthlyRevenueReport'),
-    path('genDailyTicketReport/', Reports.genDailyTicketReport),
-    path('genWeeklyTicketReport/', Reports.genWeeklyTicketReport),
-    path('genMonthlyTicketReport/', Reports.genMonthlyTicketReport),
+    path('genDailyRevenueReport/', DailyRevenueReport.genDailyRevenueReport, name='genDailyRevenueReport'),
+    path('genWeeklyRevenueReport/', WeeklyRevenueReport.genWeeklyRevenueReport, name='genWeeklyRevenueReport'),
+    path('genMonthlyRevenueReport/', MonthlyRevenueReport.genMonthlyRevenueReport, name='genMonthlyRevenueReport'),
+    path('genDailyTicketReport/', DailyTicketReport.genDailyTicketReport),
+    path('genWeeklyTicketReport/', WeeklyTicketReport.genWeeklyTicketReport),
+    path('genMonthlyTicketReport/', MonthlyTicketReport.genMonthlyTicketReport),
 
     #helper function
     path('viewUpcoming/', HelperFunction.getUpComing),
